@@ -782,4 +782,24 @@ button:active,
         animation-iteration-count: 1 !important;
         transition-duration: 0.01ms !important;
     }
-}
+    .gallery-section{
+        margin-top:60px;
+    }
+    
+    .photo-gallery{
+        display:grid;
+        grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+        gap:20px;
+    }
+    
+    .photo-gallery img{
+        width:100%;
+        border-radius:16px;
+        box-shadow:0 10px 25px rgba(0,0,0,.15);
+        transition:transform .3s ease;
+        cursor:pointer;
+    }
+    
+    .photo-gallery img:hover{
+        transform:scale(1.03);
+    }
