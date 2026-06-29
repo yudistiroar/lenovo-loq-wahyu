@@ -5,69 +5,140 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cicilan Laptop Lenovo LOQ Wahyu</title>
 
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<div class="container">
+<div class="app">
+    <div class="container">
 
-    <h1>💻 Cicilan Laptop Lenovo LOQ Wahyu</h1>
+        <header class="page-header">
+            <div class="hero" aria-label="Judul aplikasi">
+                <h1>Cicilan Lenovo LOQ</h1>
+                <p class="subtitle">
+                    Pembayaran paling lambat setiap <strong>tanggal 1</strong>.
+                </p>
+            </div>
 
-    <p class="subtitle">
-        Pembayaran paling lambat setiap <b>tanggal 1</b>.
-    </p>
+            <div class="ux-bar" aria-label="Informasi hari ini">
+                <div class="ux-bar-item">
+                    <span class="ux-bar-label">Hari ini</span>
+                    <span id="todayDate" class="ux-bar-value">—</span>
+                </div>
+                <div class="ux-bar-divider" aria-hidden="true"></div>
+                <div class="ux-bar-item ux-bar-item--countdown">
+                    <span class="ux-bar-label">Cicilan berikutnya</span>
+                    <span id="countdownText" class="ux-bar-value ux-bar-value--countdown">—</span>
+                </div>
+            </div>
+        </header>
 
-    <div class="summary">
+        <section class="summary" aria-label="Ringkasan keuangan">
 
-        <div class="card">
-            <h3>Harga Laptop</h3>
-            <p id="harga">Rp15.772.102</p>
-        </div>
+            <div class="stat-card stat-card--price">
+                <div class="stat-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+                        <rect x="2" y="3" width="20" height="14" rx="2.5"/>
+                        <path d="M8 21h8M12 17v4"/>
+                    </svg>
+                </div>
+                <div class="stat-body">
+                    <h3>Harga Laptop</h3>
+                    <p id="harga">Rp15.772.102</p>
+                </div>
+            </div>
 
-        <div class="card">
-            <h3>Sudah Dibayar</h3>
-            <p id="sudahBayar">Rp0</p>
-        </div>
+            <div class="stat-card stat-card--paid">
+                <div class="stat-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+                        <path d="M20 6L9 17l-5-5"/>
+                    </svg>
+                </div>
+                <div class="stat-body">
+                    <h3>Sudah Dibayar</h3>
+                    <p id="sudahBayar">Rp0</p>
+                </div>
+            </div>
 
-        <div class="card">
-            <h3>Sisa Hutang</h3>
-            <p id="sisaHutang">Rp15.772.102</p>
-        </div>
+            <div class="stat-card stat-card--debt">
+                <div class="stat-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+                        <circle cx="12" cy="12" r="9"/>
+                        <path d="M12 7v5l3.5 2"/>
+                    </svg>
+                </div>
+                <div class="stat-body">
+                    <h3>Sisa Hutang</h3>
+                    <p id="sisaHutang">Rp15.772.102</p>
+                </div>
+            </div>
+
+        </section>
+
+        <section class="progress-panel progress-panel--focus" aria-label="Progress cicilan">
+
+            <div class="progress-header">
+                <div class="progress-header-text">
+                    <span class="progress-eyebrow">Progress</span>
+                    <h2>Perjalanan Cicilan</h2>
+                    <p class="progress-subtitle">16 cicilan bulanan</p>
+                </div>
+                <div class="progress-percentage-wrap">
+                    <span id="progressPercentage" class="progress-percentage">0%</span>
+                    <span class="progress-percentage-label">terlunasi</span>
+                </div>
+            </div>
+
+            <div class="progress-track">
+                <div id="progressBar" class="progress-fill"></div>
+            </div>
+
+            <p id="progressText" class="progress-caption">0 / 16 Cicilan</p>
+
+        </section>
+
+        <section class="installments-section">
+            <div class="section-head">
+                <h2 class="section-title">Daftar Cicilan</h2>
+                <p class="section-desc">Kelola setiap pembayaran bulanan</p>
+            </div>
+            <div id="daftarCicilan" class="installment-list"></div>
+        </section>
+
+        <section class="gallery-section">
+            <div class="section-head">
+                <h2 class="section-title">Foto Laptop</h2>
+                <p class="section-desc">Lenovo LOQ Wahyu</p>
+            </div>
+            <div class="gallery">
+                <img src="images/hero.jpg" alt="Lenovo LOQ Wahyu">
+                <img src="images/gallery1.jpg" alt="Lenovo LOQ tampak samping">
+                <img src="images/gallery2.jpg" alt="Lenovo LOQ detail">
+            </div>
+        </section>
 
     </div>
+</div>
 
-    <div class="progress-wrapper">
-
-        <div class="progress">
-
-            <div id="progressBar"></div>
-
+<div id="confirmModal" class="modal" hidden aria-hidden="true" role="dialog" aria-labelledby="confirmTitle" aria-modal="true">
+    <div class="modal-backdrop" data-dismiss="modal"></div>
+    <div class="modal-card">
+        <h3 id="confirmTitle">Konfirmasi Pembayaran</h3>
+        <p id="confirmMessage" class="modal-message"></p>
+        <div class="modal-actions">
+            <button type="button" id="confirmCancel" class="btn-modal btn-modal--cancel">Batal</button>
+            <button type="button" id="confirmOk" class="btn-modal btn-modal--confirm">Ya, Bayar</button>
         </div>
-
-        <p id="progressText">
-
-            0 / 16 Cicilan
-
-        </p>
-
     </div>
+</div>
 
-    <h2>Daftar Cicilan</h2>
-
-    <div id="daftarCicilan"></div>
-
-    <h2>Foto Laptop</h2>
-
-    <div class="gallery">
-
-        <img src="images/hero.jpg">
-
-        <img src="images/gallery1.jpg">
-
-        <img src="images/gallery2.jpg">
-
-    </div>
-
+<div id="successToast" class="toast" aria-live="polite" aria-atomic="true">
+    <span class="toast-icon" aria-hidden="true">✓</span>
+    <span id="successToastText">Pembayaran berhasil dicatat!</span>
 </div>
 
 <script src="script.js"></script>
