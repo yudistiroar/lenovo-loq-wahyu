@@ -171,8 +171,8 @@ const cicilan = [
     DOM.confirmOk.focus();
   }
   
+  // FIX 1: Fungsi ini sekarang murni hanya menutup modal konfirmasi tanpa merusak state index
   function closeConfirmModal() {
-    pendingPayIndex = null;
     if (!DOM.confirmModal) return;
     DOM.confirmModal.hidden = true;
     DOM.confirmModal.setAttribute("aria-hidden", "true");
@@ -182,7 +182,7 @@ const cicilan = [
     if (pendingPayIndex === null) return;
     const index = pendingPayIndex;
     closeConfirmModal();
-    openAmountModal(index);
+    openAmountModal(index); // Index dikirim dengan aman ke modal nominal angka
   }
   
   // ==========================================
@@ -364,17 +364,28 @@ const cicilan = [
   }
   
   // 2. Confirm Modal Listeners
-  if (DOM.confirmCancel) DOM.confirmCancel.addEventListener("click", closeConfirmModal);
+  if (DOM.confirmCancel) {
+    DOM.confirmCancel.addEventListener("click", () => {
+      closeConfirmModal();
+      pendingPayIndex = null; // FIX 2: Bersihkan saat batal di modal konfirmasi
+    });
+  }
   if (DOM.confirmOk) DOM.confirmOk.addEventListener("click", executePayment);
   if (DOM.confirmModal) {
     const backdrop = DOM.confirmModal.querySelector(".modal-backdrop");
-    if (backdrop) backdrop.addEventListener("click", closeConfirmModal);
+    if (backdrop) {
+      backdrop.addEventListener("click", () => {
+        closeConfirmModal();
+        pendingPayIndex = null; // FIX 3: Bersihkan saat klik luar modal konfirmasi
+      });
+    }
   }
   
   // 3. Amount Modal Listeners
   if (DOM.amountModalCancel) {
     DOM.amountModalCancel.addEventListener("click", () => {
       DOM.amountModal.style.display = "none";
+      pendingPayIndex = null; // FIX 4: Bersihkan saat batal di modal nominal angka
     });
   }
   if (DOM.amountModalSubmit) {
@@ -383,6 +394,7 @@ const cicilan = [
       const nominal = Number(DOM.amountModalInput.value);
       DOM.amountModal.style.display = "none";
       payInstallment(pendingPayIndex, nominal);
+      pendingPayIndex = null; // FIX 5: Bersihkan state setelah proses simpan berhasil selesai
     });
   }
   
@@ -391,6 +403,7 @@ const cicilan = [
     if (e.key === "Escape") {
       closeConfirmModal();
       if (DOM.amountModal) DOM.amountModal.style.display = "none";
+      pendingPayIndex = null; // FIX 6: Bersihkan state saat menekan tombol Escape
     }
   });
   
