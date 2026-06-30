@@ -219,16 +219,22 @@ const galleryImages = [
       const card = document.createElement("div");
       card.className = "history-card";
   
-      // PERBAIKAN REGRESI: Memanfaatkan formatDueDate() dan formatPaidAt() secara optimal
       card.innerHTML = `
-        <div class="history-card__info">
-            <div class="history-card__header">
-                <h4>✓ Cicilan ${item.installment}</h4>
+        <div class="history-card__header">
+            <h4>✓ Cicilan ${item.installment}</h4>
+        </div>
+        <div class="history-card__content">
+            <div class="history-card__row">
+                <span class="history-card__label">💰 Nominal</span>
+                <span class="history-card__value history-card__value--amount">${rupiah(item.nominal)}</span>
             </div>
-            <div class="history-card__meta" style="display: flex; flex-direction: column; gap: 2px; margin-top: 6px; color: #555;">
-                <span>💰 <strong>Nominal:</strong> ${rupiah(item.nominal)}</span>
-                <span>📅 <strong>Jatuh Tempo:</strong> ${formatDueDate(item.dueDate)}</span>
-                <span>🕒 <strong>Submisi Pembayaran:</strong> ${formatPaidAt(item.paidAt)}</span>
+            <div class="history-card__row">
+                <span class="history-card__label">📅 Jatuh Tempo</span>
+                <span class="history-card__value">${formatDueDate(item.dueDate)}</span>
+            </div>
+            <div class="history-card__row">
+                <span class="history-card__label">🕒 Dibayar Pada</span>
+                <span class="history-card__value">${formatPaidAt(item.paidAt)}</span>
             </div>
         </div>
       `;
