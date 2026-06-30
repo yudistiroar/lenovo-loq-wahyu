@@ -893,4 +893,87 @@ button:active,
     background-color: #a2a2a2 !important;
     opacity: 0.6;
     cursor: not-allowed !important;
+  }/* ==========================================
+   STYLE MODERN: SECTION RIWAYAT PEMBAYARAN
+   ========================================== */
+
+.history-section {
+    margin-top: 40px;
+    padding: 20px 0;
+  }
+  
+  .history-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px; /* Gap yang nyaman antar kartu riwayat */
+    margin-top: 20px;
+    width: 100%;
+  }
+  
+  .history-empty {
+    background-color: #f4f4f4;
+    color: #666;
+    padding: 16px;
+    border-radius: 12px;
+    text-align: center;
+    font-size: 0.95rem;
+    font-weight: 500;
+    border: 1px dashed #ccc;
+  }
+  
+  /* Komponen Utama Kartu Riwayat */
+  .history-card {
+    display: flex;
+    flex-direction: column; /* Mengatur susunan vertikal */
+    align-items: flex-start; /* Alur rata kiri murni */
+    gap: 12px; /* Gap internal yang nyaman */
+    background-color: #ffffff;
+    border: 1px solid #e3e3e3;
+    border-radius: 12px;
+    padding: 18px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+    box-sizing: border-box;
+    width: 100%;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  
+  .history-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
+  }
+  
+  .history-card__info {
+    width: 100%;
+  }
+  
+  /* Judul Nomor Cicilan */
+  .history-card__header h4 {
+    margin: 0 0 10px 0;
+    font-size: 1.1rem;
+    color: #30a46c; /* Warna hijau indikator sukses lunasi */
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+  }
+  
+  /* Pembungkus Metadata Setiap Baris Terpisah */
+  .history-card__meta {
+    display: flex;
+    flex-direction: column; /* Menolak sebaris, memaksa baris terpisah */
+    gap: 8px; /* Jarak renggang antar poin informasi */
+    width: 100%;
+  }
+  
+  /* Styling Poin Informasi Metadata */
+  .history-card__meta span {
+    font-size: 0.95rem;
+    color: #444;
+    line-height: 1.4;
+  }
+  
+  /* Memberi penekanan visual tebal pada nominal uang */
+  .history-card__meta span:first-of-type {
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: #1a1a1a;
   }
