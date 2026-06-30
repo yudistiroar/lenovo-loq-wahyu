@@ -219,7 +219,7 @@ const galleryImages = [
       const card = document.createElement("div");
       card.className = "history-card";
   
-      // UPGRADE UI RIWAYAT: Pemisahan komprehensif nominal, dueDate, dan paidAt
+      // PERBAIKAN REGRESI: Memanfaatkan formatDueDate() dan formatPaidAt() secara optimal
       card.innerHTML = `
         <div class="history-card__info">
             <div class="history-card__header">
@@ -228,7 +228,7 @@ const galleryImages = [
             <div class="history-card__meta" style="display: flex; flex-direction: column; gap: 2px; margin-top: 6px; color: #555;">
                 <span>💰 <strong>Nominal:</strong> ${rupiah(item.nominal)}</span>
                 <span>📅 <strong>Jatuh Tempo:</strong> ${formatDueDate(item.dueDate)}</span>
-                <span>🕒 <strong>Dibayar Pada:</strong> ${formatPaidAt(item.paidAt)}</span>
+                <span>🕒 <strong>Submisi Pembayaran:</strong> ${formatPaidAt(item.paidAt)}</span>
             </div>
         </div>
       `;
