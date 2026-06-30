@@ -9,6 +9,14 @@ const galleryImages = [
     {
         src: "Images/Foto2.jpeg",
         alt: "Lenovo LOQ Wahyu - Foto 2"
+    },
+    {
+        src: "Images/Foto3.jpeg",
+        alt: "Lenovo LOQ Wahyu - Foto 3"
+    },
+    {
+        src: "Images/Foto4.jpeg",
+        alt: "Lenovo LOQ Wahyu - Foto 4"
     }
 ];
 
@@ -53,7 +61,7 @@ const DOM = {
   progressBar: document.getElementById("progressBar"),
   progressPercentage: document.getElementById("progressPercentage"),
   daftarCicilan: document.getElementById("daftarCicilan"),
-  photoGallery: document.getElementById("photoGallery"), // Cache elemen galeri baru
+  photoGallery: document.getElementById("photoGallery"),
   
   // Confirm Modal
   confirmModal: document.getElementById("confirmModal"),
@@ -98,6 +106,7 @@ function formatRupiahLive(value) {
   return rupiah ? "Rp " + rupiah : "";
 }
 
+// Fungsi mengambil nilai angka murni dari string berformat rupiah
 function getRawValue(formattedValue) {
   return Number(formattedValue.replace(/[^0-9]/g, ""));
 }
@@ -184,6 +193,7 @@ function payInstallment(index, nominal) {
   }
 }
 
+// Validasi Realtime & Manajemen State Tombol Simpan
 function validateRealtime() {
   if (pendingPayIndex === null) return;
   
@@ -340,16 +350,15 @@ function renderInstallmentList(nextUnpaid) {
   return totalBayar;
 }
 
-// FUNGSI BARU: Render Galeri Foto Secara Dinamis
 function renderGallery() {
   if (!DOM.photoGallery) return;
-  DOM.photoGallery.innerHTML = ""; // Mengosongkan isi galeri
+  DOM.photoGallery.innerHTML = "";
 
   galleryImages.forEach((imgData) => {
     const imgEl = document.createElement("img");
     imgEl.src = imgData.src;
     imgEl.alt = imgData.alt;
-    imgEl.loading = "lazy"; // Optimasi performa halaman
+    imgEl.loading = "lazy";
 
     DOM.photoGallery.appendChild(imgEl);
   });
@@ -498,4 +507,4 @@ document.addEventListener("keydown", (e) => {
 // INISIALISASI RUNTIME UTAMA
 // ==========================================
 render();
-renderGallery(); // Menjalankan fungsi render galeri pertama kali saat aplikasi dibuka
+renderGallery();
