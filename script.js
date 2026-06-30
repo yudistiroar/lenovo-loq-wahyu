@@ -74,7 +74,7 @@ const galleryImages = [
   };
   
   // ==========================================
-  // UTILITAS & PARSING LOGIC
+  // HELPER FUNCTIONS & FORMATTING LOGIC
   // ==========================================
   function rupiah(n) {
     return "Rp " + n.toLocaleString("id-ID");
@@ -111,6 +111,30 @@ const galleryImages = [
     return x;
   }
   
+  // 1. Helper untuk format tanggal Jatuh Tempo (dueDate)
+  function formatDueDate(dueDateStr) {
+    return dueDateStr; // Mengembalikan string "1 November 2026" dari data array asli
+  }
+  
+  // 2. Helper untuk parsing ISO string paidAt ke format lokalisasi Bahasa Indonesia
+  function formatPaidAt(isoString) {
+    if (!isoString) return "—";
+    const dateObj = new Date(isoString);
+    
+    // Format Tanggal: 30 Oktober 2026
+    const dateStr = dateObj.toLocaleDateString("id-ID", {
+      day: "numeric",
+      month: "long",
+      year: "numeric"
+    });
+  
+    // Format Jam: 19:42
+    const jam = String(dateObj.getHours()).padStart(2, '0');
+    const menit = String(dateObj.getMinutes()).padStart(2, '0');
+    
+    return `${dateStr} • ${jam}:${menit} WIB`;
+  }
+  
   function getNextUnpaidIndex() {
     for (let i = 0; i < cicilan.length; i++) {
       if (pembayaran[i] < cicilan[i]) return i;
@@ -143,7 +167,6 @@ const galleryImages = [
   // MODUL ARSITEKTUR RIWAYAT PEMBAYARAN
   // ==========================================
   function loadHistory() {
-    // Proteksi kerusakan data localStorage via try-catch
     try {
       const storedHistory = localStorage.getItem("loq_wahyu_history");
       riwayat = storedHistory ? JSON.parse(storedHistory) : [];
@@ -158,25 +181,18 @@ const galleryImages = [
   }
   
   function addHistory(index, nominal) {
-    const sekarang = new Date();
-    const namaBulan = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
-    
-    const dateStr = `${sekarang.getDate()} ${namaBulan[sekarang.getMonth()]} ${sekarang.getFullYear()}`;
-    const jam = String(sekarang.getHours()).padStart(2, '0');
-    const menit = String(sekarang.getMinutes()).padStart(2, '0');
-    const timeStr = `${jam}:${menit} WIB`;
-  
-    // Struktur Extensible Baru Siap Dikembangkan
+    // PENGEMBANGAN STRUKTUR DATA: Menggunakan ISO String untuk stabilitas waktu riwayat
     const itemRiwayat = {
       installment: index + 1,
       nominal: nominal,
-      paidAt: `${dateStr} ${timeStr}`,
+      dueDate: tanggal[index],          // Diambil dari master array jadwal cicilan
+      paidAt: new Date().toISOString(), // Waktu aktual saat tombol simpan diklik
       method: "",
       note: "",
       receipt: ""
     };
   
-    removeHistory(index); // Bersihkan riwayat lama tanpa memicu render prematur
+    removeHistory(index); 
     riwayat.push(itemRiwayat);
     riwayat.sort((a, b) => a.installment - b.installment);
     saveHistory();
@@ -187,7 +203,6 @@ const galleryImages = [
     saveHistory();
   }
   
-  // Hanya bertugas menyusun struktur data HTML, penataan gaya diserahkan penuh ke CSS
   function renderHistory() {
     if (!DOM.riwayatPembayaran) return;
     DOM.riwayatPembayaran.innerHTML = "";
@@ -204,17 +219,17 @@ const galleryImages = [
       const card = document.createElement("div");
       card.className = "history-card";
   
+      // UPGRADE UI RIWAYAT: Pemisahan komprehensif nominal, dueDate, dan paidAt
       card.innerHTML = `
         <div class="history-card__info">
             <div class="history-card__header">
                 <h4>✓ Cicilan ${item.installment}</h4>
             </div>
-            <div class="history-card__meta">
-                <span>📅 ${item.paidAt}</span>
+            <div class="history-card__meta" style="display: flex; flex-direction: column; gap: 2px; margin-top: 6px; color: #555;">
+                <span>💰 <strong>Nominal:</strong> ${rupiah(item.nominal)}</span>
+                <span>📅 <strong>Jatuh Tempo:</strong> ${formatDueDate(item.dueDate)}</span>
+                <span>🕒 <strong>Dibayar Pada:</strong> ${formatPaidAt(item.paidAt)}</span>
             </div>
-        </div>
-        <div class="history-card__amount">
-            ${rupiah(item.nominal)}
         </div>
       `;
       DOM.riwayatPembayaran.appendChild(card);
@@ -244,7 +259,7 @@ const galleryImages = [
       pembayaran[index] = 0;
       savePayment();
       removeHistory(index);
-      render(); // Mengikuti alur tunggal, render dipanggil sekali di akhir
+      render(); 
     }
   }
   
@@ -255,7 +270,7 @@ const galleryImages = [
     pembayaran[index] = nominal;
     savePayment();
     addHistory(index, nominal);
-    render(); // Mengikuti alur tunggal, render dipanggil sekali di akhir
+    render(); 
   
     if (pembayaran[index] >= cicilan[index]) {
       showSuccessFeedback(index);
@@ -288,7 +303,7 @@ const galleryImages = [
   // ==========================================
   function openAmountModal(index) {
     if (!DOM.amountModal) return;
-    DOM.amountModal.style.display = "flex"; // Hanya untuk show/hide modal
+    DOM.amountModal.style.display = "flex"; 
     DOM.amountModalTitle.textContent = "Masukkan Nominal Cicilan " + (index + 1);
     DOM.amountModalTarget.textContent = "Target bulanan: " + rupiah(cicilan[index]);
     
@@ -316,11 +331,12 @@ const galleryImages = [
     DOM.confirmModal.setAttribute("aria-hidden", "true");
   }
   
+  // Mengambil nilai angka murni string rupiah sebelum eksekusi pembayaran
   function processAmountSubmit() {
     if (pendingPayIndex === null || DOM.amountModalSubmit.disabled) return;
     
     const rawNominal = getRawValue(DOM.amountModalInput.value);
-    DOM.amountModal.style.display = "none"; // Hanya untuk show/hide modal
+    DOM.amountModal.style.display = "none"; 
     payInstallment(pendingPayIndex, rawNominal);
     pendingPayIndex = null;
   }
@@ -436,14 +452,13 @@ const galleryImages = [
     });
   }
   
-  // ENTRY POINT TUNGGAL: Mengontrol pembaharuan seluruh UI dalam satu siklus teratur
   function render() {
     const nextUnpaid = getNextUnpaidIndex();
     const totalBayar = renderInstallmentList(nextUnpaid);
     renderSummary(totalBayar);
     renderProgress();
     renderDateBar(nextUnpaid);
-    renderHistory(); // Pembaruan komponen riwayat disatukan di sini
+    renderHistory(); 
   }
   
   // ==========================================
@@ -575,7 +590,7 @@ const galleryImages = [
   });
   
   // ==========================================
-  // INITIALIZE RUNTIME (Siklus Awal Aplikasi)
+  // INITIALIZE RUNTIME
   // ==========================================
   function initialize() {
     loadHistory();
