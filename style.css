@@ -829,7 +829,7 @@ button:active,
         }
     
     }
-    
+
 /* Styling Tambahan Modal Input Nominal Custom */
 .modal-input {
     width: 100%;
@@ -848,3 +848,9 @@ button:active,
   .modal-input:focus {
     border-color: #0071e3;
   }    
+  /* Styling UX Modern Modal */
+#amountModalSubmit:disabled {
+    background-color: #a2a2a2 !important;
+    opacity: 0.6;
+    cursor: not-allowed !important;
+  }

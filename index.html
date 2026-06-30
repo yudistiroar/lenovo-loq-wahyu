@@ -134,10 +134,14 @@
     <div style="background: #ffffff; padding: 24px; border-radius: 12px; max-width: 400px; width: 90%; box-shadow: 0 4px 12px rgba(0,0,0,0.25); box-sizing: border-box;">
         <h3 id="amountModalTitle" style="margin-top: 0; margin-bottom: 10px; color: #333;">Input Nominal</h3>
         <p id="amountModalTarget" class="modal-message" style="margin-bottom: 15px; color: #666; font-size: 0.9rem;"></p>
-        <input type="number" id="amountModalInput" class="modal-input" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; margin-bottom: 20px;" />
+        
+        <input type="text" id="amountModalInput" class="modal-input" style="width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; font-size: 1.1rem; font-weight: 600;" />
+        
+        <p id="amountModalError" style="color: #ff375f; font-size: 0.85rem; margin-top: -15px; margin-bottom: 20px; min-height: 1.2rem; display: none; font-weight: 500;"></p>
+        
         <div class="modal-actions" style="display: flex; justify-content: flex-end; gap: 12px;">
             <button type="button" id="amountModalCancel" class="btn-modal btn-modal--cancel">Batal</button>
-            <button type="button" id="amountModalSubmit" class="btn-modal btn-modal--confirm" style="background-color: #30a46c; color: white; border: none; cursor: pointer;">Simpan</button>
+            <button type="button" id="amountModalSubmit" class="btn-modal btn-modal--confirm" style="background-color: #30a46c; color: white; border: none; cursor: pointer; transition: opacity 0.2s;">Simpan</button>
         </div>
     </div>
 </div>

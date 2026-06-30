@@ -51,6 +51,7 @@ const cicilan = [
     amountModalTitle: document.getElementById("amountModalTitle"),
     amountModalTarget: document.getElementById("amountModalTarget"),
     amountModalInput: document.getElementById("amountModalInput"),
+    amountModalError: document.getElementById("amountModalError"), // Cache tempat error
     amountModalCancel: document.getElementById("amountModalCancel"),
     amountModalSubmit: document.getElementById("amountModalSubmit"),
     
@@ -64,6 +65,28 @@ const cicilan = [
   // ==========================================
   function rupiah(n) {
     return "Rp " + n.toLocaleString("id-ID");
+  }
+  
+  // Fungsi memformat input string mentah menjadi format rupiah secara realtime
+  function formatRupiahLive(value) {
+    const numberString = value.replace(/[^,\d]/g, "").toString();
+    const split = numberString.split(",");
+    const sisa = split[0].length % 3;
+    let rupiah = split[0].substr(0, sisa);
+    const ribuan = split[0].substr(sisa).match(/\d{3}/gi);
+  
+    if (ribuan) {
+      const separator = sisa ? "." : "";
+      rupiah += separator + ribuan.join(".");
+    }
+  
+    rupiah = split[1] !== undefined ? rupiah + "," + split[1] : rupiah;
+    return rupiah ? "Rp " + rupiah : "";
+  }
+  
+  // Fungsi mengambil nilai angka murni dari string berformat rupiah
+  function getRawValue(formattedValue) {
+    return Number(formattedValue.replace(/[^0-9]/g, ""));
   }
   
   function parseTanggal(str) {
@@ -110,14 +133,12 @@ const cicilan = [
   // ==========================================
   function validatePayment(nominal, index) {
     if (isNaN(nominal) || nominal <= 0) {
-      alert("Masukkan nominal angka yang valid.");
-      return false;
+      return { valid: false, message: "Masukkan nominal angka yang valid." };
     }
     if (nominal < cicilan[index]) {
-      alert("Gagal: Nominal pembayaran tidak boleh kurang dari target cicilan yaitu " + rupiah(cicilan[index]));
-      return false;
+      return { valid: false, message: "Minimal pembayaran adalah " + rupiah(cicilan[index]) };
     }
-    return true;
+    return { valid: true, message: "" };
   }
   
   function savePayment() {
@@ -134,7 +155,8 @@ const cicilan = [
   }
   
   function payInstallment(index, nominal) {
-    if (!validatePayment(nominal, index)) return;
+    const check = validatePayment(nominal, index);
+    if (!check.valid) return;
   
     pembayaran[index] = nominal;
     savePayment();
@@ -149,6 +171,24 @@ const cicilan = [
     }
   }
   
+  // Validasi Realtime & Manajemen State Tombol Simpan (Menggantikan alert)
+  function validateRealtime() {
+    if (pendingPayIndex === null) return;
+    
+    const rawNominal = getRawValue(DOM.amountModalInput.value);
+    const check = validatePayment(rawNominal, pendingPayIndex);
+  
+    if (check.valid) {
+      DOM.amountModalSubmit.disabled = false;
+      DOM.amountModalError.style.display = "none";
+      DOM.amountModalError.textContent = "";
+    } else {
+      DOM.amountModalSubmit.disabled = true;
+      DOM.amountModalError.textContent = check.message;
+      DOM.amountModalError.style.display = "block";
+    }
+  }
+  
   // ==========================================
   // MODAL INTERACTION LOGIC
   // ==========================================
@@ -156,10 +196,19 @@ const cicilan = [
     if (!DOM.amountModal) return;
     DOM.amountModal.style.display = "flex";
     DOM.amountModalTitle.textContent = "Masukkan Nominal Cicilan " + (index + 1);
-    DOM.amountModalTarget.textContent = "Minimal target bulanan: " + rupiah(cicilan[index]);
-    DOM.amountModalInput.value = cicilan[index];
-    DOM.amountModalInput.focus();
-    DOM.amountModalInput.select();
+    DOM.amountModalTarget.textContent = "Target bulanan: " + rupiah(cicilan[index]);
+    
+    // Set nilai default dan langsung di-format rupiah live
+    DOM.amountModalInput.value = formatRupiahLive(cicilan[index].toString());
+    
+    // Jalankan pengecekan validasi awal saat modal baru terbuka
+    validateRealtime();
+    
+    // Auto-Focus & Auto-Selection teks di dalam input
+    setTimeout(() => {
+      DOM.amountModalInput.focus();
+      DOM.amountModalInput.select();
+    }, 50);
   }
   
   function handlePayClick(index) {
@@ -171,18 +220,26 @@ const cicilan = [
     DOM.confirmOk.focus();
   }
   
-  // FIX 1: Fungsi ini sekarang murni hanya menutup modal konfirmasi tanpa merusak state index
   function closeConfirmModal() {
     if (!DOM.confirmModal) return;
     DOM.confirmModal.hidden = true;
     DOM.confirmModal.setAttribute("aria-hidden", "true");
   }
   
+  function processAmountSubmit() {
+    if (pendingPayIndex === null || DOM.amountModalSubmit.disabled) return;
+    
+    const rawNominal = getRawValue(DOM.amountModalInput.value);
+    DOM.amountModal.style.display = "none";
+    payInstallment(pendingPayIndex, rawNominal);
+    pendingPayIndex = null;
+  }
+  
   function executePayment() {
     if (pendingPayIndex === null) return;
     const index = pendingPayIndex;
     closeConfirmModal();
-    openAmountModal(index); // Index dikirim dengan aman ke modal nominal angka
+    openAmountModal(index);
   }
   
   // ==========================================
@@ -212,6 +269,7 @@ const cicilan = [
     }
   }
   
+  // Menggunakan reduce() otomatis sesuai kebutuhan refactor sebelumnya
   function renderSummary(totalBayar) {
     if (DOM.sudahBayar) DOM.sudahBayar.innerHTML = rupiah(totalBayar);
     if (DOM.sisaHutang) DOM.sisaHutang.innerHTML = rupiah(TOTAL_HARGA - totalBayar);
@@ -342,10 +400,9 @@ const cicilan = [
   }
   
   // ==========================================
-  // CLEAN CENTRALIZED EVENT LISTENERS
+  // CENTRALIZED EVENT LISTENERS
   // ==========================================
   
-  // 1. Event Delegation untuk list kartu cicilan
   if (DOM.daftarCicilan) {
     DOM.daftarCicilan.addEventListener("click", (e) => {
       const button = e.target.closest(".btn-pay");
@@ -363,11 +420,11 @@ const cicilan = [
     });
   }
   
-  // 2. Confirm Modal Listeners
+  // Confirm Modal Listeners
   if (DOM.confirmCancel) {
     DOM.confirmCancel.addEventListener("click", () => {
       closeConfirmModal();
-      pendingPayIndex = null; // FIX 2: Bersihkan saat batal di modal konfirmasi
+      pendingPayIndex = null;
     });
   }
   if (DOM.confirmOk) DOM.confirmOk.addEventListener("click", executePayment);
@@ -376,34 +433,44 @@ const cicilan = [
     if (backdrop) {
       backdrop.addEventListener("click", () => {
         closeConfirmModal();
-        pendingPayIndex = null; // FIX 3: Bersihkan saat klik luar modal konfirmasi
+        pendingPayIndex = null;
       });
     }
   }
   
-  // 3. Amount Modal Listeners
-  if (DOM.amountModalCancel) {
-    DOM.amountModalCancel.addEventListener("click", () => {
-      DOM.amountModal.style.display = "none";
-      pendingPayIndex = null; // FIX 4: Bersihkan saat batal di modal nominal angka
+  // Amount Modal UX Realtime Listeners
+  if (DOM.amountModalInput) {
+    // Format mata uang realtime & validasi on-the-fly ketika mengetik
+    DOM.amountModalInput.addEventListener("input", (e) => {
+      e.target.value = formatRupiahLive(e.target.value);
+      validateRealtime();
     });
-  }
-  if (DOM.amountModalSubmit) {
-    DOM.amountModalSubmit.addEventListener("click", () => {
-      if (pendingPayIndex === null) return;
-      const nominal = Number(DOM.amountModalInput.value);
-      DOM.amountModal.style.display = "none";
-      payInstallment(pendingPayIndex, nominal);
-      pendingPayIndex = null; // FIX 5: Bersihkan state setelah proses simpan berhasil selesai
+  
+    // Dukungan tombol ENTER keyboard untuk menyimpan pembayaran otomatis jika valid
+    DOM.amountModalInput.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        processAmountSubmit();
+      }
     });
   }
   
-  // 4. Global Keyboard Listeners
+  if (DOM.amountModalCancel) {
+    DOM.amountModalCancel.addEventListener("click", () => {
+      DOM.amountModal.style.display = "none";
+      pendingPayIndex = null;
+    });
+  }
+  
+  if (DOM.amountModalSubmit) {
+    DOM.amountModalSubmit.addEventListener("click", processAmountSubmit);
+  }
+  
+  // Global Keyboard Listeners
   document.addEventListener("keydown", (e) => {
     if (e.key === "Escape") {
       closeConfirmModal();
       if (DOM.amountModal) DOM.amountModal.style.display = "none";
-      pendingPayIndex = null; // FIX 6: Bersihkan state saat menekan tombol Escape
+      pendingPayIndex = null;
     }
   });
   
