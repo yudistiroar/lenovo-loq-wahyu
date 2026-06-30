@@ -829,3 +829,22 @@ button:active,
         }
     
     }
+    
+/* Styling Tambahan Modal Input Nominal Custom */
+.modal-input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    margin-top: 10px;
+    margin-bottom: 20px;
+    font-size: 1rem;
+    font-family: 'Inter', sans-serif;
+    box-sizing: border-box;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  
+  .modal-input:focus {
+    border-color: #0071e3;
+  }    

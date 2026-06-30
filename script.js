@@ -6,28 +6,14 @@ const cicilan = [
   ];
   
   const tanggal = [
-    "1 Juli 2026",
-    "1 Agustus 2026",
-    "1 September 2026",
-    "1 Oktober 2026",
-    "1 November 2026",
-    "1 Desember 2026",
-    "1 Januari 2027",
-    "1 Februari 2027",
-    "1 Maret 2027",
-    "1 April 2027",
-    "1 Mei 2027",
-    "1 Juni 2027",
-    "1 Juli 2027",
-    "1 Agustus 2027",
-    "1 September 2027",
-    "1 Oktober 2027"
+    "1 Juli 2026", "1 Agustus 2026", "1 September 2026", "1 Oktober 2026",
+    "1 November 2026", "1 Desember 2026", "1 Januari 2027", "1 Februari 2027",
+    "1 Maret 2027", "1 April 2027", "1 Mei 2027", "1 Juni 2027",
+    "1 Juli 2027", "1 Agustus 2027", "1 September 2027", "1 Oktober 2027"
   ];
   
-  // Menghitung TOTAL_HARGA secara otomatis menggunakan reduce()
   const TOTAL_HARGA = cicilan.reduce((acc, curr) => acc + curr, 0);
   
-  // Model data nominal pembayaran
   let pembayaran = JSON.parse(localStorage.getItem("loq_wahyu"));
   if (!Array.isArray(pembayaran) || pembayaran.length !== cicilan.length) {
     pembayaran = new Array(cicilan.length).fill(0);
@@ -42,9 +28,40 @@ const cicilan = [
   };
   
   // ==========================================
-  // FUNGSI UTILITAS & PARSING
+  // CACHE DOM ELEMENTS
   // ==========================================
+  const DOM = {
+    todayDate: document.getElementById("todayDate"),
+    countdownText: document.getElementById("countdownText"),
+    sudahBayar: document.getElementById("sudahBayar"),
+    sisaHutang: document.getElementById("sisaHutang"),
+    progressText: document.getElementById("progressText"),
+    progressBar: document.getElementById("progressBar"),
+    progressPercentage: document.getElementById("progressPercentage"),
+    daftarCicilan: document.getElementById("daftarCicilan"),
+    
+    // Confirm Modal
+    confirmModal: document.getElementById("confirmModal"),
+    confirmMessage: document.getElementById("confirmMessage"),
+    confirmOk: document.getElementById("confirmOk"),
+    confirmCancel: document.getElementById("confirmCancel"),
+    
+    // Amount Modal
+    amountModal: document.getElementById("amountModal"),
+    amountModalTitle: document.getElementById("amountModalTitle"),
+    amountModalTarget: document.getElementById("amountModalTarget"),
+    amountModalInput: document.getElementById("amountModalInput"),
+    amountModalCancel: document.getElementById("amountModalCancel"),
+    amountModalSubmit: document.getElementById("amountModalSubmit"),
+    
+    // Toast
+    successToast: document.getElementById("successToast"),
+    successToastText: document.getElementById("successToastText")
+  };
   
+  // ==========================================
+  // UTILITAS & PARSING LOGIC
+  // ==========================================
   function rupiah(n) {
     return "Rp " + n.toLocaleString("id-ID");
   }
@@ -62,9 +79,7 @@ const cicilan = [
   
   function getNextUnpaidIndex() {
     for (let i = 0; i < cicilan.length; i++) {
-      if (pembayaran[i] < cicilan[i]) {
-        return i;
-      }
+      if (pembayaran[i] < cicilan[i]) return i;
     }
     return -1;
   }
@@ -91,9 +106,8 @@ const cicilan = [
   }
   
   // ==========================================
-  // FUNGSI LOGIKA BISNIS & TANGGUNG JAWAB TUNGGAL
+  // BUSINESS & STATE LOGIC
   // ==========================================
-  
   function validatePayment(nominal, index) {
     if (isNaN(nominal) || nominal <= 0) {
       alert("Masukkan nominal angka yang valid.");
@@ -130,163 +144,94 @@ const cicilan = [
       showSuccessFeedback(index);
     }
   
-    const semuaLunas = pembayaran.every((nom, idx) => nom >= cicilan[idx]);
-    if (semuaLunas) {
+    if (pembayaran.every((nom, idx) => nom >= cicilan[idx])) {
       launchConfetti();
     }
   }
   
-  // Menggantikan fungsi toggle lama
-  function toggle(index) {
-    const sudah = pembayaran[index] >= cicilan[index];
-    if (sudah) {
-      cancelInstallment(index);
-    }
-  }
-  
   // ==========================================
-  // MANAJEMEN MODAL INPUT NOMINAL (PENGGANTI PROMPT)
+  // MODAL INTERACTION LOGIC
   // ==========================================
-  
   function openAmountModal(index) {
-    let amountModal = document.getElementById("amountModal");
-    if (!amountModal) {
-      amountModal = document.createElement("div");
-      amountModal.id = "amountModal";
-      amountModal.className = "modal"; 
-      amountModal.style.position = "fixed";
-      amountModal.style.zIndex = "1000";
-      amountModal.style.left = "0";
-      amountModal.style.top = "0";
-      amountModal.style.width = "100%";
-      amountModal.style.height = "100%";
-      amountModal.style.backgroundColor = "rgba(0,0,0,0.5)";
-      amountModal.style.display = "flex";
-      amountModal.style.alignItems = "center";
-      amountModal.style.justifyContent = "center";
-      
-      amountModal.innerHTML = `
-        <div class="modal-content" style="background:#fff; padding:24px; border-radius:12px; width:90%; max-width:400px; box-shadow:0 4px 12px rgba(0,0,0,0.15);">
-          <h3 id="amountModalTitle" style="margin-top:0; margin-bottom:12px; font-size:1.2rem;">Input Nominal</h3>
-          <p id="amountModalTarget" style="margin-bottom:16px; color:#666; font-size:0.9rem;"></p>
-          <input type="number" id="amountModalInput" style="width:100%; padding:10px; border:1px solid #ccc; border-radius:6px; margin-bottom:20px; font-size:1rem; box-sizing:border-box;" />
-          <div style="display:flex; justify-content:flex-end; gap:12px;">
-            <button id="amountModalCancel" class="btn-pay btn-pay--cancel" style="padding:8px 16px;">Batal</button>
-            <button id="amountModalSubmit" class="btn-pay" style="padding:8px 16px; background:#30a46c; color:#fff; border:none;">Simpan</button>
-          </div>
-        </div>
-      `;
-      document.body.appendChild(amountModal);
-    }
-  
-    amountModal.style.display = "flex";
-    
-    const titleEl = document.getElementById("amountModalTitle");
-    const targetEl = document.getElementById("amountModalTarget");
-    const inputEl = document.getElementById("amountModalInput");
-    
-    titleEl.textContent = "Masukkan Nominal Cicilan " + (index + 1);
-    targetEl.textContent = "Minimal target bulanan: " + rupiah(cicilan[index]);
-    inputEl.value = cicilan[index];
-    inputEl.focus();
-    inputEl.select();
-  
-    document.getElementById("amountModalCancel").onclick = function() {
-      amountModal.style.display = "none";
-    };
-  
-    document.getElementById("amountModalSubmit").onclick = function() {
-      const nominal = Number(inputEl.value);
-      amountModal.style.display = "none";
-      payInstallment(index, nominal);
-    };
+    if (!DOM.amountModal) return;
+    DOM.amountModal.style.display = "flex";
+    DOM.amountModalTitle.textContent = "Masukkan Nominal Cicilan " + (index + 1);
+    DOM.amountModalTarget.textContent = "Minimal target bulanan: " + rupiah(cicilan[index]);
+    DOM.amountModalInput.value = cicilan[index];
+    DOM.amountModalInput.focus();
+    DOM.amountModalInput.select();
   }
   
   function handlePayClick(index) {
     pendingPayIndex = index;
-    document.getElementById("confirmMessage").textContent =
-      "Apakah Anda yakin ingin membayar Cicilan " + (index + 1) + " (" + tanggal[index] + ")?";
-    const modal = document.getElementById("confirmModal");
-    modal.hidden = false;
-    modal.setAttribute("aria-hidden", "false");
-    document.getElementById("confirmOk").focus();
+    if (!DOM.confirmMessage || !DOM.confirmModal) return;
+    DOM.confirmMessage.textContent = "Apakah Anda yakin ingin membayar Cicilan " + (index + 1) + " (" + tanggal[index] + ")?";
+    DOM.confirmModal.hidden = false;
+    DOM.confirmModal.setAttribute("aria-hidden", "false");
+    DOM.confirmOk.focus();
   }
   
   function closeConfirmModal() {
     pendingPayIndex = null;
-    const modal = document.getElementById("confirmModal");
-    modal.hidden = true;
-    modal.setAttribute("aria-hidden", "true");
+    if (!DOM.confirmModal) return;
+    DOM.confirmModal.hidden = true;
+    DOM.confirmModal.setAttribute("aria-hidden", "true");
   }
   
   function executePayment() {
     if (pendingPayIndex === null) return;
     const index = pendingPayIndex;
-    
     closeConfirmModal();
     openAmountModal(index);
   }
   
   // ==========================================
-  // SUB-RENDER FUNCTIONS (DIDEFINISIKAN SEBELUM DIJALANKAN)
+  // SUB-RENDER MODULAR FUNCTIONS
   // ==========================================
+  function renderDateBar(nextIdx) {
+    if (!DOM.todayDate || !DOM.countdownText) return;
   
-  function renderDateBar() {
-    const todayEl = document.getElementById("todayDate");
-    const countdownEl = document.getElementById("countdownText");
-  
-    if (!todayEl || !countdownEl) return;
-  
-    todayEl.textContent = new Date().toLocaleDateString("id-ID", {
+    DOM.todayDate.textContent = new Date().toLocaleDateString("id-ID", {
       weekday: "long", day: "numeric", month: "long", year: "numeric"
     });
   
-    const nextIdx = getNextUnpaidIndex();
-    countdownEl.classList.remove("ux-bar-value--overdue", "ux-bar-value--today", "ux-bar-value--complete");
+    DOM.countdownText.classList.remove("ux-bar-value--overdue", "ux-bar-value--today", "ux-bar-value--complete");
   
     if (nextIdx === -1) {
-      countdownEl.textContent = "Semua cicilan lunas";
-      countdownEl.classList.add("ux-bar-value--complete");
+      DOM.countdownText.textContent = "Semua cicilan lunas";
+      DOM.countdownText.classList.add("ux-bar-value--complete");
       return;
     }
   
-    countdownEl.textContent = getCountdownText(nextIdx) + " · " + tanggal[nextIdx];
+    DOM.countdownText.textContent = getCountdownText(nextIdx) + " · " + tanggal[nextIdx];
   
     if (isOverdue(nextIdx)) {
-      countdownEl.classList.add("ux-bar-value--overdue");
+      DOM.countdownText.classList.add("ux-bar-value--overdue");
     } else if (startOfDay(parseTanggal(tanggal[nextIdx])).getTime() === startOfDay(new Date()).getTime()) {
-      countdownEl.classList.add("ux-bar-value--today");
+      DOM.countdownText.classList.add("ux-bar-value--today");
     }
   }
   
   function renderSummary(totalBayar) {
-    const sudahBayarEl = document.getElementById("sudahBayar");
-    const sisaHutangEl = document.getElementById("sisaHutang");
-    
-    if (sudahBayarEl) sudahBayarEl.innerHTML = rupiah(totalBayar);
-    if (sisaHutangEl) sisaHutangEl.innerHTML = rupiah(TOTAL_HARGA - totalBayar);
+    if (DOM.sudahBayar) DOM.sudahBayar.innerHTML = rupiah(totalBayar);
+    if (DOM.sisaHutang) DOM.sisaHutang.innerHTML = rupiah(TOTAL_HARGA - totalBayar);
   }
   
   function renderProgress() {
-    const progressTextEl = document.getElementById("progressText");
-    const progressBarEl = document.getElementById("progressBar");
-    const progressPercentageEl = document.getElementById("progressPercentage");
-  
+    if (!DOM.progressText || !DOM.progressBar || !DOM.progressPercentage) return;
+    
     const cicilanLunas = pembayaran.filter((nominal, idx) => nominal >= cicilan[idx]).length;
     const totalCicilan = cicilan.length;
-    
-    if (progressTextEl) progressTextEl.innerHTML = cicilanLunas + " / " + totalCicilan + " Cicilan";
+    DOM.progressText.innerHTML = `${cicilanLunas} / ${totalCicilan} Cicilan`;
   
     const progressPct = (cicilanLunas / totalCicilan) * 100;
-    if (progressBarEl) progressBarEl.style.width = progressPct + "%";
-    if (progressPercentageEl) progressPercentageEl.textContent = Math.round(progressPct) + "%";
+    DOM.progressBar.style.width = progressPct + "%";
+    DOM.progressPercentage.textContent = Math.round(progressPct) + "%";
   }
   
   function renderInstallmentList(nextUnpaid) {
-    const daftar = document.getElementById("daftarCicilan");
-    if (!daftar) return 0;
-    
-    daftar.innerHTML = "";
+    if (!DOM.daftarCicilan) return 0;
+    DOM.daftarCicilan.innerHTML = "";
     let totalBayar = 0;
   
     tanggal.forEach((tgl, index) => {
@@ -299,16 +244,15 @@ const cicilan = [
   
       const card = document.createElement("div");
       card.className = sudah ? "cicilan cicilan--paid" : "cicilan cicilan--pending";
-  
       if (isNext) card.classList.add("cicilan--next");
       if (overdue) card.classList.add("cicilan--overdue");
+      
       card.dataset.index = index;
+      card.dataset.status = sudah ? "paid" : "pending";
   
       let badges = `<span class="status-badge ${sudah ? "status-badge--paid" : "status-badge--pending"}">${sudah ? "Sudah Dibayar" : "Belum Dibayar"}</span>`;
       if (overdue) badges += `<span class="status-badge status-badge--overdue">Terlambat</span>`;
       if (isNext) badges += `<span class="status-badge status-badge--next">Berikutnya</span>`;
-  
-      const payAction = sudah ? `toggle(${index})` : `handlePayClick(${index})`;
   
       card.innerHTML = `
         <div class="info">
@@ -322,68 +266,52 @@ const cicilan = [
                 <span class="meta-item">✅ Dibayar: ${rupiah(nominalBayar)}</span>
             </div>
         </div>
-        <button class="btn-pay ${sudah ? "btn-pay--cancel" : ""}" onclick="${payAction}">
-            ${sudah ? "Batalkan" : "Bayar"}
-        </button>
+        <button class="btn-pay ${sudah ? "btn-pay--cancel" : ""}">${sudah ? "Batalkan" : "Bayar"}</button>
       `;
   
-      daftar.appendChild(card);
+      DOM.daftarCicilan.appendChild(card);
     });
   
     return totalBayar;
   }
   
-  // Fungsi render utama yang memanggil sub-render di atas
   function render() {
     const nextUnpaid = getNextUnpaidIndex();
     const totalBayar = renderInstallmentList(nextUnpaid);
     renderSummary(totalBayar);
     renderProgress();
-    renderDateBar(); // Sekarang fungsi ini sudah pasti terbaca di atas
+    renderDateBar(nextUnpaid);
   }
   
   // ==========================================
-  // FEEDBACK & ANIMASI KEMBANG API
+  // ANIMATION & TOAST LOGIC
   // ==========================================
-  
   function showSuccessFeedback(index) {
-    const toast = document.getElementById("successToast");
-    const toastText = document.getElementById("successToastText");
-    if (!toast || !toastText) return;
+    if (!DOM.successToast || !DOM.successToastText) return;
+    DOM.successToastText.textContent = "Cicilan " + (index + 1) + " berhasil dicatat!";
+    DOM.successToast.classList.add("toast--visible");
   
-    toastText.textContent = "Cicilan " + (index + 1) + " berhasil dicatat!";
-    toast.classList.add("toast--visible");
-  
-    const card = document.querySelector('.cicilan[data-index="' + index + '"]');
+    const card = document.querySelector(`.cicilan[data-index="${index}"]`);
     if (card) {
       card.classList.add("cicilan--success-flash");
-      setTimeout(function () {
-        card.classList.remove("cicilan--success-flash");
-      }, 1400);
+      setTimeout(() => card.classList.remove("cicilan--success-flash"), 1400);
     }
-  
-    setTimeout(function () {
-      toast.classList.remove("toast--visible");
-    }, 3000);
+    setTimeout(() => DOM.successToast.classList.remove("toast--visible"), 3000);
   }
   
   function launchConfetti() {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-  
     const canvas = document.createElement("canvas");
     canvas.className = "confetti-canvas";
     canvas.setAttribute("aria-hidden", "true");
     document.body.appendChild(canvas);
   
     const ctx = canvas.getContext("2d");
-    let w = window.innerWidth;
-    let h = window.innerHeight;
-    canvas.width = w;
-    canvas.height = h;
+    let w = window.innerWidth, h = window.innerHeight;
+    canvas.width = w; canvas.height = h;
   
     const palette = ["#30a46c", "#0071e3", "#ffd60a", "#ff375f", "#bf5af2", "#ffffff"];
     const pieces = [];
-  
     for (let i = 0; i < 160; i++) {
       pieces.push({
         x: w * 0.5 + (Math.random() - 0.5) * w * 0.6,
@@ -402,44 +330,69 @@ const cicilan = [
     let frame = 0;
     function tick() {
       ctx.clearRect(0, 0, w, h);
-      pieces.forEach(function (p) {
+      pieces.forEach(p => {
         p.x += p.vx; p.y += p.vy; p.vy += p.gravity; p.rot += p.vr;
-        ctx.save();
-        ctx.translate(p.x, p.y);
-        ctx.rotate(p.rot * Math.PI / 180);
-        ctx.fillStyle = p.color;
-        ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
-        ctx.restore();
+        ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.rot * Math.PI / 180);
+        ctx.fillStyle = p.color; ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h); ctx.restore();
       });
       frame++;
-      if (frame < 200) {
-        requestAnimationFrame(tick);
-      } else {
-        canvas.remove();
-      }
+      if (frame < 200) requestAnimationFrame(tick); else canvas.remove();
     }
     requestAnimationFrame(tick);
   }
   
   // ==========================================
-  // EVENT LISTENERS
+  // CLEAN CENTRALIZED EVENT LISTENERS
   // ==========================================
   
-  const confirmCancelEl = document.getElementById("confirmCancel");
-  const confirmOkEl = document.getElementById("confirmOk");
-  const confirmModalEl = document.getElementById("confirmModal");
+  // 1. Event Delegation untuk list kartu cicilan
+  if (DOM.daftarCicilan) {
+    DOM.daftarCicilan.addEventListener("click", (e) => {
+      const button = e.target.closest(".btn-pay");
+      if (!button) return;
+      
+      const card = button.closest(".cicilan");
+      const index = parseInt(card.dataset.index, 10);
+      const status = card.dataset.status;
   
-  if (confirmCancelEl) confirmCancelEl.addEventListener("click", closeConfirmModal);
-  if (confirmOkEl) confirmOkEl.addEventListener("click", executePayment);
-  if (confirmModalEl) {
-    const backdrop = confirmModalEl.querySelector(".modal-backdrop");
+      if (status === "paid") {
+        cancelInstallment(index);
+      } else {
+        handlePayClick(index);
+      }
+    });
+  }
+  
+  // 2. Confirm Modal Listeners
+  if (DOM.confirmCancel) DOM.confirmCancel.addEventListener("click", closeConfirmModal);
+  if (DOM.confirmOk) DOM.confirmOk.addEventListener("click", executePayment);
+  if (DOM.confirmModal) {
+    const backdrop = DOM.confirmModal.querySelector(".modal-backdrop");
     if (backdrop) backdrop.addEventListener("click", closeConfirmModal);
   }
   
-  document.addEventListener("keydown", function (e) {
-    if (confirmModalEl && confirmModalEl.hidden) return;
-    if (e.key === "Escape") closeConfirmModal();
+  // 3. Amount Modal Listeners
+  if (DOM.amountModalCancel) {
+    DOM.amountModalCancel.addEventListener("click", () => {
+      DOM.amountModal.style.display = "none";
+    });
+  }
+  if (DOM.amountModalSubmit) {
+    DOM.amountModalSubmit.addEventListener("click", () => {
+      if (pendingPayIndex === null) return;
+      const nominal = Number(DOM.amountModalInput.value);
+      DOM.amountModal.style.display = "none";
+      payInstallment(pendingPayIndex, nominal);
+    });
+  }
+  
+  // 4. Global Keyboard Listeners
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") {
+      closeConfirmModal();
+      if (DOM.amountModal) DOM.amountModal.style.display = "none";
+    }
   });
   
-  // Jalankan aplikasi pertama kali setelah semuanya siap
+  // Jalankan inisialisasi aplikasi pertama kali
   render();
