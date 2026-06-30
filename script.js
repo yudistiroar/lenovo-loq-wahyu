@@ -41,6 +41,9 @@ if (!Array.isArray(pembayaran) || pembayaran.length !== cicilan.length) {
   pembayaran = new Array(cicilan.length).fill(0);
 }
 
+// Inisialisasi Data Riwayat Pembayaran Baru
+let riwayat = [];
+
 let pendingPayIndex = null;
 
 const BULAN = {
@@ -62,6 +65,7 @@ const DOM = {
   progressPercentage: document.getElementById("progressPercentage"),
   daftarCicilan: document.getElementById("daftarCicilan"),
   photoGallery: document.getElementById("photoGallery"),
+  riwayatPembayaran: document.getElementById("riwayatPembayaran"), // Cache elemen riwayat baru
   
   // Confirm Modal
   confirmModal: document.getElementById("confirmModal"),
@@ -106,7 +110,6 @@ function formatRupiahLive(value) {
   return rupiah ? "Rp " + rupiah : "";
 }
 
-// Fungsi mengambil nilai angka murni dari string berformat rupiah
 function getRawValue(formattedValue) {
   return Number(formattedValue.replace(/[^0-9]/g, ""));
 }
@@ -151,6 +154,95 @@ function getCountdownText(index) {
 }
 
 // ==========================================
+// MODUL MANAGEMENT RIWAYAT PEMBAYARAN (BARU)
+// ==========================================
+function loadHistory() {
+  const storedHistory = localStorage.getItem("loq_wahyu_history");
+  riwayat = storedHistory ? JSON.parse(storedHistory) : [];
+}
+
+function saveHistory() {
+  localStorage.setItem("loq_wahyu_history", JSON.stringify(riwayat));
+}
+
+function addHistory(index, nominal) {
+  const sekarang = new Date();
+  
+  // Ambil nama bulan bahasa indonesia untuk stamp riwayat
+  const namaBulan = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+  const dateStr = `${sekarang.getDate()} ${namaBulan[sekarang.getMonth()]} ${sekarang.getFullYear()}`;
+  
+  // Format waktu jam:menit WIB
+  const jam = String(sekarang.getHours()).padStart(2, '0');
+  const menit = String(sekarang.getMinutes()).padStart(2, '0');
+  const timeStr = `${jam}:${menit} WIB`;
+
+  // Buat objek riwayat baru
+  const itemRiwayat = {
+    installment: index + 1,
+    nominal: nominal,
+    date: dateStr,
+    time: timeStr
+  };
+
+  // Pastikan tidak ada data ganda untuk cicilan yang sama sebelum ditambahkan
+  removeHistory(index);
+  
+  riwayat.push(itemRiwayat);
+  // Urutkan berdasarkan nomor cicilan (1 -> 16)
+  riwayat.sort((a, b) => a.installment - b.installment);
+  
+  saveHistory();
+  renderHistory();
+}
+
+function removeHistory(index) {
+  riwayat = riwayat.filter(item => item.installment !== (index + 1));
+  saveHistory();
+  renderHistory();
+}
+
+function renderHistory() {
+  if (!DOM.riwayatPembayaran) return;
+  DOM.riwayatPembayaran.innerHTML = "";
+
+  if (riwayat.length === 0) {
+    DOM.riwayatPembayaran.innerHTML = `
+      <div style="background: #f4f4f4; color: #666; padding: 16px; border-radius: 12px; text-align: center; font-size: 0.95rem; font-weight: 500;">
+        Belum ada riwayat pembayaran.
+      </div>
+    `;
+    return;
+  }
+
+  riwayat.forEach(item => {
+    const card = document.createElement("div");
+    // Gunakan visual card seragam bawaan aplikasi Anda namun disesuaikan untuk tipe riwayat lunas
+    card.className = "cicilan cicilan--paid";
+    card.style.display = "flex";
+    card.style.justifyContent = "space-between";
+    card.style.alignItems = "center";
+    card.style.padding = "16px";
+
+    card.innerHTML = `
+      <div class="info" style="flex: 1;">
+          <div class="cicilan-header" style="margin-bottom: 4px;">
+              <h4 style="margin: 0; font-size: 1rem; color: #333;">✓ Cicilan ${item.installment}</h4>
+          </div>
+          <div class="cicilan-meta" style="display: flex; gap: 16px; color: #666; font-size: 0.85rem;">
+              <span>📅 ${item.date}</span>
+              <span>🕒 ${item.time}</span>
+          </div>
+      </div>
+      <div style="font-weight: 700; color: #30a46c; font-size: 1.05rem;">
+          ${rupiah(item.nominal)}
+      </div>
+    `;
+    DOM.riwayatPembayaran.appendChild(card);
+  });
+}
+
+// ==========================================
 // BUSINESS & STATE LOGIC
 // ==========================================
 function validatePayment(nominal, index) {
@@ -172,6 +264,7 @@ function cancelInstallment(index) {
   if (konfirmasiBatal) {
     pembayaran[index] = 0;
     savePayment();
+    removeHistory(index); // INTEGRASI: Hapus dari riwayat saat dibatalkan
     render();
   }
 }
@@ -182,6 +275,7 @@ function payInstallment(index, nominal) {
 
   pembayaran[index] = nominal;
   savePayment();
+  addHistory(index, nominal); // INTEGRASI: Tambahkan data ke riwayat saat berhasil
   render();
 
   if (pembayaran[index] >= cicilan[index]) {
@@ -193,7 +287,6 @@ function payInstallment(index, nominal) {
   }
 }
 
-// Validasi Realtime & Manajemen State Tombol Simpan
 function validateRealtime() {
   if (pendingPayIndex === null) return;
   
@@ -506,5 +599,7 @@ document.addEventListener("keydown", (e) => {
 // ==========================================
 // INISIALISASI RUNTIME UTAMA
 // ==========================================
+loadHistory();    // Muat data riwayat dari localStorage saat awal dibuka
 render();
 renderGallery();
+renderHistory();  // Render tampilan riwayat pertama kali
