@@ -811,24 +811,64 @@ button:active,
     }
     }
     
-    .photo-gallery img:hover{
-        transform:scale(1.03);
-    }
-    @media (max-width:768px){
+    /* ==========================================
+   STYLE PREMIUM UNTUK GALERI FOTO (CSS GRID)
+   ========================================== */
 
-        .photo-gallery{
-            grid-template-columns:1fr;
-            gap:16px;
-        }
-    
-        .photo-gallery img{
-            width:100%;
-            max-width:100%;
-            height:180px;
-            object-fit:cover;
-        }
-    
+/* Kontainer utama bagian galeri */
+.gallery-section {
+    margin-top: 40px;
+    padding: 20px 0;
+  }
+  
+  .gallery-section h2 {
+    font-size: 1.5rem;
+    color: #333;
+    margin-bottom: 20px;
+    font-weight: 600;
+  }
+  
+  /* Base style untuk wrapper galeri (Menggunakan CSS Grid Responsif) */
+  .photo-gallery {
+    display: grid;
+    grid-template-columns: 1fr; /* Default mobile: 1 kolom penuh */
+    gap: 20px; /* Jarak antar kartu foto */
+    width: 100%;
+  }
+  
+  /* Pengaturan pembungkus gambar agar efek overflow hidden dan border-radius bekerja sempurna */
+  .photo-gallery img {
+    width: 100%;
+    height: 240px; /* Tinggi seragam sesuai instruksi */
+    object-fit: cover; /* Foto otomatis memotong rapi tanpa gepeng */
+    border-radius: 12px; /* Border radius modern melengkung halus */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); /* Bayangan halus premium */
+    overflow: hidden;
+    transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 0.3s ease;
+    cursor: pointer;
+  }
+  
+  /* Efek Hover Premium: Sedikit zoom dan elevasi bayangan */
+  .photo-gallery img:hover {
+    transform: scale(1.03) translateY(-4px); /* Efek sedikit zoom dan terangkat ke atas */
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15); /* Bayangan menjadi lebih tegas saat melayang */
+  }
+  
+  /* Media Query untuk Tablet (Lebar layar mulai dari 600px ke atas) */
+  @media (min-width: 600px) {
+    .photo-gallery {
+      grid-template-columns: repeat(2, 1fr); /* Otomatis membagi rapi menjadi 2 kolom */
+      gap: 24px;
     }
+  }
+  
+  /* Media Query untuk Desktop Modern (Lebar layar mulai dari 1024px ke atas) */
+  @media (min-width: 1024px) {
+    .photo-gallery {
+      grid-template-columns: repeat(2, 1fr); /* Tetap mempertahankan format 2 kolom premium */
+      gap: 30px; /* Jarak antar foto sedikit lebih lebar agar lega di layar besar */
+    }
+  }
 
 /* Styling Tambahan Modal Input Nominal Custom */
 .modal-input {
