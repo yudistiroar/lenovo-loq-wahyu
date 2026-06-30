@@ -542,4 +542,87 @@ function launchConfetti() {
       ctx.fillStyle = p.color; ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h); ctx.restore();
     });
     frame++;
-    if (frame < 200) requestAnimationFrame(tick);
+    if (frame < 200) requestAnimationFrame(tick); else canvas.remove();
+  }
+  requestAnimationFrame(tick);
+}
+
+// ==========================================
+// CENTRALIZED EVENT LISTENERS
+// ==========================================
+if (DOM.daftarCicilan) {
+  DOM.daftarCicilan.addEventListener("click", (e) => {
+    const button = e.target.closest(".btn-pay");
+    if (!button) return;
+    
+    const card = button.closest(".cicilan");
+    const index = parseInt(card.dataset.index, 10);
+    const status = card.dataset.status;
+
+    if (status === "paid") {
+      cancelInstallment(index);
+    } else {
+      handlePayClick(index);
+    }
+  });
+}
+
+if (DOM.confirmCancel) {
+  DOM.confirmCancel.addEventListener("click", () => {
+    closeConfirmModal();
+    pendingPayIndex = null;
+  });
+}
+if (DOM.confirmOk) DOM.confirmOk.addEventListener("click", executePayment);
+if (DOM.confirmModal) {
+  const backdrop = DOM.confirmModal.querySelector(".modal-backdrop");
+  if (backdrop) {
+    backdrop.addEventListener("click", () => {
+      closeConfirmModal();
+      pendingPayIndex = null;
+    });
+  }
+}
+
+if (DOM.amountModalInput) {
+  DOM.amountModalInput.addEventListener("input", (e) => {
+    e.target.value = formatRupiahLive(e.target.value);
+    validateRealtime();
+  });
+
+  DOM.amountModalInput.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") {
+      processAmountSubmit();
+    }
+  });
+}
+
+if (DOM.amountModalCancel) {
+  DOM.amountModalCancel.addEventListener("click", () => {
+    DOM.amountModal.style.display = "none";
+    pendingPayIndex = null;
+  });
+}
+
+if (DOM.amountModalSubmit) {
+  DOM.amountModalSubmit.addEventListener("click", processAmountSubmit);
+}
+
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape") {
+    closeConfirmModal();
+    if (DOM.amountModal) DOM.amountModal.style.display = "none";
+    pendingPayIndex = null;
+  }
+});
+
+// ==========================================
+// INITIALIZE RUNTIME
+// ==========================================
+async function initialize() {
+  await loadHistory();
+  render();
+  renderGallery();
+}
+
+initialize();
