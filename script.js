@@ -10,7 +10,7 @@ const galleryImages = [
 
 const API_BASE_URL = "https://lenovo-loq-backend.asrifyudistira.workers.dev";
 
-// Single Source of Truth dari API Cloudflare
+// Single Source of Truth dari API Cloudflare D1
 let cicilanMaster = []; 
 let pendingPayIndex = null;
 
@@ -59,7 +59,8 @@ const DOM = {
 // HELPER FUNCTIONS & FORMATTING LOGIC
 // ==========================================
 function rupiah(n) {
-  return "Rp " + n.toLocaleString("id-ID");
+  const safeNumber = Number(n ?? 0);
+  return "Rp " + safeNumber.toLocaleString("id-ID");
 }
 
 function formatRupiahLive(value) {
@@ -78,13 +79,16 @@ function formatRupiahLive(value) {
   return rupiahMat ? "Rp " + rupiahMat : "";
 }
 
+// Mengambil nilai angka murni string rupiah
 function getRawValue(formattedValue) {
   return Number(formattedValue.replace(/[^0-9]/g, ""));
 }
 
 function parseTanggal(str) {
+  if (!str) return new Date();
   const p = str.split(" ");
-  return new Date(parseInt(p[2], 10), BULAN[p[1]], parseInt(p[0], 10));
+  if (p.length < 3) return new Date();
+  return new Date(parseInt(p[2], 10), BULAN[p[1]] || 0, parseInt(p[0], 10));
 }
 
 function startOfDay(d) {
@@ -94,40 +98,47 @@ function startOfDay(d) {
 }
 
 function formatDueDate(dueDateStr) {
-  return dueDateStr;
+  return dueDateStr || "—";
 }
 
 function formatPaidAt(isoString) {
   if (!isoString) return "—";
-  const dateObj = new Date(isoString);
-  
-  const dateStr = dateObj.toLocaleDateString("id-ID", {
-    day: "numeric",
-    month: "long",
-    year: "numeric"
-  });
-
-  const jam = String(dateObj.getHours()).padStart(2, '0');
-  const menit = String(dateObj.getMinutes()).padStart(2, '0');
-  
-  return `${dateStr} • ${jam}:${menit} WIB`;
+  try {
+    const dateObj = new Date(isoString);
+    const dateStr = dateObj.toLocaleDateString("id-ID", {
+      day: "numeric",
+      month: "long",
+      year: "numeric"
+    });
+    const jam = String(dateObj.getHours()).padStart(2, '0');
+    const menit = String(dateObj.getMinutes()).padStart(2, '0');
+    return `${dateStr} • ${jam}:${menit} WIB`;
+  } catch (e) {
+    return isoString;
+  }
 }
 
 function getNextUnpaidIndex() {
   for (let i = 0; i < cicilanMaster.length; i++) {
-    if (cicilanMaster[i].paid_amount < cicilanMaster[i].target_amount) return i;
+    const paid = cicilanMaster[i].paid_amount || 0;
+    const target = cicilanMaster[i].nominal || 0;
+    if (paid < target) return i;
   }
   return -1;
 }
 
 function isOverdue(index) {
-  if (cicilanMaster[index].paid_amount >= cicilanMaster[index].target_amount) return false;
+  if (!cicilanMaster[index]) return false;
+  const paid = cicilanMaster[index].paid_amount || 0;
+  const target = cicilanMaster[index].nominal || 0;
+  if (paid >= target) return false;
   const today = startOfDay(new Date());
   const due = startOfDay(parseTanggal(cicilanMaster[index].due_date));
   return today > due;
 }
 
 function getCountdownText(index) {
+  if (!cicilanMaster[index]) return "—";
   const today = startOfDay(new Date());
   const due = startOfDay(parseTanggal(cicilanMaster[index].due_date));
   const diffDays = Math.round((due - today) / 86400000);
@@ -142,16 +153,16 @@ function getCountdownText(index) {
 }
 
 // ==========================================
-// LOGIKA SOURCE DATA (MIGRASI CLOUDFLARE API)
+// LOGIKA SOURCE DATA (CLOUDFLARE API)
 // ==========================================
 async function loadHistory() {
   try {
     const response = await fetch(`${API_BASE_URL}/payments`);
-    if (!response.ok) throw new Error("Gagal mengambil data server.");
+    if (!response.ok) throw new Error("Gagal mengambil data dari server D1.");
     cicilanMaster = await response.json();
     cicilanMaster.sort((a, b) => a.id - b.id);
   } catch (e) {
-    console.error("Error load data:", e);
+    console.error("Error load data dari Cloudflare Worker:", e);
     cicilanMaster = [];
   }
 }
@@ -162,16 +173,19 @@ function saveHistory() {}
 // BUSINESS & STATE LOGIC
 // ==========================================
 function validatePayment(nominal, index) {
+  if (!cicilanMaster[index]) return { valid: false, message: "Data cicilan tidak ditemukan." };
   if (isNaN(nominal) || nominal <= 0) {
     return { valid: false, message: "Masukkan nominal angka yang valid." };
   }
-  if (nominal < cicilanMaster[index].target_amount) {
-    return { valid: false, message: "Minimal pembayaran adalah " + rupiah(cicilanMaster[index].target_amount) };
+  const target = cicilanMaster[index].nominal || 0;
+  if (nominal < target) {
+    return { valid: false, message: "Minimal pembayaran adalah " + rupiah(target) };
   }
   return { valid: true, message: "" };
 }
 
 async function cancelInstallment(index) {
+  if (!cicilanMaster[index]) return;
   const paymentId = cicilanMaster[index].id;
   const konfirmasiBatal = confirm("Apakah Anda yakin ingin membatalkan pembayaran untuk Cicilan " + (index + 1) + "?");
   if (konfirmasiBatal) {
@@ -184,7 +198,7 @@ async function cancelInstallment(index) {
       await loadHistory();
       render();
     } catch (e) {
-      console.error(e);
+      console.error("Gagal POST cancel:", e);
       alert("Gagal memproses pembatalan ke server.");
     }
   }
@@ -204,20 +218,21 @@ async function payInstallment(index, nominal) {
     });
     if (!response.ok) throw new Error("Gagal menyimpan ke server.");
 
-    const wasPaidBefore = cicilanMaster[index].paid_amount >= cicilanMaster[index].target_amount;
+    const target = cicilanMaster[index].nominal || 0;
+    const wasPaidBefore = (cicilanMaster[index].paid_amount || 0) >= target;
     
     await loadHistory();
     render();
 
-    if (!wasPaidBefore && cicilanMaster[index].paid_amount >= cicilanMaster[index].target_amount) {
+    if (!wasPaidBefore && (cicilanMaster[index].paid_amount || 0) >= cicilanMaster[index].nominal) {
       showSuccessFeedback(index);
     }
 
-    if (cicilanMaster.every(item => item.paid_amount >= item.target_amount)) {
+    if (cicilanMaster.every(item => (item.paid_amount || 0) >= (item.nominal || 0))) {
       launchConfetti();
     }
   } catch (e) {
-    console.error(e);
+    console.error("Gagal POST pay:", e);
     alert("Gagal menyimpan pembayaran ke server.");
   }
 }
@@ -243,12 +258,13 @@ function validateRealtime() {
 }
 
 function openAmountModal(index) {
-  if (!DOM.amountModal) return;
+  if (!DOM.amountModal || !cicilanMaster[index]) return;
   DOM.amountModal.style.display = "flex"; 
   DOM.amountModalTitle.textContent = "Masukkan Nominal Cicilan " + (index + 1);
-  DOM.amountModalTarget.textContent = "Target bulanan: " + rupiah(cicilanMaster[index].target_amount);
+  const target = cicilanMaster[index].nominal || 0;
+  DOM.amountModalTarget.textContent = "Target bulanan: " + rupiah(target);
   
-  DOM.amountModalInput.value = formatRupiahLive(cicilanMaster[index].target_amount.toString());
+  DOM.amountModalInput.value = formatRupiahLive(target.toString());
   validateRealtime();
   
   setTimeout(() => {
@@ -258,6 +274,7 @@ function openAmountModal(index) {
 }
 
 function handlePayClick(index) {
+  if (!cicilanMaster[index]) return;
   pendingPayIndex = index;
   if (!DOM.confirmMessage || !DOM.confirmModal) return;
   DOM.confirmMessage.textContent = "Apakah Anda yakin ingin membayar Cicilan " + (index + 1) + " (" + cicilanMaster[index].due_date + ")?";
@@ -289,118 +306,137 @@ function executePayment() {
 }
 
 // ==========================================
-// SUB-RENDER MODULAR FUNCTIONS
+// SUB-RENDER MODULAR FUNCTIONS WITH PROTECTION
 // ==========================================
 function renderDateBar(nextIdx) {
-  if (!DOM.todayDate || !DOM.countdownText) return;
+  try {
+    if (!DOM.todayDate || !DOM.countdownText) return;
 
-  DOM.todayDate.textContent = new Date().toLocaleDateString("id-ID", {
-    weekday: "long", day: "numeric", month: "long", year: "numeric"
-  });
+    DOM.todayDate.textContent = new Date().toLocaleDateString("id-ID", {
+      weekday: "long", day: "numeric", month: "long", year: "numeric"
+    });
 
-  DOM.countdownText.classList.remove("ux-bar-value--overdue", "ux-bar-value--today", "ux-bar-value--complete");
+    DOM.countdownText.classList.remove("ux-bar-value--overdue", "ux-bar-value--today", "ux-bar-value--complete");
 
-  if (nextIdx === -1) {
-    DOM.countdownText.textContent = "Semua cicilan lunas";
-    DOM.countdownText.classList.add("ux-bar-value--complete");
-    return;
-  }
+    if (nextIdx === -1) {
+      DOM.countdownText.textContent = "Semua cicilan lunas";
+      DOM.countdownText.classList.add("ux-bar-value--complete");
+      return;
+    }
 
-  DOM.countdownText.textContent = getCountdownText(nextIdx) + " · " + cicilanMaster[nextIdx].due_date;
+    DOM.countdownText.textContent = getCountdownText(nextIdx) + " · " + cicilanMaster[nextIdx].due_date;
 
-  if (isOverdue(nextIdx)) {
-    DOM.countdownText.classList.add("ux-bar-value--overdue");
-  } else if (startOfDay(parseTanggal(cicilanMaster[nextIdx].due_date)).getTime() === startOfDay(new Date()).getTime()) {
-    DOM.countdownText.classList.add("ux-bar-value--today");
+    if (isOverdue(nextIdx)) {
+      DOM.countdownText.classList.add("ux-bar-value--overdue");
+    } else if (startOfDay(parseTanggal(cicilanMaster[nextIdx].due_date)).getTime() === startOfDay(new Date()).getTime()) {
+      DOM.countdownText.classList.add("ux-bar-value--today");
+    }
+  } catch (err) {
+    console.error("Gagal renderDateBar:", err);
   }
 }
 
 function renderSummary(totalBayar, totalHarga) {
-  if (DOM.sudahBayar) DOM.sudahBayar.innerHTML = rupiah(totalBayar);
-  if (DOM.sisaHutang) DOM.sisaHutang.innerHTML = rupiah(totalHarga - totalBayar);
+  try {
+    if (DOM.sudahBayar) DOM.sudahBayar.innerHTML = rupiah(totalBayar);
+    if (DOM.sisaHutang) DOM.sisaHutang.innerHTML = rupiah(totalHarga - totalBayar);
+  } catch (err) {
+    console.error("Gagal renderSummary:", err);
+  }
 }
 
 function renderProgress() {
-  if (!DOM.progressText || !DOM.progressBar || !DOM.progressPercentage) return;
-  
-  const cicilanLunas = cicilanMaster.filter(item => item.paid_amount >= item.target_amount).length;
-  const totalCicilan = cicilanMaster.length;
-  DOM.progressText.innerHTML = `${cicilanLunas} / ${totalCicilan} Cicilan`;
+  try {
+    if (!DOM.progressText || !DOM.progressBar || !DOM.progressPercentage) return;
+    
+    const cicilanLunas = cicilanMaster.filter(item => (item.paid_amount || 0) >= (item.nominal || 0)).length;
+    const totalCicilan = cicilanMaster.length;
+    DOM.progressText.innerHTML = `${cicilanLunas} / ${totalCicilan} Cicilan`;
 
-  const progressPct = totalCicilan > 0 ? (cicilanLunas / totalCicilan) * 100 : 0;
-  DOM.progressBar.style.width = progressPct + "%";
-  DOM.progressPercentage.textContent = Math.round(progressPct) + "%";
+    const progressPct = totalCicilan > 0 ? (cicilanLunas / totalCicilan) * 100 : 0;
+    DOM.progressBar.style.width = progressPct + "%";
+    DOM.progressPercentage.textContent = Math.round(progressPct) + "%";
+  } catch (err) {
+    console.error("Gagal renderProgress:", err);
+  }
 }
 
 function renderInstallmentList(nextUnpaid) {
-  if (!DOM.daftarCicilan) return 0;
-  DOM.daftarCicilan.innerHTML = "";
-  let totalBayar = 0;
+  try {
+    if (!DOM.daftarCicilan) return 0;
+    DOM.daftarCicilan.innerHTML = "";
+    let totalBayar = 0;
 
-  cicilanMaster.forEach((item, index) => {
-    const nominalBayar = item.paid_amount;
-    const sudah = nominalBayar >= item.target_amount;
-    totalBayar += nominalBayar;
+    cicilanMaster.forEach((item, index) => {
+      const nominalBayar = item.paid_amount || 0;
+      const targetAmount = item.nominal || 0;
+      const sudah = nominalBayar >= targetAmount;
+      totalBayar += nominalBayar;
 
-    const overdue = !sudah && isOverdue(index);
-    const isNext = index === nextUnpaid && !sudah;
+      const overdue = !sudah && isOverdue(index);
+      const isNext = index === nextUnpaid && !sudah;
 
-    const card = document.createElement("div");
-    card.className = sudah ? "cicilan cicilan--paid" : "cicilan cicilan--pending";
-    if (isNext) card.classList.add("cicilan--next");
-    if (overdue) card.classList.add("cicilan--overdue");
-    
-    card.dataset.index = index;
-    card.dataset.status = sudah ? "paid" : "pending";
+      const card = document.createElement("div");
+      card.className = sudah ? "cicilan cicilan--paid" : "cicilan cicilan--pending";
+      if (isNext) card.classList.add("cicilan--next");
+      if (overdue) card.classList.add("cicilan--overdue");
+      
+      card.dataset.index = index;
+      card.dataset.status = sudah ? "paid" : "pending";
 
-    let badges = `<span class="status-badge ${sudah ? "status-badge--paid" : "status-badge--pending"}">${sudah ? "Sudah Dibayar" : "Belum Dibayar"}</span>`;
-    if (overdue) badges += `<span class="status-badge status-badge--overdue">Terlambat</span>`;
-    if (isNext) badges += `<span class="status-badge status-badge--next">Berikutnya</span>`;
+      let badges = `<span class="status-badge ${sudah ? "status-badge--paid" : "status-badge--pending"}">${sudah ? "Sudah Dibayar" : "Belum Dibayar"}</span>`;
+      if (overdue) badges += `<span class="status-badge status-badge--overdue">Terlambat</span>`;
+      if (isNext) badges += `<span class="status-badge status-badge--next">Berikutnya</span>`;
 
-    card.innerHTML = `
-      <div class="info">
-          <div class="cicilan-header">
-              <h4>Cicilan ${index + 1}</h4>
-              ${badges}
-          </div>
-          <div class="cicilan-meta">
-              <span class="meta-item">📅 ${item.due_date}</span>
-              <span class="meta-item meta-item--amount">💰 Target: ${rupiah(item.target_amount)}</span>
-              <span class="meta-item">✅ Dibayar: ${rupiah(nominalBayar)}</span>
-          </div>
-      </div>
-      <button class="btn-pay ${sudah ? "btn-pay--cancel" : ""}">${sudah ? "Batalkan" : "Bayar"}</button>
-    `;
+      card.innerHTML = `
+        <div class="info">
+            <div class="cicilan-header">
+                <h4>Cicilan ${index + 1}</h4>
+                ${badges}
+            </div>
+            <div class="cicilan-meta">
+                <span class="meta-item">📅 ${item.due_date || "—"}</span>
+                <span class="meta-item meta-item--amount">💰 Target: ${rupiah(targetAmount)}</span>
+                <span class="meta-item">✅ Dibayar: ${rupiah(nominalBayar)}</span>
+            </div>
+        </div>
+        <button class="btn-pay ${sudah ? "btn-pay--cancel" : ""}">${sudah ? "Batalkan" : "Bayar"}</button>
+      `;
 
-    DOM.daftarCicilan.appendChild(card);
-  });
+      DOM.daftarCicilan.appendChild(card);
+    });
 
-  return totalBayar;
+    return totalBayar;
+  } catch (err) {
+    console.error("Gagal renderInstallmentList:", err);
+    return 0;
+  }
 }
 
 function renderHistory() {
-  if (!DOM.riwayatPembayaran) return;
-  DOM.riwayatPembayaran.innerHTML = "";
+  try {
+    if (!DOM.riwayatPembayaran) return;
+    DOM.riwayatPembayaran.innerHTML = "";
 
-  const riwayatAktif = cicilanMaster.filter(item => item.paid_amount > 0);
+    const riwayatAktif = cicilanMaster.filter(item => (item.paid_amount || 0) > 0);
 
-  if (riwayatAktif.length === 0) {
-    const emptyCard = document.createElement("div");
-    emptyCard.className = "history-empty";
-    emptyCard.textContent = "Belum ada riwayat pembayaran.";
-    DOM.riwayatPembayaran.appendChild(emptyCard);
-    return;
-  }
+    if (riwayatAktif.length === 0) {
+      const emptyCard = document.createElement("div");
+      emptyCard.className = "history-empty";
+      emptyCard.textContent = "Belum ada riwayat pembayaran.";
+      DOM.riwayatPembayaran.appendChild(emptyCard);
+      return;
+    }
 
-  riwayatAktif.forEach(item => {
-    const card = document.createElement("div");
-    card.className = "history-card";
+    riwayatAktif.forEach(item => {
+      const card = document.createElement("div");
+      card.className = "history-card";
 
-    card.innerHTML = `
-      <div class="history-card__info">
-          <div class="history-card__header">
-              <h4>✓ Cicilan ${item.id}</h4>
-          </div>
+      card.innerHTML = `
+        <div class="history-card__info">
+            <div class="history-card__header">
+                <h4>✓ Cicilan ${item.id}</h4>
+            </div>
           <div class="history-card__content">
               <div class="history-card__row">
                   <span class="history-card__label">💰 Nominal</span>
@@ -415,29 +451,37 @@ function renderHistory() {
                   <span class="history-card__value">${formatPaidAt(item.paid_at)}</span>
               </div>
           </div>
-      </div>
-    `;
-    DOM.riwayatPembayaran.appendChild(card);
-  });
+        </div>
+      `;
+      DOM.riwayatPembayaran.appendChild(card);
+    });
+  } catch (err) {
+    console.error("Gagal renderHistory:", err);
+  }
 }
 
 function renderGallery() {
-  if (!DOM.photoGallery) return;
-  DOM.photoGallery.innerHTML = "";
+  try {
+    if (!DOM.photoGallery) return;
+    DOM.photoGallery.innerHTML = "";
 
-  galleryImages.forEach((imgData) => {
-    const imgEl = document.createElement("img");
-    imgEl.src = imgData.src;
-    imgEl.alt = imgData.alt;
-    imgEl.loading = "lazy";
+    galleryImages.forEach((imgData) => {
+      const imgEl = document.createElement("img");
+      imgEl.src = imgData.src;
+      imgEl.alt = imgData.alt;
+      imgEl.loading = "lazy";
 
-    DOM.photoGallery.appendChild(imgEl);
-  });
+      DOM.photoGallery.appendChild(imgEl);
+    });
+  } catch (err) {
+    console.error("Gagal renderGallery:", err);
+  }
 }
 
 function render() {
-  const totalHargaMaster = cicilanMaster.reduce((acc, curr) => acc + curr.target_amount, 0);
+  const totalHargaMaster = cicilanMaster.reduce((acc, curr) => acc + (curr.nominal || 0), 0);
   const nextUnpaid = getNextUnpaidIndex();
+  
   const totalBayar = renderInstallmentList(nextUnpaid);
   renderSummary(totalBayar, totalHargaMaster);
   renderProgress();
@@ -446,81 +490,56 @@ function render() {
 }
 
 // ==========================================
-// CENTRALIZED EVENT LISTENERS
+// ANIMATION & TOAST LOGIC
 // ==========================================
-if (DOM.daftarCicilan) {
-  DOM.daftarCicilan.addEventListener("click", (e) => {
-    const button = e.target.closest(".btn-pay");
-    if (!button) return;
-    
-    const card = button.closest(".cicilan");
-    const index = parseInt(card.dataset.index, 10);
-    const status = card.dataset.status;
+function showSuccessFeedback(index) {
+  if (!DOM.successToast || !DOM.successToastText) return;
+  DOM.successToastText.textContent = "Cicilan " + (index + 1) + " berhasil dicatat!";
+  DOM.successToast.classList.add("toast--visible");
 
-    if (status === "paid") {
-      cancelInstallment(index);
-    } else {
-      handlePayClick(index);
-    }
-  });
+  const card = document.querySelector(`.cicilan[data-index="${index}"]`);
+  if (card) {
+    card.classList.add("cicilan--success-flash");
+    setTimeout(() => card.classList.remove("cicilan--success-flash"), 1400);
+  }
+  setTimeout(() => DOM.successToast.classList.remove("toast--visible"), 3000);
 }
 
-if (DOM.confirmCancel) {
-  DOM.confirmCancel.addEventListener("click", () => {
-    closeConfirmModal();
-    pendingPayIndex = null;
-  });
-}
-if (DOM.confirmOk) DOM.confirmOk.addEventListener("click", executePayment);
-if (DOM.confirmModal) {
-  const backdrop = DOM.confirmModal.querySelector(".modal-backdrop");
-  if (backdrop) {
-    backdrop.addEventListener("click", () => {
-      closeConfirmModal();
-      pendingPayIndex = null;
+function launchConfetti() {
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  const canvas = document.createElement("canvas");
+  canvas.className = "confetti-canvas";
+  canvas.setAttribute("aria-hidden", "true");
+  document.body.appendChild(canvas);
+
+  const ctx = canvas.getContext("2d");
+  let w = window.innerWidth, h = window.innerHeight;
+  canvas.width = w; canvas.height = h;
+
+  const palette = ["#30a46c", "#0071e3", "#ffd60a", "#ff375f", "#bf5af2", "#ffffff"];
+  const pieces = [];
+  for (let i = 0; i < 160; i++) {
+    pieces.push({
+      x: w * 0.5 + (Math.random() - 0.5) * w * 0.6,
+      y: h * 0.35 + (Math.random() - 0.5) * 80,
+      w: 5 + Math.random() * 7,
+      h: 3 + Math.random() * 5,
+      color: palette[Math.floor(Math.random() * palette.length)],
+      vx: (Math.random() - 0.5) * 6,
+      vy: -(4 + Math.random() * 6),
+      rot: Math.random() * 360,
+      vr: (Math.random() - 0.5) * 10,
+      gravity: 0.12 + Math.random() * 0.08
     });
   }
-}
 
-if (DOM.amountModalInput) {
-  DOM.amountModalInput.addEventListener("input", (e) => {
-    e.target.value = formatRupiahLive(e.target.value);
-    validateRealtime();
-  });
-
-  DOM.amountModalInput.addEventListener("keydown", (e) => {
-    if (e.key === "Enter") {
-      processAmountSubmit();
-    }
-  });
-}
-
-if (DOM.amountModalCancel) {
-  DOM.amountModalCancel.addEventListener("click", () => {
-    DOM.amountModal.style.display = "none";
-    pendingPayIndex = null;
-  });
-}
-
-if (DOM.amountModalSubmit) {
-  DOM.amountModalSubmit.addEventListener("click", processAmountSubmit);
-}
-
-document.addEventListener("keydown", (e) => {
-  if (e.key === "Escape") {
-    closeConfirmModal();
-    if (DOM.amountModal) DOM.amountModal.style.display = "none";
-    pendingPayIndex = null;
-  }
-});
-
-// ==========================================
-// INITIALIZE RUNTIME
-// ==========================================
-async function initialize() {
-  await loadHistory();
-  render();
-  renderGallery();
-}
-
-initialize();
+  let frame = 0;
+  function tick() {
+    ctx.clearRect(0, 0, w, h);
+    pieces.forEach(p => {
+      p.x += p.vx; p.y += p.vy; p.vy += p.gravity; p.rot += p.vr;
+      ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.rot * Math.PI / 180);
+      ctx.fillStyle = p.color; ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h); ctx.restore();
+    });
+    frame++;
+    if (frame < 200) requestAnimationFrame(tick);
