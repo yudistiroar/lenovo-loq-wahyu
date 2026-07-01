@@ -12,6 +12,7 @@ const API_BASE_URL = "https://lenovo-loq-backend.asrifyudistira.workers.dev";
 
 let cicilanMaster = []; 
 let pendingPayIndex = null;
+let isCancelOperation = false; // State tracker untuk membedakan operasi Bayar vs Batalkan
 let currentTotalHargaVal = 0;
 let currentSudahBayarVal = 0;
 let currentSisaHutangVal = 0;
@@ -81,7 +82,7 @@ function animateNumber(element, start, end, duration = 600) {
   function update(currentTime) {
     const elapsed = currentTime - startTime;
     const progress = Math.min(elapsed / duration, 1);
-    const easeProgress = progress * (2 - progress); // EaseOutQuad
+    const easeProgress = progress * (2 - progress);
     const currentVal = Math.floor(start + (end - start) * easeProgress);
     element.textContent = formatRupiah(currentVal);
     
@@ -241,7 +242,7 @@ function renderDaftarCicilan() {
   cicilanMaster.forEach((item, index) => {
     const card = document.createElement("div");
     card.className = "cicilan";
-    card.style.animationDelay = `${index * 30}ms`; // Staggered delay 30ms
+    card.style.animationDelay = `${index * 30}ms`;
 
     const paidAmount = item.paid_amount ?? 0;
     const nominal = item.nominal ?? 0;
@@ -249,11 +250,14 @@ function renderDaftarCicilan() {
 
     let statusLabel = "Pending";
     let statusClass = "pending";
+    let badgeAttributes = "";
 
     if (isLunas) {
       statusLabel = "Lunas";
       statusClass = "paid";
       card.classList.add("cicilan--paid");
+      // Mengembalikan fungsionalitas trigger pembatalan klik persis pada badge Lunas
+      badgeAttributes = `onclick="window.triggerCancelFlow(${index})" role="button" tabindex="0" title="Klik untuk membatalkan pelunasan"`;
     } else if (index === nextUnpaidIdx) {
       statusLabel = "Berikutnya";
       statusClass = "next";
@@ -273,7 +277,7 @@ function renderDaftarCicilan() {
       <div class="info">
         <div class="cicilan-header">
           <h4>Cicilan Ke-${item.installment}</h4>
-          <span class="status-badge status-badge--${statusClass}">${statusLabel}</span>
+          <span class="status-badge status-badge--${statusClass}" ${badgeAttributes}>${statusLabel}</span>
         </div>
         <div class="cicilan-meta">
           <span class="meta-item">Target: <strong class="meta-item--amount">${formatRupiah(nominal)}</strong></span>
@@ -343,6 +347,7 @@ function renderGallery() {
 // ==========================================
 window.triggerPaymentFlow = function(index) {
   pendingPayIndex = index;
+  isCancelOperation = false;
   const item = cicilanMaster[index];
   const paidAmount = item.paid_amount ?? 0;
   const nominal = item.nominal ?? 0;
@@ -356,6 +361,13 @@ window.triggerPaymentFlow = function(index) {
   } else {
     openConfirmModal(`Apakah Anda yakin ingin membayar penuh untuk Cicilan Ke-${item.installment} sejumlah ${formatRupiah(nominal)}?`);
   }
+};
+
+// Mengaktifkan Detektor Klik Batalkan Pembayaran (Bug Regression Fix)
+window.triggerCancelFlow = function(index) {
+  pendingPayIndex = index;
+  isCancelOperation = true;
+  openConfirmModal("Batalkan pembayaran ini?");
 };
 
 function openConfirmModal(message) {
@@ -400,7 +412,7 @@ function processAmountSubmit() {
 }
 
 // ==========================================
-// OPERASI NETWORK POST DENGAN LOADING SPINNER BUBBLE
+// MASTER NETWORK POST CONTEXT OPERATOR
 // ==========================================
 async function executePayment() {
   if (pendingPayIndex === null) return;
@@ -418,7 +430,10 @@ async function executePayment() {
     const item = cicilanMaster[pendingPayIndex];
     let payValue = item.nominal ?? 0;
     
-    if (DOM.amountModalInput && DOM.amountModalInput.value) {
+    // Jika operasi adalah PEMBATALAN, bersihkan paid_amount ke nilai 0 (Pending state)
+    if (isCancelOperation) {
+      payValue = 0;
+    } else if (DOM.amountModalInput && DOM.amountModalInput.value) {
       const customAmount = parseRupiah(DOM.amountModalInput.value);
       if (customAmount > 0) payValue = customAmount;
     }
@@ -431,9 +446,16 @@ async function executePayment() {
 
     if (!response.ok) throw new Error("API Jaringan Error!");
 
-    showToast(`Pembayaran Cicilan Ke-${item.installment} berhasil diproses!`);
+    // Set Notifikasi Teks Berdasarkan Aksi Modus Operasi
+    if (isCancelOperation) {
+      showToast(`Pembayaran Cicilan Ke-${item.installment} berhasil dibatalkan.`);
+    } else {
+      showToast(`Pembayaran Cicilan Ke-${item.installment} berhasil diproses!`);
+    }
+    
     closeConfirmModal();
     
+    // Refresh Seluruh Lapisan UI Finansial secara Simultan
     await fetchCicilan();
     updateSyncState("synced", "Synced just now");
     
@@ -443,11 +465,12 @@ async function executePayment() {
         cards[pendingPayIndex].classList.add("cicilan--success-flash");
       }
       pendingPayIndex = null;
+      isCancelOperation = false;
     }, 150);
 
   } catch (error) {
-    console.error("Payment Execution Failed:", error);
-    alert("Gagal memperbarui data ke server Cloudflare.");
+    console.error("Payment Operation Failed:", error);
+    alert("Gagal memperbarui status data ke server Cloudflare D1.");
     updateSyncState("offline", "Offline");
   } finally {
     if (DOM.confirmOk) {
@@ -475,6 +498,7 @@ if (DOM.confirmCancel) {
   DOM.confirmCancel.addEventListener("click", () => {
     closeConfirmModal();
     pendingPayIndex = null;
+    isCancelOperation = false;
   });
 }
 if (DOM.confirmOk) DOM.confirmOk.addEventListener("click", executePayment);
@@ -484,6 +508,7 @@ if (DOM.confirmModal) {
     backdrop.addEventListener("click", () => {
       closeConfirmModal();
       pendingPayIndex = null;
+      isCancelOperation = false;
     });
   }
 }
@@ -502,6 +527,7 @@ if (DOM.amountModalCancel) {
   DOM.amountModalCancel.addEventListener("click", () => {
     if (DOM.amountModal) DOM.amountModal.style.display = "none";
     pendingPayIndex = null;
+    isCancelOperation = false;
   });
 }
 if (DOM.amountModalSubmit) DOM.amountModalSubmit.addEventListener("click", processAmountSubmit);
@@ -510,8 +536,8 @@ document.addEventListener("keydown", (e) => {
   if (e.key === "Escape") {
     closeConfirmModal();
     if (DOM.amountModal) DOM.amountModal.style.display = "none";
+    isCancelOperation = false;
   }
 });
 
-// Jalankan Sistem Utama
 initialize();

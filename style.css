@@ -634,4 +634,21 @@ button:disabled, .btn-pay:disabled { opacity: 0.35; cursor: not-allowed; }
     .toast { width: min(92%, 320px); justify-content: center; }
     .photo-gallery { grid-template-columns: repeat(2, 1fr); padding: 0 var(--space-sm); }
     .gallery-section h2 { padding: 0 var(--space-sm); }
+}/* ==========================================================================
+   INTERACTION TWEAK: CLICKABLE LUNAS BADGE AFFORDANCE
+   ========================================================================== */
+.status-badge--paid {
+    cursor: pointer !important;
+    user-select: none;
+    transition: background-color 150ms var(--ease-linear), border-color 150ms var(--ease-linear), transform 100ms var(--ease-linear) !important;
+}
+
+.status-badge--paid:hover {
+    background-color: rgba(239, 68, 68, 0.12) !important; /* Efek merah halus saat di-hover untuk mengindikasikan aksi pembatalan */
+    color: var(--danger) !important;
+    border-color: rgba(239, 68, 68, 0.3) !important;
+}
+
+.status-badge--paid:active {
+    transform: scale(0.95);
 }
