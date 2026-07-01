@@ -10,7 +10,6 @@ const galleryImages = [
 
 const API_BASE_URL = "https://lenovo-loq-backend.asrifyudistira.workers.dev";
 
-// Single Source of Truth & State Tracking
 let cicilanMaster = []; 
 let pendingPayIndex = null;
 let currentTotalHargaVal = 0;
@@ -57,7 +56,7 @@ const DOM = {
 };
 
 // ==========================================
-// PILAR 1: SYSTEM AUTOMATION CLOUD SYNC STATE
+// SYSTEM AUTOMATION CLOUD SYNC STATE
 // ==========================================
 function updateSyncState(state, text) {
   const syncContainer = document.getElementById("cloudSyncStatus");
@@ -73,7 +72,7 @@ function updateSyncState(state, text) {
 }
 
 // ==========================================
-// PILAR 2: INTERPOLASI ANIMASI ANGKA (Odometer Effect)
+// INTERPOLASI ANIMASI ANGKA (Odometer Effect)
 // ==========================================
 function animateNumber(element, start, end, duration = 600) {
   if (!element) return;
@@ -194,7 +193,6 @@ function renderSummaryData() {
   const sudahBayarVal = cicilanMaster.reduce((acc, curr) => acc + (curr.paid_amount ?? 0), 0);
   const sisaHutangVal = Math.max(0, totalHargaVal - sudahBayarVal);
 
-  // Memicu animasi pergerakan angka kelipatan naik-turun yang halus
   animateNumber(DOM.totalHarga, currentTotalHargaVal, totalHargaVal);
   animateNumber(DOM.sudahBayar, currentSudahBayarVal, sudahBayarVal);
   animateNumber(DOM.sisaHutang, currentSisaHutangVal, sisaHutangVal);
@@ -217,6 +215,7 @@ function renderProgressPanel() {
     DOM.progressBar.style.width = `${percent}%`;
     DOM.progressBar.setAttribute("aria-valuenow", percent);
   }
+  
   if (DOM.progressText) {
     DOM.progressText.textContent = `${percent}% Cicilan Terbuka (${lunasCount} dari ${totalCount} Bulan Lunas)`;
   }
@@ -242,7 +241,7 @@ function renderDaftarCicilan() {
   cicilanMaster.forEach((item, index) => {
     const card = document.createElement("div");
     card.className = "cicilan";
-    card.style.animationDelay = `${index * 40}ms`; // Efek staggered fade-in
+    card.style.animationDelay = `${index * 30}ms`; // Staggered delay 30ms
 
     const paidAmount = item.paid_amount ?? 0;
     const nominal = item.nominal ?? 0;
@@ -303,7 +302,7 @@ function renderRiwayatPembayaran() {
   sortedHistory.forEach((item, index) => {
     const card = document.createElement("div");
     card.className = "history-card";
-    card.style.animationDelay = `${index * 50}ms`;
+    card.style.animationDelay = `${index * 40}ms`;
 
     card.innerHTML = `
       <div class="history-card__header">
@@ -408,7 +407,6 @@ async function executePayment() {
   const originalBtnContent = DOM.confirmOk.innerHTML;
   
   try {
-    // Memasang status disabilitas elemen antarmuka saat transaksi berlangsung
     if (DOM.confirmOk) {
       DOM.confirmOk.disabled = true;
       DOM.confirmOk.innerHTML = `<span class="spinner"></span> Menyimpan...`;
@@ -439,7 +437,6 @@ async function executePayment() {
     await fetchCicilan();
     updateSyncState("synced", "Synced just now");
     
-    // Memicu efek kilatan hijau penanda transaksi berhasil
     setTimeout(() => {
       const cards = DOM.daftarCicilan.querySelectorAll(".cicilan");
       if (cards && cards[pendingPayIndex]) {
