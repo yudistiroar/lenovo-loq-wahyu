@@ -12,7 +12,7 @@ const API_BASE_URL = "https://lenovo-loq-backend.asrifyudistira.workers.dev";
 
 let cicilanMaster = []; 
 let pendingPayIndex = null;
-let isCancelOperation = false; // Flag pelacak jenis operasi
+let isCancelOperation = false; 
 let currentTotalHargaVal = 0;
 let currentSudahBayarVal = 0;
 let currentSisaHutangVal = 0;
@@ -41,8 +41,9 @@ const DOM = {
   daftarCicilan: document.getElementById("daftarCicilan"),
   riwayatPembayaran: document.getElementById("riwayatPembayaran"),
   photoGallery: document.getElementById("photoGallery"),
+  sisaBulanText: document.getElementById("sisaBulanText"),
   
-  // Konfirmasi Modal Nodes
+  // Confirmation Modal Nodes
   confirmModal: document.getElementById("confirmModal"),
   confirmMessage: document.getElementById("confirmMessage"),
   confirmCancel: document.getElementById("confirmCancel"),
@@ -61,6 +62,31 @@ const DOM = {
   amountModalCancel: document.getElementById("amountModalCancel"),
   amountModalSubmit: document.getElementById("amountModalSubmit")
 };
+
+// ==========================================
+// TASK 4: HELPER FUNCTION FORMAT TANGGAL INDO
+// ==========================================
+function formatTanggalIndo(dateStr) {
+  if (!dateStr || dateStr === "—") return "—";
+  const parts = dateStr.split("-");
+  if (parts.length !== 3) return dateStr;
+  
+  const tahun = parts[0];
+  const bulanIndex = parseInt(parts[1], 10) - 1;
+  const tanggal = parseInt(parts[2], 10);
+  
+  const daftarBulan = [
+    "Agustus", "September", "Oktober", "November", "Desember", 
+    "Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli"
+  ];
+  
+  // Proteksi index array bulan aman
+  const namaBulan = daftarBulan[bulanIndex] || parts[1];
+  
+  // Output format: 01 Agustus 2026
+  const tanggalPad = String(tanggal).padStart(2, '0');
+  return `${tanggalPad} ${namaBulan} ${tahun}`;
+}
 
 // ==========================================
 // CORE INFRASTRUCTURE DATA SYNCHRONIZATION
@@ -82,8 +108,6 @@ function animateNumber(element, start, end, duration = 600) {
   function update(currentTime) {
     const elapsed = currentTime - startTime;
     const progress = Math.min(elapsed / duration, 1);
-    
-    // Cubic Ease-Out Transition Formula
     const easeProgress = progress * (2 - progress);
     const currentVal = Math.floor(start + (end - start) * easeProgress);
     
@@ -174,7 +198,6 @@ async function fetchCicilan() {
       cicilanMaster = cicilanMaster ? [cicilanMaster] : [];
     }
     
-    // Sort array by installment incremental counter
     cicilanMaster.sort((a, b) => (a.installment ?? 0) - (b.installment ?? 0));
     renderAll();
   } catch (error) {
@@ -215,10 +238,17 @@ function renderProgressPanel() {
   const lunasCount = cicilanMaster.filter(c => c.status === "paid" || (c.paid_amount >= c.nominal)).length;
   const percent = Math.round((lunasCount / totalCount) * 100);
 
+  // TASK 2: Hitung otomatis berdasarkan jumlah cicilan yang belum lunas
+  const sisaBulan = cicilanMaster.filter(c => c.status !== "paid" && (c.paid_amount ?? 0) < (c.nominal ?? 0)).length;
+
   if (DOM.progressPercent) DOM.progressPercent.textContent = `${percent}%`;
   if (DOM.progressBar) {
     DOM.progressBar.style.width = `${percent}%`;
     DOM.progressBar.setAttribute("aria-valuenow", percent);
+  }
+  
+  if (DOM.sisaBulanText) {
+    DOM.sisaBulanText.textContent = `${sisaBulan} Bulan Tersisa`;
   }
   
   if (DOM.progressText) {
@@ -233,6 +263,9 @@ function renderProgressPanel() {
     if (nextIdx !== -1) {
       if (DOM.progressTitle) DOM.progressTitle.textContent = `Cicilan Bulan Ke-${cicilanMaster[nextIdx].installment || (nextIdx + 1)} Aktif`;
       if (DOM.progressSub) DOM.progressSub.textContent = `Selesaikan tagihan sebelum tenggat waktu demi menjaga histori finansial.`;
+      
+      // Sinkronisasi infobar header countdown via helper tanggal baru
+      if (DOM.countdownText) DOM.countdownText.textContent = formatTanggalIndo(cicilanMaster[nextIdx].due_date);
     }
   }
 }
@@ -265,8 +298,6 @@ function renderDaftarCicilan() {
       statusLabel = "Berikutnya";
       statusClass = "next";
       card.classList.add("cicilan--next");
-      
-      if (DOM.countdownText) DOM.countdownText.textContent = item.due_date || "—";
     } else {
       const dueDate = parseDateISO(item.due_date);
       if (dueDate && dueDate < new Date()) {
@@ -276,7 +307,7 @@ function renderDaftarCicilan() {
       }
     }
 
-    // TASK 2: Merubah teks string tombol di dalam template literal menjadi "Bayar Sekarang"
+    // TASK 3 & 4: Spacing grid nyaman dan penyeragaman format tanggal dengan helper function
     card.innerHTML = `
       <div class="info">
         <div class="cicilan-header">
@@ -284,9 +315,9 @@ function renderDaftarCicilan() {
           <span class="status-badge status-badge--${statusClass}" ${badgeAttributes}>${statusLabel}</span>
         </div>
         <div class="cicilan-meta">
-          <span class="meta-item">Target: <strong class="meta-item--amount">${formatRupiah(nominal)}</strong></span>
-          <span class="meta-item">Dibayar: <strong class="meta-item--amount">${formatRupiah(paidAmount)}</strong></span>
-          <span class="meta-item">Jatuh Tempo: <strong>${item.due_date || "—"}</strong></span>
+          <div class="meta-item">Target: <strong class="meta-item--amount">${formatRupiah(nominal)}</strong></div>
+          <div class="meta-item">Dibayar: <strong class="meta-item--amount">${formatRupiah(paidAmount)}</strong></div>
+          <div class="meta-item">Jatuh Tempo: <strong>${formatTanggalIndo(item.due_date)}</strong></div>
         </div>
       </div>
       ${isLunas ? "" : `<button type="button" class="btn-pay" onclick="triggerPaymentFlow(${index})">Bayar Sekarang</button>`}
@@ -305,7 +336,6 @@ function renderRiwayatPembayaran() {
     return;
   }
 
-  // Sorting history: most recent paid transaction pops up first
   const sortedHistory = [...paidHistory].sort((a, b) => new Date(b.paid_at || 0) - new Date(a.paid_at || 0));
 
   sortedHistory.forEach((item, index) => {
@@ -328,7 +358,7 @@ function renderRiwayatPembayaran() {
         </div>
         <div class="history-card__row">
           <span class="history-card__label">Tanggal Masuk</span>
-          <span class="history-card__value">${item.paid_at || "—"}</span>
+          <span class="history-card__value">${formatTanggalIndo(item.paid_at)}</span>
         </div>
       </div>
     `;
@@ -357,7 +387,6 @@ window.triggerPaymentFlow = function(index) {
   const paidAmount = item.paid_amount ?? 0;
   const nominal = item.nominal ?? 0;
 
-  // Partial Payment Detection Flow Switcher
   if (paidAmount > 0 && paidAmount < nominal) {
     if (DOM.amountModalTitle) DOM.amountModalTitle.textContent = `Selesaikan Cicilan Ke-${item.installment}`;
     if (DOM.amountModalTarget) DOM.amountModalTarget.textContent = `Kekurangan tagihan: ${formatRupiah(nominal - paidAmount)}`;
@@ -543,27 +572,5 @@ document.addEventListener("keydown", (e) => {
     isCancelOperation = false;
   }
 });
-
-// Task 4: Helper Function
-function formatTanggalIndo(dateStr) {
-  if (!dateStr) return "—";
-  const [y, m, d] = dateStr.split('-');
-  const bulan = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", 
-                 "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
-  return `${d} ${bulan[parseInt(m) - 1]} ${y}`;
-}
-
-// Task 2: Perbarui fungsi renderProgressPanel
-function renderProgressPanel() {
-  // ... logika sebelumnya ...
-  const sisaBulan = cicilanMaster.filter(c => c.status !== 'paid').length;
-  
-  // Tambahkan elemen ini di DOM HTML Anda: <div id="sisaBulanText"></div>
-  const el = document.getElementById("sisaBulanText");
-  if(el) el.textContent = `${sisaBulan} Bulan Tersisa`;
-}
-
-// Task 4: Update renderDaftarCicilan
-// Gunakan: formatTanggalIndo(item.due_date) di bagian Jatuh Tempo.
 
 initialize();

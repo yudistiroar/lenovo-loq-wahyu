@@ -2,50 +2,43 @@
    THE STRIPE / LINEAR / VERCEL FINTECH DESIGN SYSTEM
    ========================================================================== */
    :root {
-    /* Sophisticated Layering Architecture (Never Pure Black) */
-    --bg-page: #09090b;          /* Pure obsidian floor */
-    --bg-surface: #121215;       /* Elevated canvas layer */
-    --bg-card: #1c1c21;          /* TASK 1: Diubah agar lebih terang dari background halaman (#09090b) */
-    --bg-element: #222227;       /* Form track & input wells */
-    --bg-hover: #27272e;         /* Micro-elevation hover states */
+    --bg-page: #09090b;          
+    --bg-surface: #121215;       
+    --bg-card: #1c1c21;          
+    --bg-element: #222227;       
+    --bg-hover: #27272e;         
     
-    /* Strict Financial Color Hierarchy */
-    --text-primary: #f4f4f7;     /* Crisp high-contrast white */
-    --text-secondary: #a1a1aa;   /* Muted interface label text */
-    --text-muted: #52525b;       /* Silent trace metadata text */
+    --text-primary: #f4f4f7;     
+    --text-secondary: #a1a1aa;   
+    --text-muted: #52525b;       
     
-    /* Precision Engineering Accents */
-    --accent: #2563eb;           /* Stripe Engineering Blue */
+    --accent: #2563eb;           
     --accent-hover: #3b82f6;
     --accent-glow: rgba(37, 99, 235, 0.15);
     --accent-border: rgba(37, 99, 235, 0.2);
     
-    --success: #10b981;          /* Ledger Success Green */
-    --success-border: rgba(16, 185, 129, 0.2);
-    --success-glow: rgba(16, 185, 129, 0.08);
-    
-    --warning: #f59e0b;          /* Attention Orange */
+    /* TASK 1: Variabel warna fungsional untuk angka summary card */
+    --success: #22c55e;          
+    --warning: #f59e0b;          
+    --success-border: rgba(34, 197, 94, 0.2);
+    --success-glow: rgba(34, 197, 94, 0.08);
     --warning-border: rgba(245, 158, 11, 0.2);
     
-    /* Strict Spatial System */
     --space-xs: 8px;
     --space-sm: 16px;
     --space-md: 24px;
     --space-lg: 32px;
     
-    /* Perfect Radii Geometry */
-    --radius-sm: 8px;            /* TASK 2: Tombol & Badge radius lebih modern */
-    --radius-md: 12px;           /* Card radius modern */
-    --radius-lg: 16px;           /* Panel container & Modals */
+    --radius-sm: 8px;            
+    --radius-md: 12px;           
+    --radius-lg: 16px;           
     
-    /* Fluid Timing */
     --ease-linear: cubic-bezier(0,0,1,1);
     --ease-out: cubic-bezier(0,0,0.2,1);
     --ease-in-out: cubic-bezier(0.4,0,0.2,1);
     
-    /* High Definition Shadows */
     --shadow-sm: 0 1px 2px rgba(0,0,0,0.5);
-    --shadow-md: 0 4px 12px rgba(0,0,0,0.25); /* TASK 1: Shadow tipis untuk card */
+    --shadow-md: 0 4px 12px rgba(0,0,0,0.25); 
     --shadow-lg: 0 16px 40px rgba(0,0,0,0.6);
     --shadow-inset: inset 0 1px 0 rgba(255,255,255,0.1);
 }
@@ -113,7 +106,6 @@ body {
     font-weight: 500;
 }
 
-/* UX Info Bar */
 .ux-bar {
     display: flex;
     gap: var(--space-md);
@@ -196,6 +188,15 @@ body {
     letter-spacing: -0.03em;
     color: var(--text-primary);
     font-variant-numeric: tabular-nums;
+}
+
+/* TASK 1: Pewarnaan Angka Metrik Berdasarkan Hierarki */
+#sudahBayar {
+    color: var(--success);
+}
+
+#sisaHutang {
+    color: var(--warning);
 }
 
 /* ==========================================================================
@@ -282,6 +283,15 @@ body {
     transition: width 800ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
+/* TASK 2: Label Sisa Bulan Minimalis */
+.progress-remaining-months {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    margin-top: 4px;
+    margin-bottom: var(--space-xs);
+}
+
 .progress-details-bar {
     display: flex;
     justify-content: space-between;
@@ -294,13 +304,12 @@ body {
     color: var(--text-secondary);
 }
 
-/* Divider & Values Styles Removed via Task 3 Refinement */
 .progress-divider-dot, .progress-contract-values {
     display: none !important;
 }
 
 /* ==========================================================================
-   TASK 1: REFINEMENT DATA CARD "JADWAL PEMBAYARAN"
+   JADWAL PEMBAYARAN (CARD LIST)
    ========================================================================== */
 .installment-feed {
     display: flex;
@@ -311,27 +320,28 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: var(--bg-card); /* Lebih terang dari background halaman */
-    border: 1px solid rgba(255, 255, 255, 0.08); /* Border terlihat & elegan */
-    border-radius: var(--radius-md); /* Radius tetap modern */
+    background-color: var(--bg-card); 
+    border: 1px solid rgba(255, 255, 255, 0.08); 
+    border-radius: var(--radius-md); 
     padding: var(--space-md);
-    margin-bottom: var(--space-sm); /* Spacing antar card lebih lega */
-    box-shadow: var(--shadow-md); /* Tambahan shadow tipis */
+    margin-bottom: var(--space-sm); 
+    box-shadow: var(--shadow-md); 
     position: relative;
     overflow: hidden;
-    transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1),
-                border-color 0.2s cubic-bezier(0.16, 1, 0.3, 1),
-                box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    
+    /* TASK 6: Hover Effect Transisi 0.25 Detik Halus */
+    transition: transform 250ms cubic-bezier(0.16, 1, 0.3, 1),
+                border-color 250ms cubic-bezier(0.16, 1, 0.3, 1),
+                box-shadow 250ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* Hover Effect Halus */
+/* TASK 6: Hover Effect Card Sedikit Terangkat */
 .cicilan:hover {
-    transform: translateY(-2px);
+    transform: translateY(-3px);
     border-color: rgba(255, 255, 255, 0.16);
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
 }
 
-/* Next / Focal Magnet Card Accent Override */
 .cicilan--next {
     background: linear-gradient(180deg, #16161c 0%, #111115 100%);
     border-color: rgba(37, 99, 235, 0.35);
@@ -350,7 +360,6 @@ body {
     background-color: var(--accent);
 }
 
-/* Paid & Overdue Modifications */
 .cicilan--paid {
     opacity: 0.55;
     background-color: rgba(18, 18, 21, 0.4);
@@ -373,7 +382,6 @@ body {
     border-color: rgba(239, 68, 68, 0.25);
 }
 
-/* Card Internal Typography */
 .info {
     display: flex;
     flex-direction: column;
@@ -394,9 +402,13 @@ body {
     color: var(--text-primary);
 }
 
+/* TASK 3: Grid Spacing Keterbacaan yang Lebih Nyaman & Lega */
 .cicilan-meta {
-    display: flex;
-    gap: var(--space-md);
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-sm); 
+    width: 100%;
+    max-width: 680px;
 }
 
 .meta-item {
@@ -413,14 +425,12 @@ body {
     font-variant-numeric: tabular-nums;
 }
 
-/* ==========================================================================
-   TASK 2: REFINEMENT TOMBOL "BAYAR SEKARANG"
-   ========================================================================== */
+/* TASK 2 & 6: Refinement Tombol Bayar Sekarang & Hover Efek */
 .btn-pay {
-    margin-top: var(--space-sm); /* Margin atas yang cukup */
-    padding: 10px 18px; /* Tinggi tombol sedikit lebih besar */
-    border-radius: var(--radius-sm); /* Border radius lebih modern */
-    min-width: 125px;
+    margin-top: var(--space-sm); 
+    padding: 10px 20px; 
+    border-radius: var(--radius-sm); 
+    min-width: 130px;
     background-color: var(--accent);
     color: #ffffff;
     border: none;
@@ -429,35 +439,40 @@ body {
     letter-spacing: -0.01em;
     cursor: pointer;
     box-shadow: var(--shadow-inset);
-    transition: background-color 150ms var(--ease-linear), transform 100ms var(--ease-out);
+    
+    /* TASK 6: Hover Effect Transisi 0.25 Detik Halus */
+    transition: background-color 250ms var(--ease-linear), 
+                opacity 250ms var(--ease-out), 
+                transform 150ms var(--ease-out);
 }
 
 .btn-pay:hover {
     background-color: var(--accent-hover);
+    opacity: 0.95;
 }
 
 .btn-pay:active {
-    transform: scale(0.98);
+    transform: scale(0.97);
 }
 
 /* ==========================================================================
-   TASK 4: REFINEMENT BADGE STATUS
+   TASK 5: BADGE STATUS (PILL ARCHITECTURE)
    ========================================================================== */
 .status-badge {
     font-size: 10px;
-    font-weight: 700;
-    padding: 2px 7px;
-    border-radius: 5px;
+    font-weight: 600;            /* Font weight 600 */
+    padding: 4px 12px;           /* Padding sedikit lebih besar */
+    border-radius: 999px;        /* Border radius penuh (pill) */
     text-transform: uppercase;
-    letter-spacing: 0.04em;
+    letter-spacing: 0.02em;      /* Letter spacing tipis */
     display: inline-block;
 }
 
 /* LUNAS -> Hijau Muted */
 .status-badge--paid {
-    background-color: rgba(16, 185, 129, 0.12);
+    background-color: rgba(34, 197, 94, 0.12);
     color: #4ade80;
-    border: 1px solid rgba(16, 185, 129, 0.25);
+    border: 1px solid rgba(34, 197, 94, 0.25);
 }
 
 /* BERIKUTNYA -> Biru Muted */
@@ -641,7 +656,6 @@ body {
     margin-bottom: var(--space-md);
 }
 
-/* Form Controls Inside Amount Modal */
 .input-group {
     position: relative;
     margin-bottom: var(--space-sm);
@@ -685,7 +699,6 @@ body {
     display: none;
 }
 
-/* Modal Action Layout Grid */
 .modal-actions {
     display: flex;
     justify-content: flex-end;
@@ -731,7 +744,6 @@ body {
     cursor: not-allowed;
 }
 
-/* Spinner Loading Component */
 .spinner {
     display: inline-block;
     width: 12px;
@@ -788,7 +800,6 @@ body {
     color: var(--text-primary);
 }
 
-/* Cloud Status Engine Classes */
 .sync-status {
     display: flex;
     align-items: center;
@@ -827,7 +838,6 @@ body {
     to { opacity: 1; }
 }
 
-/* Micro Interaction: Success Flash Card Trigger */
 .cicilan--success-flash {
     animation: flashGreen 1.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
@@ -849,7 +859,7 @@ body {
 @media (max-width: 640px) {
     body { padding: var(--space-md) 0; }
     .metric-row { grid-template-columns: 1fr; gap: var(--space-xs); }
-    .cicilan-meta { flex-direction: column; gap: 4px; }
+    .cicilan-meta { grid-template-columns: 1fr; gap: 6px; }
     .progress-header-block { text-align: left; display: flex; align-items: baseline; gap: 4px; }
     .progress-percentage-label { margin-top: 0; }
     .progress-details-bar { flex-direction: column; align-items: flex-start; gap: 4px; }
@@ -863,9 +873,6 @@ body {
     .gallery-section h2 { padding: 0 var(--space-sm); }
 }
 
-/* ==========================================================================
-   INTERACTION TWEAK: CLICKABLE LUNAS BADGE AFFORDANCE
-   ========================================================================== */
 .status-badge--paid {
     cursor: pointer !important;
     user-select: none;
@@ -873,40 +880,7 @@ body {
 }
 
 .status-badge--paid:hover {
-    background-color: rgba(16, 185, 129, 0.2) !important;
-    border-color: rgba(16, 185, 129, 0.4) !important;
+    background-color: rgba(34, 197, 94, 0.2) !important;
+    border-color: rgba(34, 197, 94, 0.4) !important;
     transform: scale(1.02);
-}/* Task 1: Warna Summary Card */
-.metric-number#sudahBayar { color: #22C55E; }
-.metric-number#sisaHutang { color: #F59E0B; }
-
-/* Task 3 & 6: Spacing & Hover Jadwal Pembayaran */
-.cicilan-meta {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 12px;
-    margin-top: 10px;
-}
-.cicilan {
-    transition: transform 0.25s ease, box-shadow 0.25s ease;
-}
-.cicilan:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-}
-
-/* Task 5: Badge Pill */
-.status-badge {
-    border-radius: 999px;
-    padding: 4px 12px;
-    font-weight: 600;
-    letter-spacing: 0.02em;
-}
-
-/* Task 6: Hover Tombol */
-.btn-pay {
-    transition: background-color 0.25s ease, opacity 0.25s ease;
-}
-.btn-pay:hover {
-    opacity: 0.9;
 }
