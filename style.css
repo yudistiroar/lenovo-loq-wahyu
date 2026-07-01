@@ -193,8 +193,7 @@ body {
     border: 1px solid var(--border-light);
     border-radius: var(--radius-md);
     box-shadow: var(--shadow-xs);
-    transition: var(--transition-premium);
-    transition: transform var(--transition-premium), box-shadow var(--transition-premium), border-color var(--transition-premium);
+    transition: transform 240ms var(--ease), box-shadow 240ms var(--ease), border-color 240ms var(--ease);
 }
 
 .stat-card:hover {
@@ -264,6 +263,10 @@ body {
     border: 1px solid var(--border-light);
     border-radius: var(--radius-lg);
     box-shadow: var(--shadow-hero);
+}
+
+.progress-panel[hidden] {
+    display: none !important;
 }
 
 .progress-header {
@@ -685,16 +688,18 @@ button:active,
     padding: var(--space-lg);
 }
 
-.modal-backdrop,
-#amountModal {
-    backdrop-filter: blur(8px); /* Premium blur effect ala Arc/Wallet */
+/* FIXED PROTECTOR: Pastikan elemen HTML yang memiliki atribut [hidden] 
+   benar-benar disembunyikan dan TIDAK ditimpa oleh display: flex */
+.modal[hidden],
+#amountModal[hidden] {
+    display: none !important;
 }
 
-/* Backdrop elements background tracking */
 .modal-backdrop {
     position: absolute;
     inset: 0;
     background: rgba(0, 0, 0, 0.15);
+    backdrop-filter: blur(8px); /* Premium blur effect ala Arc/Wallet */
 }
 
 .modal-card,
