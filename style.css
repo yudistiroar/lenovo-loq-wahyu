@@ -58,9 +58,9 @@
    RESET & FOUNDATION
    ========================================================================== */
 *, *::before, *::after {
+    box-sizing: border-box;
     margin: 0;
     padding: 0;
-    box-sizing: border-box;
 }
 
 body {
@@ -194,7 +194,7 @@ body {
 .ux-bar-badge {
     font-size: 10px;
     font-weight: 500;
-    padding: 0px 4px;
+    padding: 0 4px;
     border-radius: 4px;
     display: inline-block;
     width: max-content;
@@ -596,7 +596,7 @@ button:disabled, .btn-pay:disabled { opacity: 0.5; cursor: not-allowed; }
 .modal-backdrop { position: absolute; inset: 0; background: rgba(0, 0, 0, 0.1); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
 
 .modal-card, #amountModal > div { position: relative; z-index: 1; width: min(100%, 380px); padding: var(--space-lg) !important; background: var(--bg-surface) !important; border: 1px solid rgba(0, 0, 0, 0.04) !important; border-radius: var(--radius-lg) !important; box-shadow: var(--shadow-modal) !important; animation: modalIn 300ms var(--ease-premium) forwards; }
-.modal-card h3, #amountModal h3 { font-size: 15px !important; font-weight: 700 !spacing: -0.01em !important; margin-bottom: 4px !important; color: var(--text-primary) !important; }
+.modal-card h3, #amountModal h3 { font-size: 15px !important; font-weight: 700; letter-spacing: -0.01em !important; margin-bottom: 4px !important; color: var(--text-primary) !important; }
 .modal-message, #amountModal p.modal-message { font-size: 12px !important; color: var(--text-secondary) !important; line-height: 1.5 !important; margin-bottom: var(--space-md) !important; }
 
 .modal-input, #amountModalInput { width: 100%; padding: 10px 12px !important; border: 1px solid rgba(0, 0, 0, 0.06) !important; border-radius: 6px !important; margin-top: 4px !important; margin-bottom: var(--space-sm) !important; font-size: 15px !important; font-weight: 700 !important; font-family: var(--font) !important; background-color: var(--bg-subtle) !important; outline: none; transition: border-color 150ms var(--ease-premium), background-color 150ms var(--ease-premium), box-shadow 150ms var(--ease-premium) !important; }
@@ -643,5 +643,5 @@ button:disabled, .btn-pay:disabled { opacity: 0.5; cursor: not-allowed; }
     .modal-actions { flex-direction: column; }
     .toast { width: min(92%, 340px); justify-content: center; }
     .photo-gallery { grid-template-columns: repeat(2, 1fr); padding: 0 var(--space-sm); }
-    .gallery-section h2 { padding-0 var(--space-sm); }
+    .gallery-section h2 { padding: 0 var(--space-sm); }
 }
