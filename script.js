@@ -64,7 +64,7 @@ const DOM = {
 };
 
 // ==========================================
-// TASK 4: HELPER FUNCTION FORMAT TANGGAL INDO
+// HELPER FUNCTION FORMAT TANGGAL INDO
 // ==========================================
 function formatTanggalIndo(dateStr) {
   if (!dateStr || dateStr === "—") return "—";
@@ -80,10 +80,7 @@ function formatTanggalIndo(dateStr) {
     "Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli"
   ];
   
-  // Proteksi index array bulan aman
   const namaBulan = daftarBulan[bulanIndex] || parts[1];
-  
-  // Output format: 01 Agustus 2026
   const tanggalPad = String(tanggal).padStart(2, '0');
   return `${tanggalPad} ${namaBulan} ${tahun}`;
 }
@@ -238,7 +235,6 @@ function renderProgressPanel() {
   const lunasCount = cicilanMaster.filter(c => c.status === "paid" || (c.paid_amount >= c.nominal)).length;
   const percent = Math.round((lunasCount / totalCount) * 100);
 
-  // TASK 2: Hitung otomatis berdasarkan jumlah cicilan yang belum lunas
   const sisaBulan = cicilanMaster.filter(c => c.status !== "paid" && (c.paid_amount ?? 0) < (c.nominal ?? 0)).length;
 
   if (DOM.progressPercent) DOM.progressPercent.textContent = `${percent}%`;
@@ -264,7 +260,6 @@ function renderProgressPanel() {
       if (DOM.progressTitle) DOM.progressTitle.textContent = `Cicilan Bulan Ke-${cicilanMaster[nextIdx].installment || (nextIdx + 1)} Aktif`;
       if (DOM.progressSub) DOM.progressSub.textContent = `Selesaikan tagihan sebelum tenggat waktu demi menjaga histori finansial.`;
       
-      // Sinkronisasi infobar header countdown via helper tanggal baru
       if (DOM.countdownText) DOM.countdownText.textContent = formatTanggalIndo(cicilanMaster[nextIdx].due_date);
     }
   }
@@ -307,7 +302,6 @@ function renderDaftarCicilan() {
       }
     }
 
-    // TASK 3 & 4: Spacing grid nyaman dan penyeragaman format tanggal dengan helper function
     card.innerHTML = `
       <div class="info">
         <div class="cicilan-header">
@@ -378,24 +372,29 @@ function renderGallery() {
 }
 
 // ==========================================
-// DYNAMIC MUTATION INTERACTION WORKFLOWS
+// REFACTORED MUTATION INTERACTION WORKFLOWS
 // ==========================================
 window.triggerPaymentFlow = function(index) {
   pendingPayIndex = index;
   isCancelOperation = false;
   const item = cicilanMaster[index];
-  const paidAmount = item.paid_amount ?? 0;
   const nominal = item.nominal ?? 0;
+  const paidAmount = item.paid_amount ?? 0;
+  
+  // Hitung sisa sisa target yang belum dibayar di bulan berjalan
+  const targetSisaBulanIni = Math.max(0, nominal - paidAmount);
 
-  if (paidAmount > 0 && paidAmount < nominal) {
-    if (DOM.amountModalTitle) DOM.amountModalTitle.textContent = `Selesaikan Cicilan Ke-${item.installment}`;
-    if (DOM.amountModalTarget) DOM.amountModalTarget.textContent = `Kekurangan tagihan: ${formatRupiah(nominal - paidAmount)}`;
-    if (DOM.amountModalInput) DOM.amountModalInput.value = formatRupiahLive(String(nominal - paidAmount));
-    if (DOM.amountModal) DOM.amountModal.style.display = "flex";
-    validateRealtime();
-  } else {
-    openConfirmModal(`Apakah Anda yakin ingin membayar penuh untuk Cicilan Ke-${item.installment} sejumlah ${formatRupiah(nominal)}?`);
+  // REFACTOR: Klik tombol bayar selalu memunculkan modal input nominal terlebih dahulu
+  if (DOM.amountModalTitle) DOM.amountModalTitle.textContent = `Pembayaran Cicilan Ke-${item.installment}`;
+  if (DOM.amountModalTarget) DOM.amountModalTarget.textContent = `Target tagihan bulan ini: ${formatRupiah(targetSisaBulanIni)}`;
+  
+  // Set default nilai input ke nominal sisa target cicilan bulan ini
+  if (DOM.amountModalInput) {
+    DOM.amountModalInput.value = formatRupiahLive(String(targetSisaBulanIni));
   }
+  
+  if (DOM.amountModal) DOM.amountModal.style.display = "flex";
+  validateRealtime();
 };
 
 window.triggerCancelFlow = function(index) {
@@ -424,10 +423,13 @@ function validateRealtime() {
   
   const item = cicilanMaster[pendingPayIndex];
   const inputVal = parseRupiah(DOM.amountModalInput.value);
-  const remainingDebt = (item.nominal ?? 0) - (item.paid_amount ?? 0);
+  const nominal = item.nominal ?? 0;
+  const paidAmount = item.paid_amount ?? 0;
+  const targetSisaBulanIni = Math.max(0, nominal - paidAmount);
 
-  if (inputVal < remainingDebt) {
-    DOM.amountModalError.textContent = `Nominal tidak boleh kurang dari sisa hutang bulan ini (${formatRupiah(remainingDebt)})`;
+  // Validasi: Tolak nominal yang lebih kecil dari sisa target bulan ini
+  if (inputVal < targetSisaBulanIni) {
+    DOM.amountModalError.textContent = `Nominal tidak boleh kurang dari target tagihan bulan ini (${formatRupiah(targetSisaBulanIni)})`;
     DOM.amountModalError.style.display = "block";
     DOM.amountModalSubmit.disabled = true;
   } else {
@@ -442,7 +444,9 @@ function processAmountSubmit() {
   const amount = parseRupiah(DOM.amountModalInput.value);
   
   if (DOM.amountModal) DOM.amountModal.style.display = "none";
-  openConfirmModal(`Konfirmasi pembayaran khusus sebesar ${formatRupiah(amount)} untuk Cicilan Ke-${cicilanMaster[pendingPayIndex].installment}?`);
+  
+  // Tampilkan modal konfirmasi dengan nominal yang sudah ditentukan
+  openConfirmModal(`Konfirmasi pembayaran sebesar ${formatRupiah(amount)} untuk Cicilan Ke-${cicilanMaster[pendingPayIndex].installment}?`);
 }
 
 async function executePayment() {
