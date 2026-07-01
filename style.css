@@ -1,62 +1,61 @@
 /* ==========================================================================
-   HIGH-FIDELITY REDESIGN: NEXT-GEN FINANCIAL INTERFACE
-   Inspired by Stripe Dashboard, Linear, Vercel & Apple Wallet
+   THE STRIPE / LINEAR / VERCEL FINTECH DESIGN SYSTEM
    ========================================================================== */
    :root {
-    /* Sophisticated Core Palette */
-    --bg-page: #09090b;          /* Pure obsidian base matching Linear/Vercel */
-    --bg-surface: #121214;       /* Slate dark elevated surfaces */
-    --bg-surface-hover: #1a1a1e;
-    --bg-element: #1c1c21;       /* Inside fields & subtle tags */
+    /* Sophisticated Layering Architecture (Never Pure Black) */
+    --bg-page: #09090b;          /* Pure obsidian floor */
+    --bg-surface: #121215;       /* Elevated canvas layer */
+    --bg-card: #18181c;          /* High-definition interactive card layer */
+    --bg-element: #222227;       /* Form track & input wells */
+    --bg-hover: #27272e;         /* Micro-elevation hover states */
     
-    /* Ultra High-Contrast Typography */
-    --text-primary: #f4f4f5;     /* Crisp white */
-    --text-secondary: #a1a1aa;   /* Soft slate text */
-    --text-muted: #71717a;       /* Deep gray description tags */
+    /* Strict Financial Color Hierarchy */
+    --text-primary: #f4f4f7;     /* Crisp high-contrast white */
+    --text-secondary: #a1a1aa;   /* Muted interface label text */
+    --text-muted: #52525b;       /* Silent trace metadata text */
     
-    /* High-Definition Micro Accents */
-    --accent: #2563eb;           /* Stripe Blueprint Blue */
+    /* Precision Engineering Accents */
+    --accent: #2563eb;           /* Stripe Engineering Blue */
     --accent-hover: #3b82f6;
-    --accent-soft: rgba(37, 99, 235, 0.08);
-    --accent-border: rgba(37, 99, 235, 0.25);
+    --accent-glow: rgba(37, 99, 235, 0.15);
+    --accent-border: rgba(37, 99, 235, 0.2);
     
-    --success: #10b981;          /* Emerald Ledger Green */
-    --success-soft: rgba(16, 185, 129, 0.08);
-    --success-border: rgba(16, 185, 129, 0.25);
+    --success: #10b981;          /* Ledger Success Green */
+    --success-soft: rgba(16, 185, 129, 0.06);
+    --success-border: rgba(16, 185, 129, 0.2);
     
-    --danger: #ef4444;           /* High-Alert Crimson */
-    --danger-soft: rgba(239, 68, 68, 0.08);
-    --danger-border: rgba(239, 68, 68, 0.25);
+    --danger: #ef4444;           /* Delinquent Balance Crimson */
+    --danger-soft: rgba(239, 68, 68, 0.06);
+    --danger-border: rgba(239, 68, 68, 0.2);
     
-    --warning: #f59e0b;          /* Amber Warning */
-    --warning-soft: rgba(245, 158, 11, 0.08);
-    --warning-border: rgba(245, 158, 11, 0.25);
-    
-    /* 8px Strict Spatial Tokens */
+    --warning: #f59e0b;          /* Grace Period Amber */
+    --warning-soft: rgba(245, 158, 11, 0.06);
+    --warning-border: rgba(245, 158, 11, 0.2);
+
+    /* 8px Spatial Layout Tokens */
     --space-xs: 8px;
     --space-sm: 16px;
     --space-md: 24px;
     --space-lg: 32px;
     --space-xl: 48px;
     
-    /* Structural Bounds */
+    /* Structural Rules */
     --radius-sm: 6px;
     --radius-md: 10px;
     --radius-lg: 16px;
     --radius-full: 9999px;
-    
-    --font: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+    --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     --ease-linear: cubic-bezier(0.16, 1, 0.3, 1);
     
-    /* High-Fidelity Ray-traced Elevation Profile */
+    /* Precision Borders & Shadows Packs */
     --border-subtle: rgba(255, 255, 255, 0.04);
-    --border-hover: rgba(255, 255, 255, 0.08);
-    --shadow-premium: 0 1px 2px rgba(0,0,0,0.5), 0 8px 24px rgba(0,0,0,0.4);
-    --shadow-glow: 0 0 24px rgba(37, 99, 235, 0.15);
+    --border-hover: rgba(255, 255, 255, 0.09);
+    --shadow-premium: 0 1px 2px rgba(0, 0, 0, 0.6), 0 12px 32px rgba(0, 0, 0, 0.4);
+    --shadow-inset: inset 0 1px 0 rgba(255, 255, 255, 0.05);
 }
 
 /* ==========================================================================
-   BASE FOUNDATION
+   RESET & FINTECH CANVAS FOUNDATION
    ========================================================================== */
 *, *::before, *::after {
     box-sizing: border-box;
@@ -68,10 +67,10 @@ body {
     min-height: 100vh;
     background-color: var(--bg-page);
     background-image: 
-        radial-gradient(circle at 50% 0%, rgba(37, 99, 235, 0.07) 0%, transparent 50%),
-        radial-gradient(circle at 0% 100%, rgba(16, 185, 129, 0.02) 0%, transparent 40%);
+        radial-gradient(circle at 50% 0%, rgba(37, 99, 235, 0.06) 0%, transparent 45%),
+        radial-gradient(circle at 0% 100%, rgba(16, 185, 129, 0.01) 0%, transparent 35%);
     background-attachment: fixed;
-    font-family: var(--font);
+    font-family: var(--font-sans);
     color: var(--text-primary);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -79,11 +78,11 @@ body {
 }
 
 .app {
-    animation: saasIntro 500ms var(--ease-linear) forwards;
+    animation: saasStageReveal 500ms var(--ease-linear) forwards;
 }
 
-@keyframes saasIntro {
-    from { opacity: 0; transform: scale(0.99) translateY(4px); }
+@keyframes saasStageReveal {
+    from { opacity: 0; transform: scale(0.995) translateY(6px); }
     to { opacity: 1; transform: scale(1) translateY(0); }
 }
 
@@ -94,7 +93,7 @@ body {
 }
 
 /* ==========================================================================
-   HERO SEKTOR: HIGH-END STRUCTURAL MINIMALISM
+   HERO SECTOR: SYSTEM BRAND ARCHITECTURE
    ========================================================================== */
 .page-header {
     margin-bottom: var(--space-xl);
@@ -104,64 +103,73 @@ body {
     flex-wrap: wrap;
     gap: var(--space-md);
     border-bottom: 1px solid var(--border-subtle);
-    padding-bottom: var(--space-md);
+    padding-bottom: var(--space-lg);
 }
 
 .hero h1 {
-    font-size: 28px;
-    font-weight: 700;
-    letter-spacing: -0.04em;
+    font-size: 32px;
+    font-weight: 800;
+    letter-spacing: -0.05em;
     color: #ffffff;
     line-height: 1.1;
     margin-bottom: var(--space-xs);
-    text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+    background: linear-gradient(180deg, #ffffff 0%, #a1a1aa 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 
 .subtitle {
     font-size: 13px;
     color: var(--text-secondary);
+    letter-spacing: -0.01em;
 }
 .subtitle strong {
-    color: var(--text-primary);
+    color: #ffffff;
     font-weight: 600;
 }
 
-/* Arc Browser / Linear Inspired Top UX Cards Container */
+/* ==========================================================================
+   TOP INFO BAR (Glass Morphism Execution Profile)
+   ========================================================================== */
 .ux-bar {
     display: flex;
-    align-items: center;
-    background: var(--bg-surface);
+    align-items: stretch;
+    background: rgba(18, 18, 21, 0.6);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
     border: 1px solid var(--border-subtle);
-    border-radius: var(--radius-md);
-    padding: 4px;
-    box-shadow: var(--shadow-premium);
+    border-radius: var(--radius-lg);
+    padding: 6px;
+    box-shadow: var(--shadow-premium), var(--shadow-inset);
+    gap: 4px;
+    width: 100%;
+    max-width: 580px;
 }
 
 .ux-bar-item {
+    flex: 1;
     display: flex;
     align-items: center;
-    gap: var(--space-xs);
-    padding: 6px 14px;
-    border-radius: var(--radius-sm);
+    gap: 12px;
+    padding: var(--space-xs) 14px;
+    border-radius: var(--radius-md);
     transition: background 150ms var(--ease-linear);
 }
-
 .ux-bar-item:hover {
-    background: var(--bg-surface-hover);
+    background: var(--border-subtle);
 }
 
 .ux-bar-icon-wrap {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 24px;
-    height: 24px;
+    width: 26px;
+    height: 26px;
     background: var(--bg-element);
     border-radius: var(--radius-sm);
     color: var(--text-secondary);
     border: 1px solid var(--border-subtle);
 }
-
 .ux-icon {
     width: 12px;
     height: 12px;
@@ -175,10 +183,11 @@ body {
 
 .ux-bar-label {
     font-size: 9px;
-    font-weight: 600;
+    font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 0.06em;
+    letter-spacing: 0.08em;
     color: var(--text-muted);
+    margin-bottom: 2px;
 }
 
 .ux-bar-value {
@@ -189,74 +198,72 @@ body {
 
 .ux-bar-due-group {
     display: flex;
-    align-items: center;
-    gap: 6px;
+    flex-direction: column;
 }
 
 .ux-bar-badge {
     font-size: 9px;
     font-weight: 700;
-    padding: 1px 4px;
+    padding: 2px 5px;
     border-radius: 4px;
     text-transform: uppercase;
     letter-spacing: 0.02em;
+    width: max-content;
+    margin-top: 2px;
 }
 .ux-bar-badge--warning { background: var(--warning-soft); color: var(--warning); border: 1px solid var(--warning-border); }
 .ux-bar-badge--danger { background: var(--danger-soft); color: var(--danger); border: 1px solid var(--danger-border); }
 
 .ux-bar-divider {
     width: 1px;
-    height: 20px;
     background: var(--border-subtle);
-    margin: 0 4px;
+    margin: 6px 4px;
 }
 
-/* Cloud Sync Soft State Engine */
+/* Cloud Sync Micro-Interactions Layer */
 .sync-status {
     display: flex;
     align-items: center;
     gap: 6px;
     transition: opacity 200ms var(--ease-linear);
 }
-
 .sync-status--fade-out { opacity: 0; }
-.sync-dot { width: 5px; height: 5px; border-radius: 50%; }
+.sync-dot { width: 6px; height: 6px; border-radius: 50%; }
 .sync-text { font-size: 11px; font-weight: 600; }
 
 .sync-status--syncing { color: var(--warning); }
-.sync-status--syncing .sync-dot { background-color: var(--warning); animation: saasPulse 1s infinite alternate; }
+.sync-status--syncing .sync-dot { background-color: var(--warning); animation: pulseOpacity 1s infinite ease-in-out alternate; }
 
 .sync-status--synced { color: var(--success); }
-.sync-status--synced .sync-dot { background-color: var(--success); }
+.sync-status--synced .sync-dot { background-color: var(--success); box-shadow: 0 0 8px var(--success); }
 
 .sync-status--offline { color: var(--danger); }
-.sync-status--offline .sync-dot { background-color: var(--danger); animation: saasPulse 1s infinite alternate; }
+.sync-status--offline .sync-dot { background-color: var(--danger); animation: pulseOpacity 1s infinite ease-in-out alternate; }
 
-@keyframes saasPulse { from { opacity: 0.3; } to { opacity: 1; } }
+@keyframes pulseOpacity { from { opacity: 0.3; } to { opacity: 1; } }
 
 /* ==========================================================================
-   SUMMARY SEKTOR: METRIC BLOCK MONOLITH
+   SUMMARY SECTOR: ASSET KPI MONOLITHS
    ========================================================================== */
 .summary {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: var(--space-sm);
-    margin-bottom: var(--space-md);
+    margin-bottom: var(--space-lg);
 }
 
 .stat-card {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    height: 110px;
+    height: 118px;
     padding: var(--space-sm) var(--space-md);
-    background: linear-gradient(145deg, var(--bg-surface) 0%, rgba(18,18,20,0.7) 100%);
+    background: linear-gradient(180deg, var(--bg-surface) 0%, rgba(18, 18, 21, 0.8) 100%);
     border: 1px solid var(--border-subtle);
     border-radius: var(--radius-md);
-    box-shadow: var(--shadow-premium);
+    box-shadow: var(--shadow-premium), var(--shadow-inset);
     transition: transform 250ms var(--ease-linear), border-color 250ms var(--ease-linear);
 }
-
 .stat-card:hover {
     transform: translateY(-2px);
     border-color: var(--border-hover);
@@ -272,32 +279,31 @@ body {
     color: var(--text-secondary);
     border: 1px solid var(--border-subtle);
 }
-
 .stat-icon svg { width: 14px; height: 14px; }
-.stat-card--price .stat-icon { color: var(--text-primary); }
+.stat-card--price .stat-icon { color: #ffffff; }
 .stat-card--paid .stat-icon { background: var(--success-soft); color: var(--success); border-color: var(--success-border); }
 .stat-card--debt .stat-icon { background: var(--accent-soft); color: var(--accent); border-color: var(--accent-border); }
 
 .stat-body h3 {
     font-size: 10px;
-    font-weight: 600;
+    font-weight: 700;
     color: var(--text-muted);
     text-transform: uppercase;
-    letter-spacing: 0.05em;
+    letter-spacing: 0.06em;
     margin-bottom: 2px;
 }
-
 .stat-body p {
-    font-size: 24px;
-    font-weight: 700;
+    font-size: 26px;
+    font-weight: 800;
     letter-spacing: -0.04em;
     color: #ffffff;
     font-variant-numeric: tabular-nums;
+    line-height: 1.1;
 }
 .stat-card--paid .stat-body p { color: var(--success); }
 
 /* ==========================================================================
-   PROGRESS SEKTOR: VERCEL INTERACTIVE TIMELINE
+   PROGRESS SEKTOR: AMORTIZATION INSIGHTS CARD
    ========================================================================== */
 .progress-panel {
     padding: var(--space-md) var(--space-lg);
@@ -305,16 +311,7 @@ body {
     background: var(--bg-surface);
     border: 1px solid var(--border-subtle);
     border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-premium);
-    position: relative;
-}
-
-.progress-panel::before {
-    content: "";
-    position: absolute;
-    top: 0; left: var(--space-lg); right: var(--space-lg);
-    height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent);
+    box-shadow: var(--shadow-premium), var(--shadow-inset);
 }
 
 .progress-header {
@@ -326,44 +323,44 @@ body {
 }
 
 .progress-eyebrow {
-    font-size: 9px;
+    display: block;
+    font-size: 10px;
     font-weight: 700;
     color: var(--accent);
     text-transform: uppercase;
     letter-spacing: 0.08em;
     margin-bottom: 2px;
 }
-
 .progress-header h2 { 
-    font-size: 16px; 
+    font-size: 17px; 
     font-weight: 700; 
-    letter-spacing: -0.02em;
-    color: var(--text-primary);
+    letter-spacing: -0.02em; 
+    color: #ffffff;
 }
-
 .progress-subtitle { 
     font-size: 12px; 
     color: var(--text-secondary); 
 }
 
 .progress-percentage-wrap { text-align: right; }
-.progress-percentage { display: block; font-size: 32px; font-weight: 800; letter-spacing: -0.04em; line-height: 1; color: #ffffff; }
-.progress-percentage-label { display: block; margin-top: 2px; font-size: 10px; font-weight: 500; color: var(--text-muted); }
+.progress-percentage { display: block; font-size: 36px; font-weight: 800; letter-spacing: -0.05em; line-height: 1; color: #ffffff; }
+.progress-percentage-label { display: block; margin-top: 2px; font-size: 10px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; }
 
 .progress-track {
-    height: 6px;
+    height: 10px; /* Thicker Progress Track */
     background: var(--bg-element);
     border-radius: var(--radius-full);
     overflow: hidden;
     margin-bottom: var(--space-sm);
-    border: 1px solid rgba(255,255,255,0.02);
+    border: 1px solid rgba(255, 255, 255, 0.01);
 }
 
 .progress-fill, #progressBar {
     width: 0%; height: 100%;
     border-radius: var(--radius-full);
-    background: linear-gradient(90deg, var(--accent) 0%, var(--success) 100%);
-    transition: width 1200ms cubic-bezier(0.16, 1, 0.3, 1);
+    background: linear-gradient(90deg, var(--accent) 0%, var(--success) 100%); /* Gradient Fill */
+    box-shadow: 0 0 16px rgba(37, 99, 235, 0.2);
+    transition: width 1.2s cubic-bezier(0.16, 1, 0.3, 1); /* Animated Progress */
 }
 
 .progress-details-bar {
@@ -378,6 +375,7 @@ body {
 
 .progress-caption, #progressText {
     font-size: 12px;
+    font-weight: 500;
     color: var(--text-secondary);
 }
 
@@ -387,13 +385,14 @@ body {
 }
 
 .progress-contract-values { color: var(--text-secondary); }
-.progress-contract-values strong { color: var(--text-primary); font-weight: 600; }
+.progress-contract-values strong { color: #ffffff; font-weight: 600; }
 
-.progress-meta-pills { flex-shrink: 0; display: flex; gap: 6px; }
+/* Injected SaaS Insight Pills Container (Overriding Badges) */
+.progress-meta-pills { flex-shrink: 0; display: flex; gap: var(--space-xs); }
 .progress-pill-badge {
     font-size: 10px;
     font-weight: 600;
-    padding: 2px 8px;
+    padding: 3px 8px;
     background: var(--bg-element);
     color: var(--text-secondary);
     border-radius: var(--radius-sm);
@@ -401,11 +400,11 @@ body {
 }
 
 /* ==========================================================================
-   SaaS GRID SPLIT LAYOUT (Notion Balanced Columns)
+   PRODUCTION GRAPH ARTIFACTS GRID
    ========================================================================== */
 .dashboard-grid {
     display: grid;
-    grid-template-columns: 1.35fr 1fr;
+    grid-template-columns: 1.4fr 1fr;
     gap: var(--space-md);
     margin-bottom: var(--space-lg);
 }
@@ -415,12 +414,11 @@ body {
     border-left: 2px solid var(--border-subtle);
     padding-left: var(--space-xs);
 }
-
-.section-title { font-size: 14px; font-weight: 700; letter-spacing: -0.01em; color: var(--text-primary); }
+.section-title { font-size: 14px; font-weight: 700; letter-spacing: -0.01em; color: #ffffff; }
 .section-desc { font-size: 11px; color: var(--text-muted); }
 
 /* ==========================================================================
-   PAYMENT LIST SEKTOR: EXTREME VISUAL CONTRAST PACK
+   PAYMENT LIST (Strict Contract Focal Points)
    ========================================================================== */
 .installment-list, #daftarCicilan,
 .history-list, #riwayatPembayaran {
@@ -430,64 +428,62 @@ body {
 }
 
 .cicilan {
-    background: var(--bg-surface);
+    background: var(--bg-card);
     border: 1px solid var(--border-subtle);
     border-radius: var(--radius-md);
-    padding: 12px var(--space-sm);
-    box-shadow: var(--shadow-premium);
+    padding: var(--space-sm) var(--space-md);
+    box-shadow: var(--shadow-premium), var(--shadow-inset);
     opacity: 0;
-    transform: translateY(6px);
-    animation: saasReveal 400ms var(--ease-linear) forwards;
+    transform: translateY(8px);
+    animation: saasStageReveal 450ms var(--ease-linear) forwards;
     transition: transform 200ms var(--ease-linear), border-color 200ms var(--ease-linear), background 200ms var(--ease-linear);
 }
+.cicilan:hover {
+    transform: translateY(-1px);
+    border-color: var(--border-hover);
+}
 
-@keyframes saasReveal { to { opacity: 1; transform: translateY(0); } }
-
-/* FOCAL CONTRAST 1: Next Payment (Magnet State) */
+/* 1. Next Payment Magnet State */
 .cicilan--next {
     border-color: var(--accent-border);
-    background: linear-gradient(175deg, var(--bg-surface) 0%, rgba(37,99,235,0.02) 100%);
-    box-shadow: var(--shadow-glow), var(--shadow-premium);
-    transform: scale(1.005);
+    background: linear-gradient(180deg, var(--bg-card) 0%, rgba(37, 99, 235, 0.02) 100%);
+    box-shadow: var(--shadow-premium), 0 0 20px rgba(37, 99, 235, 0.08), var(--shadow-inset);
 }
 .cicilan--next:hover {
-    transform: translateY(-1px) scale(1.005);
-    border-color: rgba(37,99,235,0.4);
+    border-color: rgba(37, 99, 235, 0.35);
 }
 
-/* FOCAL CONTRAST 2: Pending Installments (Lighter Standby State) */
+/* 2. Pending Standby State (Lighter Fields) */
 .cicilan:not(.cicilan--paid):not(.cicilan--next) {
-    background: rgba(18,18,20,0.5);
-    border-color: var(--border-subtle);
-}
-.cicilan:not(.cicilan--paid):not(.cicilan--next):hover {
-    border-color: var(--border-hover);
-    transform: translateY(-1px);
+    background: rgba(24, 24, 28, 0.6);
 }
 
-/* FOCAL CONTRAST 3: Paid State (Subtle Muted Profile) */
+/* 3. Paid Completed State (Calmer / Deprioritized) */
 .cicilan--paid {
-    background: rgba(9,9,11,0.3);
-    border-color: rgba(255,255,255,0.01);
+    background: rgba(9, 9, 11, 0.4);
+    border-color: transparent;
     box-shadow: none;
 }
-.cicilan--paid:hover { transform: none; border-color: rgba(255,255,255,0.01); }
-.cicilan--paid h4 { color: var(--text-muted); text-decoration: line-through; text-decoration-color: rgba(255,255,255,0.05); }
+.cicilan--paid:hover {
+    transform: none;
+    border-color: transparent;
+}
+.cicilan--paid h4 { color: var(--text-muted); text-decoration: line-through; text-decoration-color: rgba(255, 255, 255, 0.03); }
 .cicilan--paid .meta-item--amount { color: var(--text-muted); }
-.cicilan--paid .meta-item { color: rgba(255,255,255,0.15); }
+.cicilan--paid .meta-item { color: rgba(255, 255, 255, 0.15); }
 
 .cicilan--overdue { border-color: var(--danger-border); }
-.cicilan--success-flash { animation: targetSuccessFlash 1s var(--ease-linear); }
+.cicilan--success-flash { animation: actionFlash 1s var(--ease-linear); }
 
-@keyframes targetSuccessFlash {
-    0%, 100% { background: var(--bg-surface); }
-    40% { background: var(--success-soft); border-color: var(--success); }
+@keyframes actionFlash {
+    0%, 100% { background: var(--bg-card); }
+    50% { background: var(--success-soft); border-color: var(--success); }
 }
 
-.cicilan-header { display: flex; align-items: center; justify-content: space-between; gap: var(--space-xs); margin-bottom: 6px; }
-.info h4 { font-size: 13px; font-weight: 600; color: var(--text-primary); letter-spacing: -0.01em; }
+.cicilan-header { display: flex; align-items: center; justify-content: space-between; gap: var(--space-xs); margin-bottom: 8px; }
+.info h4 { font-size: 13px; font-weight: 600; color: #ffffff; letter-spacing: -0.01em; }
 
-.status-badge { display: inline-flex; align-items: center; padding: 1px 6px; font-size: 9px; font-weight: 600; border-radius: var(--radius-sm); text-transform: uppercase; letter-spacing: 0.02em; }
+.status-badge { display: inline-flex; align-items: center; padding: 2px 6px; font-size: 9px; font-weight: 600; border-radius: var(--radius-sm); text-transform: uppercase; letter-spacing: 0.03em; }
 .status-badge--paid { background: var(--success-soft); color: var(--success); border: 1px solid var(--success-border); }
 .status-badge--pending { background: var(--bg-element); color: var(--text-secondary); border: 1px solid var(--border-subtle); }
 .status-badge--overdue { background: var(--danger-soft); color: var(--danger); border: 1px solid var(--danger-border); }
@@ -495,18 +491,18 @@ body {
 
 .cicilan-meta { display: flex; flex-wrap: wrap; align-items: center; }
 .meta-item { font-size: 11px; color: var(--text-secondary); }
-.meta-item--amount { font-weight: 600; color: var(--text-primary); font-variant-numeric: tabular-nums; }
+.meta-item--amount { font-weight: 600; color: #ffffff; font-variant-numeric: tabular-nums; }
 .meta-item + .meta-item::before { content: "·"; margin: 0 6px; color: var(--text-muted); }
 
-/* Premium Command Buttons */
+/* Premium Control Operations Pack */
 button, .btn-pay {
     min-width: 68px;
     padding: 5px 10px;
-    background: var(--text-primary);
-    color: var(--bg-page);
+    background: #ffffff;
+    color: #000000;
     border: none;
     border-radius: var(--radius-sm);
-    font-family: var(--font);
+    font-family: var(--font-sans);
     font-size: 11px;
     font-weight: 600;
     cursor: pointer;
@@ -515,69 +511,69 @@ button, .btn-pay {
     justify-content: center;
     transition: background 150ms var(--ease-linear), transform 100ms var(--ease-linear);
 }
-button:hover, .btn-pay:hover { background: #ffffff; }
+button:hover, .btn-pay:hover { background: #e4e4e7; }
 button:active, .btn-pay:active { transform: scale(0.97); }
-button:disabled, .btn-pay:disabled { opacity: 0.4; cursor: not-allowed; }
+button:disabled, .btn-pay:disabled { opacity: 0.35; cursor: not-allowed; }
 
-.spinner { width: 10px; height: 10px; border: 2px solid rgba(0,0,0,0.2); border-radius: 50%; border-top-color: #000; animation: spin 0.5s linear infinite; margin-right: 4px; }
+.spinner { width: 10px; height: 10px; border: 2px solid rgba(0, 0, 0, 0.1); border-radius: 50%; border-top-color: #000000; animation: spin 0.5s linear infinite; margin-right: 4px; }
 @keyframes spin { to { transform: rotate(360deg); } }
 
 .btn-pay--cancel { background: var(--bg-element); color: var(--text-secondary); border: 1px solid var(--border-subtle); }
 .btn-pay--cancel:hover { background: var(--danger-soft); color: var(--danger); border-color: var(--danger-border); }
 
 /* ==========================================================================
-   PAYMENT HISTORY SEKTOR: BANK STATEMENT PROFILE
+   PAYMENT HISTORY: MODERN TRANSACTION STATEMENT
    ========================================================================== */
-.history-empty { background-color: rgba(18,18,20,0.3); color: var(--text-muted); padding: var(--space-md); border-radius: var(--radius-md); text-align: center; font-size: 12px; border: 1px dashed var(--border-subtle); }
+.history-empty { background-color: rgba(18, 18, 20, 0.2); color: var(--text-muted); padding: var(--space-md); border-radius: var(--radius-md); text-align: center; font-size: 12px; border: 1px dashed var(--border-subtle); }
 
 .history-card { 
     display: flex;
     flex-direction: column; 
     gap: 0;
-    padding: 10px var(--space-sm); 
-    background: rgba(18,18,20,0.4);
+    padding: 12px var(--space-sm); 
+    background: rgba(24, 24, 28, 0.4);
     border: 1px solid var(--border-subtle);
     border-radius: var(--radius-md);
     box-shadow: none;
 }
-.history-card:hover { border-color: rgba(255,255,255,0.06); }
+.history-card:hover { border-color: var(--border-hover); }
 
 .history-card__header { 
     width: 100%; 
-    border-bottom: 1px solid rgba(255,255,255,0.02); 
+    border-bottom: 1px solid rgba(255, 255, 255, 0.02); 
     padding-bottom: 4px;
-    margin-bottom: 6px;
+    margin-bottom: var(--space-xs);
 }
-.history-card__header h4 { font-size: 10px; color: var(--success); text-transform: uppercase; letter-spacing: 0.06em; font-weight: 700; }
+.history-card__header h4 { font-size: 10px; color: var(--success); text-transform: uppercase; letter-spacing: 0.08em; font-weight: 700; }
 
 .history-card__content { display: flex; flex-direction: column; gap: var(--space-xs); width: 100%; }
 .history-card__row { display: flex; justify-content: space-between; align-items: center; width: 100%; }
 
 .history-card__row + .history-card__row {
     padding-top: var(--space-xs);
-    border-top: 1px dashed rgba(255,255,255,0.02);
+    border-top: 1px dashed rgba(255, 255, 255, 0.02);
 }
 
-.history-card__label { font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.02em; }
-.history-card__value { font-size: 11px; color: var(--text-secondary); font-weight: 500; }
+.history-card__label { font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.03em; font-weight: 600; }
+.history-card__value { font-size: 12px; color: var(--text-secondary); font-weight: 500; }
 .history-card__value--amount { font-size: 12px; font-weight: 700; color: #ffffff; }
 
 /* ==========================================================================
-   DEVICE GALERI GRAPHIC
+   HARDWARE GRAPHIC HOVER PACK
    ========================================================================== */
 .gallery-section { margin-top: var(--space-md); border-top: 1px solid var(--border-subtle); padding-top: var(--space-md); }
 .gallery-section h2 { font-size: 11px; color: var(--text-muted); margin-bottom: var(--space-sm); font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; }
 .photo-gallery { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; width: 100%; }
-.photo-gallery img { width: 100%; height: 95px; object-fit: cover; border-radius: var(--radius-sm); border: 1px solid var(--border-subtle); filter: grayscale(20%) brightness(90%); transition: all 250ms var(--ease-linear); }
-.photo-gallery img:hover { transform: scale(1.01); filter: grayscale(0%) brightness(100%); border-color: var(--border-hover); }
+.photo-gallery img { width: 100%; height: 95px; object-fit: cover; border-radius: var(--radius-sm); border: 1px solid var(--border-subtle); filter: grayscale(15%) brightness(85%); transition: all 250ms var(--ease-linear); }
+.photo-gallery img:hover { transform: scale(1.015); filter: grayscale(0%) brightness(100%); border-color: var(--border-hover); }
 
 /* ==========================================================================
-   GLASS BACKDROP DIALOG FRAME
+   DIALOG FRAMES BOUNDS
    ========================================================================== */
 .modal, #amountModal { position: fixed; inset: 0; z-index: 10000; display: flex; align-items: center; justify-content: center; padding: var(--space-sm); }
 .modal[hidden], #amountModal[hidden] { display: none !important; }
 
-.modal-backdrop { position: absolute; inset: 0; background: rgba(0, 0, 0, 0.5); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); }
+.modal-backdrop { position: absolute; inset: 0; background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); }
 
 .modal-card, #amountModal > div { 
     position: relative; 
@@ -585,36 +581,36 @@ button:disabled, .btn-pay:disabled { opacity: 0.4; cursor: not-allowed; }
     width: min(100%, 360px); 
     padding: var(--space-md) var(--space-lg) !important; 
     background: var(--bg-surface) !important; 
-    border: 1px solid rgba(255,255,255,0.06) !important; 
+    border: 1px solid rgba(255, 255, 255, 0.06) !important; 
     border-radius: var(--radius-lg) !important; 
-    box-shadow: var(--shadow-modal) !important; 
-    animation: modalSlideIn 250ms var(--ease-linear) forwards; 
+    box-shadow: var(--shadow-modal), var(--shadow-inset) !important; 
+    animation: saasModalIn 250ms var(--ease-linear) forwards; 
 }
 
-@keyframes modalSlideIn { from { opacity: 0; transform: scale(0.98) translateY(6px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+@keyframes saasModalIn { from { opacity: 0; transform: scale(0.98) translateY(8px); } to { opacity: 1; transform: scale(1) translateY(0); } }
 
 .modal-card h3, #amountModal h3 { font-size: 14px !important; font-weight: 700; letter-spacing: -0.01em !important; margin-bottom: 4px !important; color: #ffffff !important; }
 .modal-message, #amountModal p.modal-message { font-size: 12px !important; color: var(--text-secondary) !important; line-height: 1.5 !important; margin-bottom: var(--space-sm) !important; }
 
-.modal-input, #amountModalInput { width: 100%; padding: 10px 12px !important; border: 1px solid var(--border-subtle) !important; border-radius: var(--radius-sm) !important; margin-top: 4px !important; margin-bottom: var(--space-sm) !important; font-size: 14px !important; font-weight: 700 !important; font-family: var(--font) !important; background-color: var(--bg-element) !important; color: #ffffff !important; outline: none; transition: border-color 150ms var(--ease-linear) !important; }
+.modal-input, #amountModalInput { width: 100%; padding: 10px 12px !important; border: 1px solid var(--border-subtle) !important; border-radius: var(--radius-sm) !important; margin-top: 4px !important; margin-bottom: var(--space-sm) !important; font-size: 14px !important; font-weight: 700 !important; font-family: var(--font-sans) !important; background-color: var(--bg-element) !important; color: #ffffff !important; outline: none; transition: border-color 150ms var(--ease-linear) !important; }
 .modal-input:focus, #amountModalInput:focus { border-color: var(--accent) !important; background-color: var(--bg-surface) !important; }
 #amountModalError { font-size: 11px !important; color: var(--danger) !important; margin-top: -4px !important; margin-bottom: var(--space-sm) !important; }
 
 .modal-actions { display: flex; gap: 8px; }
-.btn-modal { flex: 1; padding: 8px 14px; border-radius: var(--radius-sm); font-family: var(--font); font-size: 11px; font-weight: 600; cursor: pointer; border: none; }
+.btn-modal { flex: 1; padding: 8px 14px; border-radius: var(--radius-sm); font-family: var(--font-sans); font-size: 11px; font-weight: 600; cursor: pointer; border: none; }
 .btn-modal--cancel { background: var(--bg-element); color: var(--text-secondary); border: 1px solid var(--border-subtle); }
-.btn-modal--cancel:hover { background: rgba(255,255,255,0.02); }
-.btn-modal--confirm, #amountModalSubmit { background: #ffffff !important; color: var(--bg-page) !important; }
+.btn-modal--cancel:hover { background: rgba(255, 255, 255, 0.02); }
+.btn-modal--confirm, #amountModalSubmit { background: #ffffff !important; color: #000000 !important; }
 
 /* ==========================================================================
-   TOAST SYSTEM
+   TOAST CONTROLS
    ========================================================================== */
 .toast { position: fixed; bottom: var(--space-md); left: 50%; transform: translateX(-50%) translateY(10px); z-index: 11000; display: flex; align-items: center; gap: var(--space-xs); padding: 8px 14px; background: #ffffff; color: #000000; border-radius: var(--radius-full); box-shadow: var(--shadow-modal); font-size: 12px; font-weight: 600; opacity: 0; pointer-events: none; transition: opacity 200ms var(--ease-linear), transform 200ms var(--ease-linear); }
 .toast--visible { opacity: 1; transform: translateX(-50%) translateY(0); }
 .toast-icon { display: grid; place-items: center; width: 16px; height: 16px; background: var(--success); color: #fff; border-radius: 50%; font-size: 9px; font-weight: 700; flex-shrink: 0; }
 
 /* ==========================================================================
-   RESPONSIVE LAYOUT SYSTEM
+   RESPONSIVE SAAS MATRIX SAFETY OVERRIDES
    ========================================================================== */
 @media (max-width: 992px) { .dashboard-grid { grid-template-columns: 1fr; gap: var(--space-lg); } }
 @media (max-width: 768px) {
