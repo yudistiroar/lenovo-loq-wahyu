@@ -5,7 +5,7 @@
     /* Sophisticated Layering Architecture (Never Pure Black) */
     --bg-page: #09090b;          /* Pure obsidian floor */
     --bg-surface: #121215;       /* Elevated canvas layer */
-    --bg-card: #18181c;          /* High-definition interactive card layer */
+    --bg-card: #1c1c21;          /* TASK 1: Diubah agar lebih terang dari background halaman (#09090b) */
     --bg-element: #222227;       /* Form track & input wells */
     --bg-hover: #27272e;         /* Micro-elevation hover states */
     
@@ -21,159 +21,119 @@
     --accent-border: rgba(37, 99, 235, 0.2);
     
     --success: #10b981;          /* Ledger Success Green */
-    --success-soft: rgba(16, 185, 129, 0.06);
     --success-border: rgba(16, 185, 129, 0.2);
+    --success-glow: rgba(16, 185, 129, 0.08);
     
-    --danger: #ef4444;           /* Delinquent Balance Crimson */
-    --danger-soft: rgba(239, 68, 68, 0.06);
-    --danger-border: rgba(239, 68, 68, 0.2);
-    
-    --warning: #f59e0b;          /* Grace Period Amber */
-    --warning-soft: rgba(245, 158, 11, 0.06);
+    --warning: #f59e0b;          /* Attention Orange */
     --warning-border: rgba(245, 158, 11, 0.2);
-
-    /* 8px Spatial Layout Tokens */
+    
+    /* Strict Spatial System */
     --space-xs: 8px;
     --space-sm: 16px;
     --space-md: 24px;
     --space-lg: 32px;
-    --space-xl: 48px;
     
-    /* Structural Rules */
-    --radius-sm: 6px;
-    --radius-md: 10px;
-    --radius-lg: 16px;
-    --radius-full: 9999px;
-    --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    --ease-linear: cubic-bezier(0.16, 1, 0.3, 1);
+    /* Perfect Radii Geometry */
+    --radius-sm: 8px;            /* TASK 2: Tombol & Badge radius lebih modern */
+    --radius-md: 12px;           /* Card radius modern */
+    --radius-lg: 16px;           /* Panel container & Modals */
     
-    /* Precision Borders & Shadows Packs */
-    --border-subtle: rgba(255, 255, 255, 0.04);
-    --border-hover: rgba(255, 255, 255, 0.09);
-    --shadow-premium: 0 1px 2px rgba(0, 0, 0, 0.6), 0 12px 32px rgba(0, 0, 0, 0.4);
-    --shadow-inset: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    /* Fluid Timing */
+    --ease-linear: cubic-bezier(0,0,1,1);
+    --ease-out: cubic-bezier(0,0,0.2,1);
+    --ease-in-out: cubic-bezier(0.4,0,0.2,1);
+    
+    /* High Definition Shadows */
+    --shadow-sm: 0 1px 2px rgba(0,0,0,0.5);
+    --shadow-md: 0 4px 12px rgba(0,0,0,0.25); /* TASK 1: Shadow tipis untuk card */
+    --shadow-lg: 0 16px 40px rgba(0,0,0,0.6);
+    --shadow-inset: inset 0 1px 0 rgba(255,255,255,0.1);
 }
 
 /* ==========================================================================
-   RESET & FINTECH CANVAS FOUNDATION
+   BASE APPLICATION RESET
    ========================================================================== */
-*, *::before, *::after {
-    box-sizing: border-box;
+* {
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
 body {
-    min-height: 100vh;
     background-color: var(--bg-page);
-    background-image: 
-        radial-gradient(circle at 50% 0%, rgba(37, 99, 235, 0.06) 0%, transparent 45%),
-        radial-gradient(circle at 0% 100%, rgba(16, 185, 129, 0.01) 0%, transparent 35%);
-    background-attachment: fixed;
-    font-family: var(--font-sans);
     color: var(--text-primary);
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    padding: var(--space-xl) var(--space-sm);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    padding: var(--space-lg) 0;
+    overflow-x: hidden;
 }
 
 .app {
-    animation: saasStageReveal 500ms var(--ease-linear) forwards;
-}
-
-@keyframes saasStageReveal {
-    from { opacity: 0; transform: scale(0.995) translateY(6px); }
-    to { opacity: 1; transform: scale(1) translateY(0); }
+    width: 100%;
+    max-width: 1140px;
+    padding: 0 var(--space-md);
 }
 
 .container {
-    width: 100%;
-    max-width: 1120px;
-    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-lg);
 }
 
 /* ==========================================================================
-   HERO SECTOR: SYSTEM BRAND ARCHITECTURE
+   PAGE HEADER COMPONENT
    ========================================================================== */
 .page-header {
-    margin-bottom: var(--space-xl);
     display: flex;
     justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: var(--space-md);
-    border-bottom: 1px solid var(--border-subtle);
-    padding-bottom: var(--space-lg);
+    align-items: flex-end;
+    border-bottom: 1px solid var(--bg-element);
+    padding-bottom: var(--space-md);
 }
 
 .hero h1 {
-    font-size: 32px;
-    font-weight: 800;
-    letter-spacing: -0.05em;
-    color: #ffffff;
-    line-height: 1.1;
-    margin-bottom: var(--space-xs);
-    background: linear-gradient(180deg, #ffffff 0%, #a1a1aa 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+    font-size: 24px;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    color: var(--text-primary);
+    margin-bottom: 4px;
 }
 
 .subtitle {
     font-size: 13px;
     color: var(--text-secondary);
-    letter-spacing: -0.01em;
-}
-.subtitle strong {
-    color: #ffffff;
-    font-weight: 600;
 }
 
-/* ==========================================================================
-   TOP INFO BAR (Glass Morphism Execution Profile)
-   ========================================================================== */
+.subtitle strong {
+    color: var(--text-primary);
+    font-weight: 500;
+}
+
+/* UX Info Bar */
 .ux-bar {
     display: flex;
-    align-items: stretch;
-    background: rgba(18, 18, 21, 0.6);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border: 1px solid var(--border-subtle);
-    border-radius: var(--radius-lg);
-    padding: 6px;
-    box-shadow: var(--shadow-premium), var(--shadow-inset);
-    gap: 4px;
-    width: 100%;
-    max-width: 580px;
+    gap: var(--space-md);
 }
 
 .ux-bar-item {
-    flex: 1;
     display: flex;
     align-items: center;
-    gap: 12px;
-    padding: var(--space-xs) 14px;
-    border-radius: var(--radius-md);
-    transition: background 150ms var(--ease-linear);
-}
-.ux-bar-item:hover {
-    background: var(--border-subtle);
+    gap: var(--space-xs);
 }
 
 .ux-bar-icon-wrap {
+    color: var(--text-muted);
     display: flex;
     align-items: center;
-    justify-content: center;
-    width: 26px;
-    height: 26px;
-    background: var(--bg-element);
-    border-radius: var(--radius-sm);
-    color: var(--text-secondary);
-    border: 1px solid var(--border-subtle);
 }
+
 .ux-icon {
-    width: 12px;
-    height: 12px;
-    stroke-width: 2.5;
+    width: 16px;
+    height: 16px;
 }
 
 .ux-bar-content {
@@ -182,448 +142,715 @@ body {
 }
 
 .ux-bar-label {
-    font-size: 9px;
-    font-weight: 700;
+    font-size: 10px;
     text-transform: uppercase;
-    letter-spacing: 0.08em;
+    letter-spacing: 0.05em;
     color: var(--text-muted);
-    margin-bottom: 2px;
+    font-weight: 600;
 }
 
 .ux-bar-value {
-    font-size: 12px;
-    font-weight: 600;
-    color: var(--text-primary);
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-secondary);
 }
-
-.ux-bar-due-group {
-    display: flex;
-    flex-direction: column;
-}
-
-.ux-bar-badge {
-    font-size: 9px;
-    font-weight: 700;
-    padding: 2px 5px;
-    border-radius: 4px;
-    text-transform: uppercase;
-    letter-spacing: 0.02em;
-    width: max-content;
-    margin-top: 2px;
-}
-.ux-bar-badge--warning { background: var(--warning-soft); color: var(--warning); border: 1px solid var(--warning-border); }
-.ux-bar-badge--danger { background: var(--danger-soft); color: var(--danger); border: 1px solid var(--danger-border); }
-
-.ux-bar-divider {
-    width: 1px;
-    background: var(--border-subtle);
-    margin: 6px 4px;
-}
-
-/* Cloud Sync Micro-Interactions Layer */
-.sync-status {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    transition: opacity 200ms var(--ease-linear);
-}
-.sync-status--fade-out { opacity: 0; }
-.sync-dot { width: 6px; height: 6px; border-radius: 50%; }
-.sync-text { font-size: 11px; font-weight: 600; }
-
-.sync-status--syncing { color: var(--warning); }
-.sync-status--syncing .sync-dot { background-color: var(--warning); animation: pulseOpacity 1s infinite ease-in-out alternate; }
-
-.sync-status--synced { color: var(--success); }
-.sync-status--synced .sync-dot { background-color: var(--success); box-shadow: 0 0 8px var(--success); }
-
-.sync-status--offline { color: var(--danger); }
-.sync-status--offline .sync-dot { background-color: var(--danger); animation: pulseOpacity 1s infinite ease-in-out alternate; }
-
-@keyframes pulseOpacity { from { opacity: 0.3; } to { opacity: 1; } }
 
 /* ==========================================================================
-   SUMMARY SECTOR: ASSET KPI MONOLITHS
+   FINANCIAL HIGHLIGHT PANELS (TOP MATRIX)
    ========================================================================== */
-.summary {
+.metric-row {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: var(--space-sm);
-    margin-bottom: var(--space-lg);
 }
 
-.stat-card {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    height: 118px;
-    padding: var(--space-sm) var(--space-md);
-    background: linear-gradient(180deg, var(--bg-surface) 0%, rgba(18, 18, 21, 0.8) 100%);
-    border: 1px solid var(--border-subtle);
-    border-radius: var(--radius-md);
-    box-shadow: var(--shadow-premium), var(--shadow-inset);
-    transition: transform 250ms var(--ease-linear), border-color 250ms var(--ease-linear);
-}
-.stat-card:hover {
-    transform: translateY(-2px);
-    border-color: var(--border-hover);
+.panel-metric {
+    background-color: var(--bg-surface);
+    border: 1px solid var(--bg-element);
+    border-radius: var(--radius-lg);
+    padding: var(--space-md);
+    position: relative;
+    overflow: hidden;
 }
 
-.stat-icon {
-    width: 32px;
-    height: 32px;
-    display: grid;
-    place-items: center;
-    border-radius: var(--radius-sm);
-    background: var(--bg-element);
-    color: var(--text-secondary);
-    border: 1px solid var(--border-subtle);
+.panel-metric::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0) 100%);
 }
-.stat-icon svg { width: 14px; height: 14px; }
-.stat-card--price .stat-icon { color: #ffffff; }
-.stat-card--paid .stat-icon { background: var(--success-soft); color: var(--success); border-color: var(--success-border); }
-.stat-card--debt .stat-icon { background: var(--accent-soft); color: var(--accent); border-color: var(--accent-border); }
 
-.stat-body h3 {
-    font-size: 10px;
-    font-weight: 700;
-    color: var(--text-muted);
+.metric-title {
+    font-size: 11px;
+    font-weight: 600;
     text-transform: uppercase;
-    letter-spacing: 0.06em;
-    margin-bottom: 2px;
+    letter-spacing: 0.05em;
+    color: var(--text-secondary);
+    margin-bottom: var(--space-xs);
 }
-.stat-body p {
+
+.metric-number {
     font-size: 26px;
-    font-weight: 800;
-    letter-spacing: -0.04em;
-    color: #ffffff;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    color: var(--text-primary);
     font-variant-numeric: tabular-nums;
-    line-height: 1.1;
 }
-.stat-card--paid .stat-body p { color: var(--success); }
 
 /* ==========================================================================
-   PROGRESS SEKTOR: AMORTIZATION INSIGHTS CARD
+   CORE DASHBOARD LAYOUT GRID
    ========================================================================== */
-.progress-panel {
-    padding: var(--space-md) var(--space-lg);
-    margin-bottom: var(--space-lg);
-    background: var(--bg-surface);
-    border: 1px solid var(--border-subtle);
-    border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-premium), var(--shadow-inset);
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    gap: var(--space-lg);
+    align-items: start;
 }
 
-.progress-header {
+.main-column, .side-column {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+}
+
+.section-head {
+    margin-bottom: var(--space-sm);
+}
+
+.section-head h3 {
+    font-size: 14px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-secondary);
+}
+
+/* ==========================================================================
+   PROGRESS MANAGEMENT CONTAINER
+   ========================================================================== */
+.panel-progress {
+    background-color: var(--bg-surface);
+    border: 1px solid var(--bg-element);
+    border-radius: var(--radius-lg);
+    padding: var(--space-md);
+}
+
+.progress-header-block {
     display: flex;
     justify-content: space-between;
-    align-items: flex-start;
-    gap: var(--space-sm);
+    align-items: baseline;
     margin-bottom: var(--space-sm);
 }
 
-.progress-eyebrow {
-    display: block;
-    font-size: 10px;
-    font-weight: 700;
-    color: var(--accent);
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
+.progress-title-stack h4 {
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    color: var(--text-primary);
     margin-bottom: 2px;
 }
-.progress-header h2 { 
-    font-size: 17px; 
-    font-weight: 700; 
-    letter-spacing: -0.02em; 
-    color: #ffffff;
-}
-.progress-subtitle { 
-    font-size: 12px; 
-    color: var(--text-secondary); 
+
+.progress-subtitle-stack {
+    font-size: 12px;
+    color: var(--text-secondary);
 }
 
-.progress-percentage-wrap { text-align: right; }
-.progress-percentage { display: block; font-size: 36px; font-weight: 800; letter-spacing: -0.05em; line-height: 1; color: #ffffff; }
-.progress-percentage-label { display: block; margin-top: 2px; font-size: 10px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; }
+.progress-percentage-label {
+    font-size: 32px;
+    font-weight: 700;
+    letter-spacing: -0.04em;
+    color: var(--text-primary);
+}
 
-.progress-track {
-    height: 10px; /* Thicker Progress Track */
-    background: var(--bg-element);
-    border-radius: var(--radius-full);
+.progress-track-bar {
+    background-color: var(--bg-element);
+    border-radius: var(--radius-sm);
+    height: 6px;
+    width: 100%;
     overflow: hidden;
     margin-bottom: var(--space-sm);
-    border: 1px solid rgba(255, 255, 255, 0.01);
+    box-shadow: inset 0 1px 2px rgba(0,0,0,0.3);
 }
 
-.progress-fill, #progressBar {
-    width: 0%; height: 100%;
-    border-radius: var(--radius-full);
-    background: linear-gradient(90deg, var(--accent) 0%, var(--success) 100%); /* Gradient Fill */
-    box-shadow: 0 0 16px rgba(37, 99, 235, 0.2);
-    transition: width 1.2s cubic-bezier(0.16, 1, 0.3, 1); /* Animated Progress */
+.progress-fill {
+    background: linear-gradient(90deg, var(--accent) 0%, #3b82f6 100%);
+    height: 100%;
+    width: 0%;
+    border-radius: var(--radius-sm);
+    box-shadow: 0 0 8px rgba(37, 99, 235, 0.4);
+    transition: width 800ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .progress-details-bar {
     display: flex;
     justify-content: space-between;
-    align-items: center;
-    gap: var(--space-sm);
-    margin-top: 12px;
-    padding-top: var(--space-xs);
-    border-top: 1px solid var(--border-subtle);
+    font-size: 12px;
+    color: var(--text-muted);
 }
 
-.progress-caption, #progressText {
-    font-size: 12px;
+.progress-text {
     font-weight: 500;
     color: var(--text-secondary);
 }
 
-.progress-divider-dot {
-    color: var(--text-muted);
-    margin: 0 4px;
-}
-
-.progress-contract-values { color: var(--text-secondary); }
-.progress-contract-values strong { color: #ffffff; font-weight: 600; }
-
-/* Injected SaaS Insight Pills Container (Overriding Badges) */
-.progress-meta-pills { flex-shrink: 0; display: flex; gap: var(--space-xs); }
-.progress-pill-badge {
-    font-size: 10px;
-    font-weight: 600;
-    padding: 3px 8px;
-    background: var(--bg-element);
-    color: var(--text-secondary);
-    border-radius: var(--radius-sm);
-    border: 1px solid var(--border-subtle);
+/* Divider & Values Styles Removed via Task 3 Refinement */
+.progress-divider-dot, .progress-contract-values {
+    display: none !important;
 }
 
 /* ==========================================================================
-   PRODUCTION GRAPH ARTIFACTS GRID
+   TASK 1: REFINEMENT DATA CARD "JADWAL PEMBAYARAN"
    ========================================================================== */
-.dashboard-grid {
-    display: grid;
-    grid-template-columns: 1.4fr 1fr;
-    gap: var(--space-md);
-    margin-bottom: var(--space-lg);
-}
-
-.section-head {
-    margin-bottom: var(--space-sm);
-    border-left: 2px solid var(--border-subtle);
-    padding-left: var(--space-xs);
-}
-.section-title { font-size: 14px; font-weight: 700; letter-spacing: -0.01em; color: #ffffff; }
-.section-desc { font-size: 11px; color: var(--text-muted); }
-
-/* ==========================================================================
-   PAYMENT LIST (Strict Contract Focal Points)
-   ========================================================================== */
-.installment-list, #daftarCicilan,
-.history-list, #riwayatPembayaran {
+.installment-feed {
     display: flex;
     flex-direction: column;
-    gap: var(--space-xs);
 }
 
 .cicilan {
-    background: var(--bg-card);
-    border: 1px solid var(--border-subtle);
-    border-radius: var(--radius-md);
-    padding: var(--space-sm) var(--space-md);
-    box-shadow: var(--shadow-premium), var(--shadow-inset);
-    opacity: 0;
-    transform: translateY(8px);
-    animation: saasStageReveal 450ms var(--ease-linear) forwards;
-    transition: transform 200ms var(--ease-linear), border-color 200ms var(--ease-linear), background 200ms var(--ease-linear);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--bg-card); /* Lebih terang dari background halaman */
+    border: 1px solid rgba(255, 255, 255, 0.08); /* Border terlihat & elegan */
+    border-radius: var(--radius-md); /* Radius tetap modern */
+    padding: var(--space-md);
+    margin-bottom: var(--space-sm); /* Spacing antar card lebih lega */
+    box-shadow: var(--shadow-md); /* Tambahan shadow tipis */
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+                border-color 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+                box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
+
+/* Hover Effect Halus */
 .cicilan:hover {
-    transform: translateY(-1px);
-    border-color: var(--border-hover);
+    transform: translateY(-2px);
+    border-color: rgba(255, 255, 255, 0.16);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
 }
 
-/* 1. Next Payment Magnet State */
+/* Next / Focal Magnet Card Accent Override */
 .cicilan--next {
-    border-color: var(--accent-border);
-    background: linear-gradient(180deg, var(--bg-card) 0%, rgba(37, 99, 235, 0.02) 100%);
-    box-shadow: var(--shadow-premium), 0 0 20px rgba(37, 99, 235, 0.08), var(--shadow-inset);
-}
-.cicilan--next:hover {
+    background: linear-gradient(180deg, #16161c 0%, #111115 100%);
     border-color: rgba(37, 99, 235, 0.35);
+    box-shadow: 0 4px 14px rgba(37, 99, 235, 0.12), var(--shadow-md);
 }
 
-/* 2. Pending Standby State (Lighter Fields) */
-.cicilan:not(.cicilan--paid):not(.cicilan--next) {
-    background: rgba(24, 24, 28, 0.6);
+.cicilan--next:hover {
+    border-color: rgba(37, 99, 235, 0.5);
 }
 
-/* 3. Paid Completed State (Calmer / Deprioritized) */
+.cicilan--next::after {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 3px;
+    background-color: var(--accent);
+}
+
+/* Paid & Overdue Modifications */
 .cicilan--paid {
-    background: rgba(9, 9, 11, 0.4);
-    border-color: transparent;
-    box-shadow: none;
+    opacity: 0.55;
+    background-color: rgba(18, 18, 21, 0.4);
 }
 .cicilan--paid:hover {
     transform: none;
-    border-color: transparent;
+    border-color: rgba(255, 255, 255, 0.08);
+    box-shadow: var(--shadow-md);
 }
-.cicilan--paid h4 { color: var(--text-muted); text-decoration: line-through; text-decoration-color: rgba(255, 255, 255, 0.03); }
-.cicilan--paid .meta-item--amount { color: var(--text-muted); }
-.cicilan--paid .meta-item { color: rgba(255, 255, 255, 0.15); }
-
-.cicilan--overdue { border-color: var(--danger-border); }
-.cicilan--success-flash { animation: actionFlash 1s var(--ease-linear); }
-
-@keyframes actionFlash {
-    0%, 100% { background: var(--bg-card); }
-    50% { background: var(--success-soft); border-color: var(--success); }
+.cicilan--paid .info h4 {
+    text-decoration: line-through;
+    color: var(--text-muted);
+}
+.cicilan--paid .meta-item strong {
+    text-decoration: line-through;
+    color: var(--text-muted);
 }
 
-.cicilan-header { display: flex; align-items: center; justify-content: space-between; gap: var(--space-xs); margin-bottom: 8px; }
-.info h4 { font-size: 13px; font-weight: 600; color: #ffffff; letter-spacing: -0.01em; }
+.cicilan--overdue {
+    border-color: rgba(239, 68, 68, 0.25);
+}
 
-.status-badge { display: inline-flex; align-items: center; padding: 2px 6px; font-size: 9px; font-weight: 600; border-radius: var(--radius-sm); text-transform: uppercase; letter-spacing: 0.03em; }
-.status-badge--paid { background: var(--success-soft); color: var(--success); border: 1px solid var(--success-border); }
-.status-badge--pending { background: var(--bg-element); color: var(--text-secondary); border: 1px solid var(--border-subtle); }
-.status-badge--overdue { background: var(--danger-soft); color: var(--danger); border: 1px solid var(--danger-border); }
-.status-badge--next { background: var(--accent-soft); color: var(--accent); border: 1px solid var(--accent-border); }
+/* Card Internal Typography */
+.info {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    flex-grow: 1;
+}
 
-.cicilan-meta { display: flex; flex-wrap: wrap; align-items: center; }
-.meta-item { font-size: 11px; color: var(--text-secondary); }
-.meta-item--amount { font-weight: 600; color: #ffffff; font-variant-numeric: tabular-nums; }
-.meta-item + .meta-item::before { content: "·"; margin: 0 6px; color: var(--text-muted); }
+.cicilan-header {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+}
 
-/* Premium Control Operations Pack */
-button, .btn-pay {
-    min-width: 68px;
-    padding: 5px 10px;
-    background: #ffffff;
-    color: #000000;
+.info h4 {
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    color: var(--text-primary);
+}
+
+.cicilan-meta {
+    display: flex;
+    gap: var(--space-md);
+}
+
+.meta-item {
+    font-size: 12px;
+    color: var(--text-secondary);
+}
+
+.meta-item strong {
+    color: var(--text-primary);
+    font-weight: 500;
+}
+
+.meta-item--amount {
+    font-variant-numeric: tabular-nums;
+}
+
+/* ==========================================================================
+   TASK 2: REFINEMENT TOMBOL "BAYAR SEKARANG"
+   ========================================================================== */
+.btn-pay {
+    margin-top: var(--space-sm); /* Margin atas yang cukup */
+    padding: 10px 18px; /* Tinggi tombol sedikit lebih besar */
+    border-radius: var(--radius-sm); /* Border radius lebih modern */
+    min-width: 125px;
+    background-color: var(--accent);
+    color: #ffffff;
     border: none;
-    border-radius: var(--radius-sm);
-    font-family: var(--font-sans);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    cursor: pointer;
+    box-shadow: var(--shadow-inset);
+    transition: background-color 150ms var(--ease-linear), transform 100ms var(--ease-out);
+}
+
+.btn-pay:hover {
+    background-color: var(--accent-hover);
+}
+
+.btn-pay:active {
+    transform: scale(0.98);
+}
+
+/* ==========================================================================
+   TASK 4: REFINEMENT BADGE STATUS
+   ========================================================================== */
+.status-badge {
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 7px;
+    border-radius: 5px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    display: inline-block;
+}
+
+/* LUNAS -> Hijau Muted */
+.status-badge--paid {
+    background-color: rgba(16, 185, 129, 0.12);
+    color: #4ade80;
+    border: 1px solid rgba(16, 185, 129, 0.25);
+}
+
+/* BERIKUTNYA -> Biru Muted */
+.status-badge--next {
+    background-color: rgba(37, 99, 235, 0.15);
+    color: #60a5fa;
+    border: 1px solid rgba(37, 99, 235, 0.3);
+}
+
+/* PENDING -> Abu-abu Muted */
+.status-badge--pending {
+    background-color: rgba(161, 161, 170, 0.08);
+    color: #a1a1aa;
+    border: 1px solid rgba(161, 161, 170, 0.18);
+}
+
+/* OVERDUE -> Merah Muted */
+.status-badge--overdue {
+    background-color: rgba(239, 68, 68, 0.12);
+    color: #f87171;
+    border: 1px solid rgba(239, 68, 68, 0.25);
+}
+
+/* ==========================================================================
+   BANK MUTATION LOG & BANK MEMO COMPONENT
+   ========================================================================== */
+.panel-history {
+    background-color: var(--bg-surface);
+    border: 1px solid var(--bg-element);
+    border-radius: var(--radius-lg);
+    padding: var(--space-md);
+}
+
+.history-feed {
+    display: flex;
+    flex-direction: column;
+}
+
+.history-empty {
+    font-size: 12px;
+    color: var(--text-muted);
+    text-align: center;
+    padding: var(--space-md) 0;
+}
+
+.history-card {
+    border-bottom: 1px dashed var(--bg-element);
+    padding: var(--space-sm) 0;
+}
+
+.history-card:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.history-card:first-child {
+    padding-top: 0;
+}
+
+.history-card__header {
+    margin-bottom: 6px;
+}
+
+.history-card__header h4 {
     font-size: 11px;
     font-weight: 600;
-    cursor: pointer;
-    display: inline-flex;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--success);
+}
+
+.history-card__content {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.history-card__row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+}
+
+.history-card__label {
+    color: var(--text-secondary);
+}
+
+.history-card__value {
+    color: var(--text-primary);
+    font-weight: 500;
+}
+
+.history-card__value--amount {
+    font-variant-numeric: tabular-nums;
+    font-weight: 600;
+}
+
+/* ==========================================================================
+   VISUAL GALLERY ASSET STORAGE SECTION
+   ========================================================================== */
+.gallery-section {
+    border-top: 1px solid var(--bg-element);
+    padding-top: var(--space-lg);
+    margin-top: var(--space-sm);
+}
+
+.gallery-section h2 {
+    font-size: 14px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-secondary);
+    margin-bottom: var(--space-md);
+}
+
+.photo-gallery {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--space-sm);
+}
+
+.photo-gallery img {
+    width: 100%;
+    height: 140px;
+    object-fit: cover;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--bg-element);
+    background-color: var(--bg-surface);
+    transition: opacity 200ms var(--ease-linear), border-color 200ms var(--ease-linear);
+}
+
+.photo-gallery img:hover {
+    border-color: var(--text-muted);
+}
+
+/* ==========================================================================
+   INTERACTION MODAL LAYERS & DIALOG SYSTEM
+   ========================================================================== */
+.modal-layer {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    z-index: 1000;
+    display: none;
     align-items: center;
     justify-content: center;
-    transition: background 150ms var(--ease-linear), transform 100ms var(--ease-linear);
+    padding: var(--space-md);
 }
-button:hover, .btn-pay:hover { background: #e4e4e7; }
-button:active, .btn-pay:active { transform: scale(0.97); }
-button:disabled, .btn-pay:disabled { opacity: 0.35; cursor: not-allowed; }
 
-.spinner { width: 10px; height: 10px; border: 2px solid rgba(0, 0, 0, 0.1); border-radius: 50%; border-top-color: #000000; animation: spin 0.5s linear infinite; margin-right: 4px; }
-@keyframes spin { to { transform: rotate(360deg); } }
+.modal-backdrop {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-color: rgba(5, 5, 6, 0.8);
+    backdrop-filter: blur(4px);
+}
 
-.btn-pay--cancel { background: var(--bg-element); color: var(--text-secondary); border: 1px solid var(--border-subtle); }
-.btn-pay--cancel:hover { background: var(--danger-soft); color: var(--danger); border-color: var(--danger-border); }
+.modal-wrapper {
+    background-color: var(--bg-surface);
+    border: 1px solid var(--bg-element);
+    border-radius: var(--radius-lg);
+    width: 100%;
+    max-width: 420px;
+    padding: var(--space-md);
+    position: relative;
+    z-index: 1001;
+    box-shadow: var(--shadow-lg);
+    box-sizing: border-box;
+}
 
-/* ==========================================================================
-   PAYMENT HISTORY: MODERN TRANSACTION STATEMENT
-   ========================================================================== */
-.history-empty { background-color: rgba(18, 18, 20, 0.2); color: var(--text-muted); padding: var(--space-md); border-radius: var(--radius-md); text-align: center; font-size: 12px; border: 1px dashed var(--border-subtle); }
+.modal-wrapper h3 {
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+}
 
-.history-card { 
+.modal-wrapper p {
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.4;
+    margin-bottom: var(--space-md);
+}
+
+/* Form Controls Inside Amount Modal */
+.input-group {
+    position: relative;
+    margin-bottom: var(--space-sm);
+}
+
+.currency-symbol {
+    position: absolute;
+    left: var(--space-sm);
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    pointer-events: none;
+}
+
+.input-field {
+    width: 100%;
+    background-color: var(--bg-element);
+    border: 1px solid var(--bg-hover);
+    border-radius: var(--radius-sm);
+    padding: 10px var(--space-sm) 10px 42px;
+    color: var(--text-primary);
+    font-size: 15px;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    outline: none;
+    transition: border-color 150ms var(--ease-linear);
+    box-shadow: inset 0 1px 2px rgba(0,0,0,0.2);
+}
+
+.input-field:focus {
+    border-color: var(--accent);
+}
+
+.error-message {
+    font-size: 12px;
+    color: #ef4444;
+    margin-top: -6px;
+    margin-bottom: var(--space-sm);
+    display: none;
+}
+
+/* Modal Action Layout Grid */
+.modal-actions {
     display: flex;
-    flex-direction: column; 
-    gap: 0;
-    padding: 12px var(--space-sm); 
-    background: rgba(24, 24, 28, 0.4);
-    border: 1px solid var(--border-subtle);
+    justify-content: flex-end;
+    gap: var(--space-xs);
+}
+
+.btn-secondary {
+    background-color: transparent;
+    border: 1px solid var(--bg-element);
+    color: var(--text-secondary);
+    padding: 8px var(--space-sm);
+    border-radius: var(--radius-sm);
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 150ms var(--ease-linear), color 150ms var(--ease-linear);
+}
+
+.btn-secondary:hover {
+    background-color: var(--bg-element);
+    color: var(--text-primary);
+}
+
+.btn-primary {
+    background-color: var(--text-primary);
+    border: none;
+    color: var(--bg-page);
+    padding: 8px var(--space-sm);
+    border-radius: var(--radius-sm);
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: var(--shadow-sm);
+    transition: opacity 150ms var(--ease-linear);
+}
+
+.btn-primary:hover {
+    opacity: 0.9;
+}
+
+.btn-primary:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+/* Spinner Loading Component */
+.spinner {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border: 2px solid rgba(255,255,255,0.3);
+    border-radius: 50%;
+    border-top-color: #fff;
+    animation: spin 0.8s infinite linear;
+    margin-right: 6px;
+    vertical-align: middle;
+}
+
+@keyframes spin {
+    to { transform: rotate(300deg); }
+}
+
+/* ==========================================================================
+   GLOBAL NOTIFICATION TRANSITION ENGINE (TOAST)
+   ========================================================================== */
+.toast {
+    position: fixed;
+    bottom: var(--space-md);
+    right: var(--space-md);
+    background-color: var(--bg-surface);
+    border: 1px solid var(--bg-element);
     border-radius: var(--radius-md);
-    box-shadow: none;
-}
-.history-card:hover { border-color: var(--border-hover); }
-
-.history-card__header { 
-    width: 100%; 
-    border-bottom: 1px solid rgba(255, 255, 255, 0.02); 
-    padding-bottom: 4px;
-    margin-bottom: var(--space-xs);
-}
-.history-card__header h4 { font-size: 10px; color: var(--success); text-transform: uppercase; letter-spacing: 0.08em; font-weight: 700; }
-
-.history-card__content { display: flex; flex-direction: column; gap: var(--space-xs); width: 100%; }
-.history-card__row { display: flex; justify-content: space-between; align-items: center; width: 100%; }
-
-.history-card__row + .history-card__row {
-    padding-top: var(--space-xs);
-    border-top: 1px dashed rgba(255, 255, 255, 0.02);
+    padding: var(--space-sm) var(--space-md);
+    z-index: 2000;
+    box-shadow: var(--shadow-lg);
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    transform: translateY(100px);
+    opacity: 0;
+    pointer-events: none;
+    transition: transform 400ms cubic-bezier(0.16, 1, 0.3, 1), opacity 400ms var(--ease-linear);
 }
 
-.history-card__label { font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.03em; font-weight: 600; }
-.history-card__value { font-size: 12px; color: var(--text-secondary); font-weight: 500; }
-.history-card__value--amount { font-size: 12px; font-weight: 700; color: #ffffff; }
-
-/* ==========================================================================
-   HARDWARE GRAPHIC HOVER PACK
-   ========================================================================== */
-.gallery-section { margin-top: var(--space-md); border-top: 1px solid var(--border-subtle); padding-top: var(--space-md); }
-.gallery-section h2 { font-size: 11px; color: var(--text-muted); margin-bottom: var(--space-sm); font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; }
-.photo-gallery { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; width: 100%; }
-.photo-gallery img { width: 100%; height: 95px; object-fit: cover; border-radius: var(--radius-sm); border: 1px solid var(--border-subtle); filter: grayscale(15%) brightness(85%); transition: all 250ms var(--ease-linear); }
-.photo-gallery img:hover { transform: scale(1.015); filter: grayscale(0%) brightness(100%); border-color: var(--border-hover); }
-
-/* ==========================================================================
-   DIALOG FRAMES BOUNDS
-   ========================================================================== */
-.modal, #amountModal { position: fixed; inset: 0; z-index: 10000; display: flex; align-items: center; justify-content: center; padding: var(--space-sm); }
-.modal[hidden], #amountModal[hidden] { display: none !important; }
-
-.modal-backdrop { position: absolute; inset: 0; background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); }
-
-.modal-card, #amountModal > div { 
-    position: relative; 
-    z-index: 1; 
-    width: min(100%, 360px); 
-    padding: var(--space-md) var(--space-lg) !important; 
-    background: var(--bg-surface) !important; 
-    border: 1px solid rgba(255, 255, 255, 0.06) !important; 
-    border-radius: var(--radius-lg) !important; 
-    box-shadow: var(--shadow-modal), var(--shadow-inset) !important; 
-    animation: saasModalIn 250ms var(--ease-linear) forwards; 
+.toast--visible {
+    transform: translateY(0);
+    opacity: 1;
+    pointer-events: auto;
 }
 
-@keyframes saasModalIn { from { opacity: 0; transform: scale(0.98) translateY(8px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+.toast-icon {
+    color: var(--success);
+    display: flex;
+    align-items: center;
+}
 
-.modal-card h3, #amountModal h3 { font-size: 14px !important; font-weight: 700; letter-spacing: -0.01em !important; margin-bottom: 4px !important; color: #ffffff !important; }
-.modal-message, #amountModal p.modal-message { font-size: 12px !important; color: var(--text-secondary) !important; line-height: 1.5 !important; margin-bottom: var(--space-sm) !important; }
+.toast-text {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-primary);
+}
 
-.modal-input, #amountModalInput { width: 100%; padding: 10px 12px !important; border: 1px solid var(--border-subtle) !important; border-radius: var(--radius-sm) !important; margin-top: 4px !important; margin-bottom: var(--space-sm) !important; font-size: 14px !important; font-weight: 700 !important; font-family: var(--font-sans) !important; background-color: var(--bg-element) !important; color: #ffffff !important; outline: none; transition: border-color 150ms var(--ease-linear) !important; }
-.modal-input:focus, #amountModalInput:focus { border-color: var(--accent) !important; background-color: var(--bg-surface) !important; }
-#amountModalError { font-size: 11px !important; color: var(--danger) !important; margin-top: -4px !important; margin-bottom: var(--space-sm) !important; }
+/* Cloud Status Engine Classes */
+.sync-status {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: var(--text-secondary);
+    transition: opacity 200ms var(--ease-linear);
+}
 
-.modal-actions { display: flex; gap: 8px; }
-.btn-modal { flex: 1; padding: 8px 14px; border-radius: var(--radius-sm); font-family: var(--font-sans); font-size: 11px; font-weight: 600; cursor: pointer; border: none; }
-.btn-modal--cancel { background: var(--bg-element); color: var(--text-secondary); border: 1px solid var(--border-subtle); }
-.btn-modal--cancel:hover { background: rgba(255, 255, 255, 0.02); }
-.btn-modal--confirm, #amountModalSubmit { background: #ffffff !important; color: #000000 !important; }
+.sync-status--fade-out {
+    opacity: 0;
+}
+
+.sync-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: var(--text-muted);
+}
+
+.sync-status--syncing .sync-dot {
+    background-color: var(--warning);
+    animation: pulse 1s infinite alternate;
+}
+
+.sync-status--synced .sync-dot {
+    background-color: var(--success);
+}
+
+.sync-status--offline .sync-dot {
+    background-color: #ef4444;
+}
+
+@keyframes pulse {
+    from { opacity: 0.4; }
+    to { opacity: 1; }
+}
+
+/* Micro Interaction: Success Flash Card Trigger */
+.cicilan--success-flash {
+    animation: flashGreen 1.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes flashGreen {
+    0% { border-color: var(--success); background-color: var(--success-glow); }
+    100% { border-color: rgba(255, 255, 255, 0.08); background-color: var(--bg-card); }
+}
 
 /* ==========================================================================
-   TOAST CONTROLS
+   DYNAMIC MEDIA CONSTRAINTS & RESPONSIVE GRID OVERRIDES
    ========================================================================== */
-.toast { position: fixed; bottom: var(--space-md); left: 50%; transform: translateX(-50%) translateY(10px); z-index: 11000; display: flex; align-items: center; gap: var(--space-xs); padding: 8px 14px; background: #ffffff; color: #000000; border-radius: var(--radius-full); box-shadow: var(--shadow-modal); font-size: 12px; font-weight: 600; opacity: 0; pointer-events: none; transition: opacity 200ms var(--ease-linear), transform 200ms var(--ease-linear); }
-.toast--visible { opacity: 1; transform: translateX(-50%) translateY(0); }
-.toast-icon { display: grid; place-items: center; width: 16px; height: 16px; background: var(--success); color: #fff; border-radius: 50%; font-size: 9px; font-weight: 700; flex-shrink: 0; }
+@media (max-width: 890px) {
+    .dashboard-grid { grid-template-columns: 1fr; }
+    .page-header { flex-direction: column; align-items: flex-start; gap: var(--space-md); }
+    .ux-bar { width: 100%; justify-content: space-between; }
+}
 
-/* ==========================================================================
-   RESPONSIVE SAAS MATRIX SAFETY OVERRIDES
-   ========================================================================== */
-@media (max-width: 992px) { .dashboard-grid { grid-template-columns: 1fr; gap: var(--space-lg); } }
-@media (max-width: 768px) {
-    body { padding: var(--space-sm) 0 var(--space-lg); }
-    .page-header { flex-direction: column; align-items: flex-start; gap: var(--space-sm); padding: 0 var(--space-sm); }
-    .ux-bar { width: 100%; max-width: unset; flex-direction: column; align-items: stretch; gap: 2px; }
-    .ux-bar-divider { display: none; }
-    .ux-bar-item { width: 100%; }
-    .summary { grid-template-columns: 1fr; gap: var(--space-xs); padding: 0 var(--space-sm); }
-    .stat-card { flex-direction: row; align-items: center; justify-content: flex-start; height: auto; gap: var(--space-sm); padding: var(--space-sm); }
-    .progress-panel { margin: 0 var(--space-sm) var(--space-lg); padding: var(--space-sm) var(--space-md); }
-    .progress-header { flex-direction: column; align-items: flex-start; gap: 2px; }
-    .progress-percentage-wrap { text-align: left; display: flex; align-items: baseline; gap: 4px; }
+@media (max-width: 640px) {
+    body { padding: var(--space-md) 0; }
+    .metric-row { grid-template-columns: 1fr; gap: var(--space-xs); }
+    .cicilan-meta { flex-direction: column; gap: 4px; }
+    .progress-header-block { text-align: left; display: flex; align-items: baseline; gap: 4px; }
     .progress-percentage-label { margin-top: 0; }
     .progress-details-bar { flex-direction: column; align-items: flex-start; gap: 4px; }
     .dashboard-grid { padding: 0 var(--space-sm); }
@@ -634,7 +861,9 @@ button:disabled, .btn-pay:disabled { opacity: 0.35; cursor: not-allowed; }
     .toast { width: min(92%, 320px); justify-content: center; }
     .photo-gallery { grid-template-columns: repeat(2, 1fr); padding: 0 var(--space-sm); }
     .gallery-section h2 { padding: 0 var(--space-sm); }
-}/* ==========================================================================
+}
+
+/* ==========================================================================
    INTERACTION TWEAK: CLICKABLE LUNAS BADGE AFFORDANCE
    ========================================================================== */
 .status-badge--paid {
@@ -644,11 +873,7 @@ button:disabled, .btn-pay:disabled { opacity: 0.35; cursor: not-allowed; }
 }
 
 .status-badge--paid:hover {
-    background-color: rgba(239, 68, 68, 0.12) !important; /* Efek merah halus saat di-hover untuk mengindikasikan aksi pembatalan */
-    color: var(--danger) !important;
-    border-color: rgba(239, 68, 68, 0.3) !important;
-}
-
-.status-badge--paid:active {
-    transform: scale(0.95);
+    background-color: rgba(16, 185, 129, 0.2) !important;
+    border-color: rgba(16, 185, 129, 0.4) !important;
+    transform: scale(1.02);
 }

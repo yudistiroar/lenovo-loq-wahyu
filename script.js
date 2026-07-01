@@ -41,12 +41,18 @@ const DOM = {
   daftarCicilan: document.getElementById("daftarCicilan"),
   riwayatPembayaran: document.getElementById("riwayatPembayaran"),
   photoGallery: document.getElementById("photoGallery"),
+  
+  // Konfirmasi Modal Nodes
   confirmModal: document.getElementById("confirmModal"),
   confirmMessage: document.getElementById("confirmMessage"),
   confirmCancel: document.getElementById("confirmCancel"),
   confirmOk: document.getElementById("confirmOk"),
+  
+  // Toast Node
   successToast: document.getElementById("successToast"),
   successToastText: document.getElementById("successToastText"),
+  
+  // Custom Amount Modal Nodes
   amountModal: document.getElementById("amountModal"),
   amountModalTitle: document.getElementById("amountModalTitle"),
   amountModalTarget: document.getElementById("amountModalTarget"),
@@ -57,23 +63,17 @@ const DOM = {
 };
 
 // ==========================================
-// SYSTEM AUTOMATION CLOUD SYNC STATE
+// CORE INFRASTRUCTURE DATA SYNCHRONIZATION
 // ==========================================
 function updateSyncState(state, text) {
-  const syncContainer = document.getElementById("cloudSyncStatus");
-  const syncText = document.getElementById("syncText");
-  if (!syncContainer || !syncText) return;
-
-  syncContainer.classList.add("sync-status--fade-out");
-  setTimeout(() => {
-    syncContainer.className = `sync-status sync-status--${state}`;
-    syncText.textContent = text;
-    syncContainer.classList.remove("sync-status--fade-out");
-  }, 200);
+  if (window.updateCloudSyncVisualState) {
+    let stateClass = `sync-status--${state}`;
+    window.updateCloudSyncVisualState(stateClass, text);
+  }
 }
 
 // ==========================================
-// INTERPOLASI ANIMASI ANGKA (Odometer Effect)
+// CORE UTILITIES & TRANSITIONS
 // ==========================================
 function animateNumber(element, start, end, duration = 600) {
   if (!element) return;
@@ -82,8 +82,11 @@ function animateNumber(element, start, end, duration = 600) {
   function update(currentTime) {
     const elapsed = currentTime - startTime;
     const progress = Math.min(elapsed / duration, 1);
+    
+    // Cubic Ease-Out Transition Formula
     const easeProgress = progress * (2 - progress);
     const currentVal = Math.floor(start + (end - start) * easeProgress);
+    
     element.textContent = formatRupiah(currentVal);
     
     if (progress < 1) {
@@ -95,9 +98,6 @@ function animateNumber(element, start, end, duration = 600) {
   requestAnimationFrame(update);
 }
 
-// ==========================================
-// UTILITY PARSING BULANAN & MATA UANG
-// ==========================================
 function formatRupiah(angka) {
   return new Intl.NumberFormat("id-ID", {
     style: "currency",
@@ -141,7 +141,7 @@ function getNextUnpaidIndex() {
 }
 
 // ==========================================
-// LOGIKA UTAMA INISIALISASI JARINGAN
+// INITIALIZATION LIFE-CYCLE
 // ==========================================
 async function initialize() {
   try {
@@ -174,6 +174,7 @@ async function fetchCicilan() {
       cicilanMaster = cicilanMaster ? [cicilanMaster] : [];
     }
     
+    // Sort array by installment incremental counter
     cicilanMaster.sort((a, b) => (a.installment ?? 0) - (b.installment ?? 0));
     renderAll();
   } catch (error) {
@@ -182,6 +183,9 @@ async function fetchCicilan() {
   }
 }
 
+// ==========================================
+// GRAPHICAL INTERFACE RENDERING ENGINE
+// ==========================================
 function renderAll() {
   renderSummaryData();
   renderProgressPanel();
@@ -272,6 +276,7 @@ function renderDaftarCicilan() {
       }
     }
 
+    // TASK 2: Merubah teks string tombol di dalam template literal menjadi "Bayar Sekarang"
     card.innerHTML = `
       <div class="info">
         <div class="cicilan-header">
@@ -284,7 +289,7 @@ function renderDaftarCicilan() {
           <span class="meta-item">Jatuh Tempo: <strong>${item.due_date || "—"}</strong></span>
         </div>
       </div>
-      ${isLunas ? "" : `<button type="button" class="btn-pay" onclick="triggerPaymentFlow(${index})">Bayar</button>`}
+      ${isLunas ? "" : `<button type="button" class="btn-pay" onclick="triggerPaymentFlow(${index})">Bayar Sekarang</button>`}
     `;
     DOM.daftarCicilan.appendChild(card);
   });
@@ -300,6 +305,7 @@ function renderRiwayatPembayaran() {
     return;
   }
 
+  // Sorting history: most recent paid transaction pops up first
   const sortedHistory = [...paidHistory].sort((a, b) => new Date(b.paid_at || 0) - new Date(a.paid_at || 0));
 
   sortedHistory.forEach((item, index) => {
@@ -342,7 +348,7 @@ function renderGallery() {
 }
 
 // ==========================================
-// INTERACTIVE SYSTEM FLOW MODAL CONTROL
+// DYNAMIC MUTATION INTERACTION WORKFLOWS
 // ==========================================
 window.triggerPaymentFlow = function(index) {
   pendingPayIndex = index;
@@ -351,6 +357,7 @@ window.triggerPaymentFlow = function(index) {
   const paidAmount = item.paid_amount ?? 0;
   const nominal = item.nominal ?? 0;
 
+  // Partial Payment Detection Flow Switcher
   if (paidAmount > 0 && paidAmount < nominal) {
     if (DOM.amountModalTitle) DOM.amountModalTitle.textContent = `Selesaikan Cicilan Ke-${item.installment}`;
     if (DOM.amountModalTarget) DOM.amountModalTarget.textContent = `Kekurangan tagihan: ${formatRupiah(nominal - paidAmount)}`;
@@ -409,9 +416,6 @@ function processAmountSubmit() {
   openConfirmModal(`Konfirmasi pembayaran khusus sebesar ${formatRupiah(amount)} untuk Cicilan Ke-${cicilanMaster[pendingPayIndex].installment}?`);
 }
 
-// ==========================================
-// MASTER NETWORK POST CONTEXT OPERATOR
-// ==========================================
 async function executePayment() {
   if (pendingPayIndex === null) return;
   const originalBtnContent = DOM.confirmOk.innerHTML;
@@ -427,7 +431,6 @@ async function executePayment() {
     
     const item = cicilanMaster[pendingPayIndex];
     
-    // PENENTUAN ENDPOINT DINAMIS BERDASARKAN FILE CODE.TXT ASLI ANDA
     let requestUrl = `${API_BASE_URL}/payments/${item.id}/pay`;
     let fetchOptions = {
       method: "POST",
@@ -435,10 +438,8 @@ async function executePayment() {
     };
 
     if (isCancelOperation) {
-      // Jika membatalkan, tembak endpoint /cancel tanpa membawa request body sesuai rancangan backend asli Anda
       requestUrl = `${API_BASE_URL}/payments/${item.id}/cancel`;
     } else {
-      // Jika membayar, gunakan endpoint /pay dengan membawa payload paid_amount nominal angka numerik biasa
       let payValue = item.nominal ?? 0;
       if (DOM.amountModalInput && DOM.amountModalInput.value) {
         const customAmount = parseRupiah(DOM.amountModalInput.value);
@@ -459,7 +460,6 @@ async function executePayment() {
     
     closeConfirmModal();
     
-    // Refresh secara serentak
     await fetchCicilan();
     updateSyncState("synced", "Synced just now");
     

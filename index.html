@@ -7,13 +7,12 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet\">\n
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<div class="app">
+<div class=\"app\">
     <div class="container">
 
         <header class="page-header">
@@ -28,16 +27,14 @@
                 <div class="ux-bar-item">
                     <div class="ux-bar-icon-wrap">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="ux-icon">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5m-9 3h.008v.008H12v-.008Z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5" />
                         </svg>
                     </div>
                     <div class="ux-bar-content">
                         <span class="ux-bar-label">Hari ini</span>
-                        <span id="todayDate" class="ux-bar-value">—</span>
+                        <span class="ux-bar-value" id="todayDate">—</span>
                     </div>
                 </div>
-
-                <div class="ux-bar-divider" aria-hidden="true"></div>
 
                 <div class="ux-bar-item">
                     <div class="ux-bar-icon-wrap">
@@ -46,242 +43,130 @@
                         </svg>
                     </div>
                     <div class="ux-bar-content">
-                        <span class="ux-bar-label">Batas Waktu</span>
-                        <div class="ux-bar-due-group">
-                            <span id="countdownText" class="ux-bar-value">—</span>
-                            <span id="daysRemainingText" class="ux-bar-badge">—</span>
-                        </div>
+                        <span class="ux-bar-label">Jatuh Tempo Berikutnya</span>
+                        <span class="ux-bar-value" id="countdownText">—</span>
                     </div>
                 </div>
 
-                <div class="ux-bar-divider" aria-hidden="true"></div>
-
                 <div class="ux-bar-item">
-                    <div class="ux-bar-icon-wrap">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="ux-icon">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 16.5V9.75m0 0l3 3m-3-3l-3 3M6.75 19.5a4.5 4.5 0 0 1-1.41-8.775 5.25 5.25 0 0 1 10.233-2.33 3 3 0 0 1 3.758 3.848A3.752 3.752 0 0 1 18 19.5H6.75Z" />
-                        </svg>
-                    </div>
-                    <div class="ux-bar-content">
-                        <span class="ux-bar-label">Cloud Sync</span>
-                        <div id="cloudSyncStatus" class="sync-status sync-status--syncing">
-                            <span class="sync-dot"></span>
-                            <span id="syncText" class="sync-text">Syncing...</span>
-                        </div>
+                    <div class="sync-status sync-status--syncing" id="cloudSyncStatus" aria-label="Status sinkronisasi">
+                        <div class="sync-dot"></div>
+                        <span id="syncText">Connecting...</span>
                     </div>
                 </div>
             </div>
         </header>
 
-        <section class="summary" aria-label="Ringkasan Keuangan">
-            <div class="stat-card stat-card--price">
-                <div class="stat-icon">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25v10.5A2.25 2.25 0 002.25 13.5zm3-12V3m12 12V3" />
-                    </svg>
-                </div>
-                <div class="stat-body">
-                    <h3>Total Harga Laptop</h3>
-                    <p id="totalHarga">—</p>
-                </div>
+        <section class="metric-row" aria-label="Ringkasan Finansial">
+            <div class="panel-metric">
+                <h2 class="metric-title">Total Harga</h2>
+                <div class="metric-number" id="totalHarga">Rp 0</div>
             </div>
-
-            <div class="stat-card stat-card--paid">
-                <div class="stat-icon">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                </div>
-                <div class="stat-body">
-                    <h3>Total Sudah Dibayar</h3>
-                    <p id="sudahBayar">—</p>
-                </div>
+            <div class="panel-metric">
+                <h2 class="metric-title">Sudah Bayar</h2>
+                <div class="metric-number" id="sudahBayar">Rp 0</div>
             </div>
-
-            <div class="stat-card stat-card--debt">
-                <div class="stat-icon">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m-3-2.818l.879.555M16 8.182l-.879-.555M12 12m0 0l-.879-.555M12 12l.879.555M12 12v3.182" />
-                    </svg>
-                </div>
-                <div class="stat-body">
-                    <h3>Sisa Hutang</h3>
-                    <p id="sisaHutang">—</p>
-                </div>
+            <div class="panel-metric">
+                <h2 class="metric-title">Sisa Hutang</h2>
+                <div class="metric-number" id="sisaHutang">Rp 0</div>
             </div>
         </section>
 
-        <section class="progress-panel" aria-label="Progres Pembayaran" id="progressPanel" hidden>
-            <div class="progress-header">
-                <div class="progress-header-main">
-                    <span class="progress-eyebrow">Rencana Pembayaran</span>
-                    <h2 id="progressTitle">Memuat Progres...</h2>
-                    <p class="progress-subtitle" id="progressSub">Menghitung kestabilan pembayaran jangka panjang.</p>
-                </div>
-                <div class="progress-percentage-wrap">
-                    <span class="progress-percentage" id="progressPercent">0%</span>
-                    <span class="progress-percentage-label">Terbayar</span>
-                </div>
-            </div>
-            
-            <div class="progress-track">
-                <div id="progressBar" class="progress-fill" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
-            </div>
-
-            <div class="progress-details-bar">
-                <p id="progressText" class="progress-caption">Menghitung data cicilan...</p>
-                <div class="progress-meta-pills">
-                    <span class="progress-pill-badge">Kontrak Aktif</span>
-                </div>
-            </div>
-        </section>
-
-        <div class="dashboard-grid">
-            
-            <section class="installments-section">
-                <div class="section-head">
-                    <h2 class="section-title">Jadwal Pembayaran</h2>
-                    <p class="section-desc">Daftar cicilan bulanan yang harus diselesaikan.</p>
-                </div>
-                <div id="daftarCicilan" class="installment-list">
+        <main class="dashboard-grid">
+            <div class="main-column">
+                <section class="installment-container">
+                    <div class="section-head">
+                        <h3>Jadwal Pembayaran</h3>
                     </div>
-            </section>
+                    <div class="installment-feed" id="daftarCicilan">
+                        </div>
+                </section>
+            </div>
 
-            <section class="history-section">
-                <div class="section-head">
-                    <h2 class="section-title">Riwayat Pembayaran</h2>
-                    <p class="section-desc">Catatan verifikasi transfer aman D1.</p>
-                </div>
-                <div id="riwayatPembayaran" class="history-list">
+            <div class="side-column">
+                <section class="panel-progress" id="progressPanel" hidden>
+                    <div class="progress-header-block">
+                        <div class="progress-title-stack">
+                            <h4 id="progressTitle">Cicilan Aktif</h4>
+                            <p id="progressSub" class="progress-subtitle-stack">Selesaikan tagihan sebelum tenggat waktu.</p>
+                        </div>
+                        <div class="progress-percentage-label" id="progressPercent">0%</div>
                     </div>
-            </section>
-            
-        </div>
+                    <div class="progress-track-bar">
+                        <div class="progress-fill" id="progressBar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                    <div class="progress-details-bar">
+                        <span class="progress-text" id="progressText">0% Cicilan Terbuka</span>
+                    </div>
+                </section>
+
+                <section class="panel-history">
+                    <div class="section-head">
+                        <h3>Riwayat Transaksi</h3>
+                    </div>
+                    <div class="history-feed" id="riwayatPembayaran">
+                        </div>
+                </section>
+            </div>
+        </main>
 
         <section class="gallery-section">
-            <h2>Galeri Perangkat</h2>
-            <div id="photoGallery" class="photo-gallery">
+            <h2>Galeri Fisik Unit</h2>
+            <div class="photo-gallery" id="photoGallery">
                 </div>
         </section>
 
     </div>
 </div>
 
-<div id="amountModal" class="modal" hidden style="display: none; position: fixed; inset: 0; z-index: 10000; align-items: center; justify-content: center;">
-    <div style="background: #ffffff; padding: 28px; border-radius: 16px; max-width: 400px; width: 90%; box-shadow: 0 10px 30px rgba(0,0,0,0.15); box-sizing: border-box;">
-        <h3 id="amountModalTitle" style="margin-top: 0; margin-bottom: 6px; color: #1d1d1f; font-size: 16px; font-weight: 700;">Input Nominal</h3>
-        <p id="amountModalTarget" class="modal-message" style="margin-bottom: 20px; color: #6e6e73; font-size: 13px; line-height: 1.5;"></p>
-        
-        <input type="text" id="amountModalInput" class="modal-input" style="width: 100%; padding: 12px 14px; border: 1px solid rgba(0,0,0,0.15); border-radius: 8px; box-sizing: border-box; font-size: 16px; font-weight: 700; background: #f5f5f7; outline: none;" />
-        
-        <p id="amountModalError" style="color: #dc2626; font-size: 12px; margin-top: 8px; margin-bottom: 16px; min-height: 1.2rem; display: none; font-weight: 500;"></p>
-        
-        <div class="modal-actions" style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px;">
-            <button type="button" id="amountModalCancel" class="btn-modal btn-modal--cancel">Batal</button>
-            <button type="button" id="amountModalSubmit" class="btn-modal btn-modal--confirm">Simpan</button>
-        </div>
-    </div>
-</div>
-
-<div id="confirmModal" class="modal" hidden aria-hidden="true" role="dialog" aria-labelledby="confirmTitle" aria-modal="true">
+<div class="modal-layer" id="confirmModal">
     <div class="modal-backdrop"></div>
-    <div class="modal-card">
-        <h3 id="confirmTitle">Konfirmasi Pembayaran</h3>
-        <p id="confirmMessage" class="modal-message"></p>
+    <div class="modal-wrapper">
+        <h3>Konfirmasi Aksi</h3>
+        <p id="confirmMessage">Apakah Anda yakin ingin melanjutkan tindakan ini?</p>
         <div class="modal-actions">
-            <button type="button" id="confirmCancel" class="btn-modal btn-modal--cancel">Batal</button>
-            <button type="button" id="confirmOk" class="btn-modal btn-modal--confirm">Ya, Bayar</button>
+            <button type="button" class="btn-secondary" id="confirmCancel">Kembali</button>
+            <button type="button" class="btn-primary" id="confirmOk">Konfirmasi</button>
         </div>
     </div>
 </div>
 
-<div id="successToast" class="toast" aria-live="polite" aria-atomic="true">
-    <span class="toast-icon" aria-hidden="true">✓</span>
-    <span id="successToastText">Pembayaran berhasil disimpan.</span>
+<div class="modal-layer" id="amountModal">
+    <div class="modal-backdrop"></div>
+    <div class="modal-wrapper">
+        <h3 id="amountModalTitle">Masukkan Jumlah Pembayaran</h3>
+        <p id="amountModalTarget">Kekurangan tagihan: Rp 0</p>
+        <div class="input-group">
+            <span class="currency-symbol">Rp</span>
+            <input type="text" id="amountModalInput" class="input-field" placeholder="0" autocomplete="off">
+        </div>
+        <div class="error-message" id="amountModalError"></div>
+        <div class="modal-actions">
+            <button type="button" class="btn-secondary" id="amountModalCancel">Batal</button>
+            <button type="button" class="btn-primary" id="amountModalSubmit">Lanjutkan</button>
+        </div>
+    </div>
 </div>
 
+<div class="toast" id="successToast">
+    <div class="toast-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" style="width:18px;height:18px;">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+        </svg>
+    </div>
+    <div class="toast-text" id="successToastText">Transaksi sukses diproses!</div>
+</div>
+
+<script src="script.js"></script>
 <script>
-document.addEventListener("DOMContentLoaded", () => {
-  const countdownTarget = document.getElementById("countdownText");
-  const daysBadge = document.getElementById("daysRemainingText");
-
-  if (countdownTarget) {
-    const observer = new MutationObserver(() => {
-      let rawText = countdownTarget.textContent;
-      if (rawText && (rawText.includes(":") || rawText.match(/\d{4}-\d{2}-\d{2}/))) {
-        let datePart = rawText.includes(":") ? rawText.split(":")[1].trim() : rawText.trim();
-        let targetDate = new Date(datePart);
-        
-        if (!isNaN(targetDate)) {
-          let formattedDate = targetDate.toLocaleDateString("id-ID", {
-            day: "numeric", month: "long", year: "numeric"
-          });
-          
-          let today = new Date();
-          today.setHours(0,0,0,0);
-          targetDate.setHours(0,0,0,0);
-          
-          let diffTime = targetDate.getTime() - today.getTime();
-          let diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-          
-          observer.disconnect();
-          countdownTarget.textContent = formattedDate;
-          
-          if (daysBadge) {
-            daysBadge.style.display = "inline-block";
-            if (diffDays > 0) {
-              daysBadge.textContent = `${diffDays} hari lagi`;
-              daysBadge.className = "ux-bar-badge ux-bar-badge--warning";
-            } else if (diffDays === 0) {
-              daysBadge.textContent = `Hari ini`;
-              daysBadge.className = "ux-bar-badge ux-bar-badge--danger";
-            } else {
-              daysBadge.textContent = `Terlambat ${Math.abs(diffDays)} hari`;
-              daysBadge.className = "ux-bar-badge ux-bar-badge--danger";
-            }
-          }
-          observer.observe(countdownTarget, { childList: true, characterData: true });
-        }
-      }
-    });
-    observer.observe(countdownTarget, { childList: true, characterData: true });
-  }
-
-  // Interseptor Progress Detail untuk Menampilkan Struktur Nilai Kontrak Akurat
-  const progressTextEl = document.getElementById("progressText");
-  const totalHargaEl = document.getElementById("totalHarga");
-  const sudahBayarEl = document.getElementById("sudahBayar");
-
-  if (progressTextEl) {
-    const progressObserver = new MutationObserver(() => {
-      const rawText = progressTextEl.textContent;
-      if (rawText && rawText.includes("Cicilan Terbuka") && !rawText.includes("Kontrak: ")) {
-        const totalHargaStr = totalHargaEl ? totalHargaEl.textContent : "—";
-        const sudahBayarStr = sudahBayarEl ? sudahBayarEl.textContent : "—";
-        
-        progressObserver.disconnect();
-        progressTextEl.innerHTML = `${rawText} <span class='progress-divider-dot'>·</span> <span class='progress-contract-values'>Kontrak: <strong>${sudahBayarStr}</strong> dari <strong>${totalHargaStr}</strong></span>`;
-        progressObserver.observe(progressTextEl, { childList: true, characterData: true });
-      }
-    });
-    progressObserver.observe(progressTextEl, { childList: true, characterData: true });
-  }
-});
-
 window.updateCloudSyncVisualState = function(stateClass, textContent) {
   const syncContainer = document.getElementById("cloudSyncStatus");
   const syncText = document.getElementById("syncText");
   if (syncContainer && syncText) {
-    syncContainer.classList.add("sync-status--fade-out");
-    setTimeout(() => {
-      syncContainer.className = `sync-status ${stateClass}`;
-      syncText.textContent = textContent;
-      syncContainer.classList.remove("sync-status--fade-out");
-    }, 250);
+    syncContainer.className = `sync-status ${stateClass}`;
+    syncText.textContent = textContent;
   }
 };
 </script>
-
-<script src="script.js"></script>
 </body>
 </html>
