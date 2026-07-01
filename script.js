@@ -710,4 +710,88 @@ async function executePayment() {
   } catch (error) {
     SyncStatus.setOffline();
   }
-}
+}// ==========================================================================
+// APPLE HIG UX-BAR AUTOMATION COMPONENT
+// ==========================================================================
+document.addEventListener("DOMContentLoaded", () => {
+  // 1. Ambil target elemen asli Anda yang sering diinjeksi string kasarnya
+  const countdownTarget = document.getElementById("countdownText");
+  const daysBadge = document.getElementById("daysRemainingText");
+
+  if (countdownTarget) {
+    // Gunakan MutationObserver untuk memantau perubahan teks dari skrip asli Anda
+    const observer = new MutationObserver(() => {
+      let rawText = countdownTarget.textContent;
+      
+      // Jika berisi pola string bawaan "Jatuh tempo..." atau format ISO YYYY-MM-DD
+      if (rawText && (rawText.includes(":") || rawText.match(/\d{4}-\d{2}-\d{2}/))) {
+        // Ekstrak string tanggal murni
+        let datePart = rawText.includes(":") ? rawText.split(":")[1].trim() : rawText.trim();
+        let targetDate = new Date(datePart);
+        
+        if (!isNaN(targetDate)) {
+          // Format ke Bahasa Indonesia (Contoh: 1 Agustus 2026)
+          let formattedDate = targetDate.toLocaleDateString("id-ID", {
+            day: "numeric",
+            month: "long",
+            year: "numeric"
+          });
+          
+          // Hitung sisa hari secara presisi
+          let today = new Date();
+          today.setHours(0,0,0,0);
+          targetDate.setHours(0,0,0,0);
+          
+          let diffTime = targetDate.getTime() - today.getTime();
+          let diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+          
+          // Putus loop pemantauan sementara saat menginjeksi teks baru
+          observer.disconnect();
+          
+          countdownTarget.textContent = formattedDate;
+          
+          if (daysBadge) {
+            daysBadge.style.display = "inline-block";
+            if (diffDays > 0) {
+              daysBadge.textContent = `${diffDays} hari lagi`;
+              daysBadge.style.background = "rgba(255, 149, 0, 0.08)";
+              daysBadge.style.color = "#ff9500";
+              daysBadge.style.borderColor = "rgba(255, 149, 0, 0.15)";
+            } else if (diffDays === 0) {
+              daysBadge.textContent = `Hari ini`;
+              daysBadge.style.background = "rgba(255, 59, 48, 0.08)";
+              daysBadge.style.color = "#ff3b30";
+              daysBadge.style.borderColor = "rgba(255, 59, 48, 0.15)";
+            } else {
+              daysBadge.textContent = `Terlambat ${Math.abs(diffDays)} hari`;
+              daysBadge.style.background = "rgba(255, 59, 48, 0.08)";
+              daysBadge.style.color = "#ff3b30";
+              daysBadge.style.borderColor = "rgba(255, 59, 48, 0.15)";
+            }
+          }
+          
+          // Hubungkan kembali observer
+          observer.observe(countdownTarget, { childList: true, characterData: true });
+        }
+      }
+    });
+    
+    observer.observe(countdownTarget, { childList: true, characterData: true });
+  }
+});
+
+// 2. Fungsi Pembantu Animasi Fade saat Perubahan Status Cloud Sync
+window.updateCloudSyncVisualState = function(stateClass, textContent) {
+  const syncContainer = document.getElementById("cloudSyncStatus");
+  const syncText = document.getElementById("syncText");
+  
+  if (syncContainer && syncText) {
+    syncContainer.classList.add("sync-status--fade-out");
+    
+    setTimeout(() => {
+      syncContainer.className = `sync-status ${stateClass}`;
+      syncText.textContent = textContent;
+      syncContainer.classList.remove("sync-status--fade-out");
+    }, 250); // Selaras dengan durasi transition CSS (250ms)
+  }
+};

@@ -24,26 +24,53 @@
                 </p>
             </div>
 
-            <div class="ux-bar" aria-label="Informasi hari ini">
+            <div class="ux-bar" aria-label="Informasi status">
                 <div class="ux-bar-item">
-                    <span class="ux-bar-label">Hari ini</span>
-                    <span id="todayDate" class="ux-bar-value">—</span>
+                    <div class="ux-bar-icon-wrap">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="ux-icon">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5m-9 3h.008v.008H12v-.008Z" />
+                        </svg>
+                    </div>
+                    <div class="ux-bar-content">
+                        <span class="ux-bar-label">Hari ini</span>
+                        <span id="todayDate" class="ux-bar-value">—</span>
+                    </div>
                 </div>
+            
                 <div class="ux-bar-divider" aria-hidden="true"></div>
-                <div class="ux-bar-item ux-bar-item--countdown">
-                    <span class="ux-bar-label">Batas Waktu</span>
-                    <span id="countdownText" class="ux-bar-value ux-bar-value--countdown">—</span>
+            
+                <div class="ux-bar-item">
+                    <div class="ux-bar-icon-wrap">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="ux-icon">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                        </svg>
+                    </div>
+                    <div class="ux-bar-content">
+                        <span class="ux-bar-label">Batas Waktu</span>
+                        <div class="ux-bar-due-group">
+                            <span id="countdownText" class="ux-bar-value">—</span>
+                            <span id="daysRemainingText" class="ux-bar-badge">—</span>
+                        </div>
+                    </div>
                 </div>
+            
                 <div class="ux-bar-divider" aria-hidden="true"></div>
-                <div class="ux-bar-item sync-status-wrapper">
-                    <span class="ux-bar-label">Cloud Sync</span>
-                    <div id="cloudSyncStatus" class="sync-status sync-status--syncing">
-                        <span class="sync-dot"></span>
-                        <span id="syncText" class="sync-text">Syncing...</span>
+            
+                <div class="ux-bar-item">
+                    <div class="ux-bar-icon-wrap">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="ux-icon">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 16.5V9.75m0 0l3 3m-3-3l-3 3M6.75 19.5a4.5 4.5 0 0 1-1.41-8.775 5.25 5.25 0 0 1 10.233-2.33 3 3 0 0 1 3.758 3.848A3.752 3.752 0 0 1 18 19.5H6.75Z" />
+                        </svg>
+                    </div>
+                    <div class="ux-bar-content">
+                        <span class="ux-bar-label">Cloud Sync</span>
+                        <div id="cloudSyncStatus" class="sync-status sync-status--syncing">
+                            <span class="sync-dot"></span>
+                            <span id="syncText" class="sync-text">Syncing...</span>
+                        </div>
                     </div>
                 </div>
             </div>
-        </header>
 
         <section class="summary" aria-label="Ringkasan Keuangan">
             <div class="stat-card stat-card--price">
