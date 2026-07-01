@@ -12,7 +12,7 @@ const API_BASE_URL = "https://lenovo-loq-backend.asrifyudistira.workers.dev";
 
 let cicilanMaster = []; 
 let pendingPayIndex = null;
-let isCancelOperation = false; 
+let isCancelOperation = false; // Flag pelacak jenis operasi
 let currentTotalHargaVal = 0;
 let currentSudahBayarVal = 0;
 let currentSisaHutangVal = 0;
@@ -410,7 +410,7 @@ function processAmountSubmit() {
 }
 
 // ==========================================
-// MASTER NETWORK POST CONTEXT OPERATOR (Fixed Tipe Data Payload)
+// MASTER NETWORK POST CONTEXT OPERATOR
 // ==========================================
 async function executePayment() {
   if (pendingPayIndex === null) return;
@@ -426,21 +426,28 @@ async function executePayment() {
     updateSyncState("syncing", "Syncing...");
     
     const item = cicilanMaster[pendingPayIndex];
-    let payValue = item.nominal ?? 0;
     
+    // PENENTUAN ENDPOINT DINAMIS BERDASARKAN FILE CODE.TXT ASLI ANDA
+    let requestUrl = `${API_BASE_URL}/payments/${item.id}/pay`;
+    let fetchOptions = {
+      method: "POST",
+      headers: { "Content-Type": "application/json" }
+    };
+
     if (isCancelOperation) {
-      payValue = 0;
-    } else if (DOM.amountModalInput && DOM.amountModalInput.value) {
-      const customAmount = parseRupiah(DOM.amountModalInput.value);
-      if (customAmount > 0) payValue = customAmount;
+      // Jika membatalkan, tembak endpoint /cancel tanpa membawa request body sesuai rancangan backend asli Anda
+      requestUrl = `${API_BASE_URL}/payments/${item.id}/cancel`;
+    } else {
+      // Jika membayar, gunakan endpoint /pay dengan membawa payload paid_amount nominal angka numerik biasa
+      let payValue = item.nominal ?? 0;
+      if (DOM.amountModalInput && DOM.amountModalInput.value) {
+        const customAmount = parseRupiah(DOM.amountModalInput.value);
+        if (customAmount > 0) payValue = customAmount;
+      }
+      fetchOptions.body = JSON.stringify({ paid_amount: payValue });
     }
 
-    // FIX: Bungkus parameter paid_amount ke String() untuk memenuhi validasi D1 Worker Anda
-    const response = await fetch(`${API_BASE_URL}/payments/${item.id}/pay`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ paid_amount: String(payValue) })
-    });
+    const response = await fetch(requestUrl, fetchOptions);
 
     if (!response.ok) throw new Error("API Jaringan Error!");
 
@@ -452,6 +459,7 @@ async function executePayment() {
     
     closeConfirmModal();
     
+    // Refresh secara serentak
     await fetchCicilan();
     updateSyncState("synced", "Synced just now");
     
