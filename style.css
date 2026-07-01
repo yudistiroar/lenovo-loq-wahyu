@@ -1,32 +1,46 @@
-:root {
-    --bg-page: #ffffff;
-    --bg-muted: #fafafa;
+/* ==========================================================================
+   PREMIUM DESIGN SYSTEM (Apple Wallet, Linear & Arc Inspired)
+   ========================================================================== */
+   :root {
+    --bg-page: #f5f5f7; /* Karakter abu-abu terang premium khas Apple workspace */
+    --bg-muted: #ffffff;
     --bg-subtle: #f5f5f7;
     --text-primary: #1d1d1f;
     --text-secondary: #6e6e73;
     --text-tertiary: #86868b;
-    --accent: #16a34a;
-    --accent-hover: #15803d;
-    --accent-soft: #f0fdf4;
-    --accent-border: #bbf7d0;
-    --danger: #dc2626;
-    --danger-soft: #fef2f2;
-    --danger-border: #fecaca;
-    --warning: #b45309;
-    --warning-soft: #fffbeb;
-    --warning-border: #fde68a;
-    --border: rgba(0, 0, 0, 0.08);
-    --border-light: rgba(0, 0, 0, 0.05);
-    --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.04);
-    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
-    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.06);
+    
+    /* Premium Smooth Accents */
+    --accent: #0071e3; /* Blue Apple Signatures */
+    --accent-hover: #0077ed;
+    --accent-soft: rgba(0, 113, 227, 0.04);
+    --accent-border: rgba(0, 113, 227, 0.15);
+    
+    --success: #24b263;
+    --success-soft: rgba(36, 178, 99, 0.05);
+    --success-border: rgba(36, 178, 99, 0.15);
+    
+    --danger: #ff3b30;
+    --danger-soft: rgba(255, 59, 48, 0.04);
+    --danger-border: rgba(255, 59, 48, 0.12);
+    
+    --warning: #ff9500;
+    --warning-soft: rgba(255, 149, 0, 0.05);
+    --warning-border: rgba(255, 149, 0, 0.15);
+    
+    --border: rgba(0, 0, 0, 0.04);
+    --border-light: rgba(0, 0, 0, 0.04);
+    
+    /* Radii & Shadows */
     --radius-sm: 10px;
-    --radius-md: 12px;
-    --radius-lg: 16px;
-    --radius-xl: 20px;
+    --radius-md: 14px;
+    --radius-lg: 20px;
+    --radius-xl: 24px;
     --radius-full: 999px;
+    
     --font: "Inter", -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", system-ui, sans-serif;
-    --ease: cubic-bezier(0.25, 0.1, 0.25, 1);
+    --ease: cubic-bezier(0.16, 1, 0.3, 1); /* Linear-like micro-interactions curve */
+    
+    /* Whitespace Utilities */
     --space-xs: 8px;
     --space-sm: 12px;
     --space-md: 16px;
@@ -34,6 +48,12 @@
     --space-xl: 32px;
     --space-2xl: 48px;
     --space-3xl: 64px;
+
+    --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.01);
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.015), 0 4px 16px rgba(0, 0, 0, 0.015);
+    --shadow-md: 0 12px 32px rgba(0, 0, 0, 0.04), 0 2px 4px rgba(0, 0, 0, 0.01);
+    --shadow-hero: 0 20px 40px rgba(0, 0, 0, 0.03), inset 0 1px 0 rgba(255, 255, 255, 0.7);
+    --shadow-modal: 0 30px 70px rgba(0, 0, 0, 0.08);
 }
 
 *,
@@ -65,113 +85,103 @@ body {
 }
 
 .container {
-    width: min(92%, 720px);
+    width: min(92%, 840px); /* Ruang layout dibuat sedikit lebih lega & seimbang */
     margin: 0 auto;
 }
 
-/* ── Page header ── */
-
+/* ==========================================================================
+   PAGE HEADER & UX TOP BAR
+   ========================================================================== */
 .page-header {
-    margin-bottom: var(--space-2xl);
+    margin-bottom: var(--space-xl);
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    gap: var(--space-lg);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+    padding-bottom: var(--space-lg);
 }
 
 .hero {
-    margin-bottom: var(--space-xl);
+    margin-bottom: 0;
 }
 
 .hero h1 {
-    font-size: clamp(1.75rem, 5vw, 2.25rem);
+    font-size: 28px;
     font-weight: 700;
-    letter-spacing: -0.035em;
-    line-height: 1.15;
+    letter-spacing: -0.03em;
+    line-height: 1.2;
     color: var(--text-primary);
-    margin-bottom: var(--space-sm);
+    margin-bottom: 6px;
 }
 
 .subtitle {
-    font-size: 1rem;
-    font-weight: 400;
+    font-size: 14px;
     color: var(--text-secondary);
-    line-height: 1.5;
-    max-width: 420px;
 }
-
-.subtitle strong {
-    color: var(--text-primary);
-    font-weight: 600;
-}
-
-/* ── UX bar ── */
 
 .ux-bar {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: flex-end;
     gap: var(--space-lg);
-    padding: var(--space-md) var(--space-lg);
+    padding: 10px 20px;
     background: var(--bg-muted);
     border: 1px solid var(--border-light);
-    border-radius: var(--radius-lg);
+    border-radius: var(--radius-full); /* Rounded pill style */
+    box-shadow: var(--shadow-xs);
 }
 
 .ux-bar-item {
     display: flex;
     flex-direction: column;
-    gap: 4px;
-    min-width: 0;
+    gap: 2px;
 }
 
 .ux-bar-item--countdown {
-    align-items: flex-end;
-    text-align: right;
+    align-items: flex-start;
+    text-align: left;
 }
 
 .ux-bar-label {
-    font-size: 0.75rem;
-    font-weight: 500;
-    letter-spacing: 0.02em;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
     color: var(--text-tertiary);
 }
 
 .ux-bar-value {
-    font-size: 0.9375rem;
+    font-size: 13px;
     font-weight: 600;
-    letter-spacing: -0.02em;
+    letter-spacing: -0.01em;
     color: var(--text-primary);
 }
 
 .ux-bar-value--countdown {
-    font-size: 0.875rem;
-    font-weight: 500;
-    color: var(--text-secondary);
+    font-size: 13px;
+    font-weight: 600;
 }
 
-.ux-bar-value--overdue {
-    color: var(--danger);
-}
-
-.ux-bar-value--today {
-    color: var(--warning);
-}
-
-.ux-bar-value--complete {
-    color: var(--accent);
-}
+.ux-bar-value--overdue { color: var(--danger); }
+.ux-bar-value--today { color: var(--warning); }
+.ux-bar-value--complete { color: var(--success); }
 
 .ux-bar-divider {
     width: 1px;
-    height: 32px;
-    background: var(--border);
-    flex-shrink: 0;
+    height: 24px;
+    background: rgba(0, 0, 0, 0.06);
 }
 
-/* ── Stat cards ── */
-
+/* ==========================================================================
+   PRIORITAS 1 & 8: HERO SUMMARY & PRICE TYPOGRAPHY
+   ========================================================================== */
 .summary {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: var(--space-md);
-    margin-bottom: var(--space-2xl);
+    margin-bottom: var(--space-xl);
 }
 
 .stat-card {
@@ -179,20 +189,23 @@ body {
     flex-direction: column;
     gap: var(--space-md);
     padding: var(--space-lg);
-    background: var(--bg-page);
+    background: var(--bg-muted);
     border: 1px solid var(--border-light);
-    border-radius: var(--radius-lg);
+    border-radius: var(--radius-md);
     box-shadow: var(--shadow-xs);
-    transition: box-shadow 0.2s var(--ease);
+    transition: var(--transition-premium);
+    transition: transform var(--transition-premium), box-shadow var(--transition-premium), border-color var(--transition-premium);
 }
 
 .stat-card:hover {
+    transform: translateY(-2px);
     box-shadow: var(--shadow-sm);
+    border-color: rgba(0, 0, 0, 0.08);
 }
 
 .stat-icon {
-    width: 40px;
-    height: 40px;
+    width: 42px;
+    height: 42px;
     display: grid;
     place-items: center;
     border-radius: var(--radius-sm);
@@ -201,43 +214,56 @@ body {
 }
 
 .stat-icon svg {
-    width: 20px;
-    height: 20px;
+    width: 18px;
+    height: 18px;
+}
+
+.stat-card--price .stat-icon {
+    background: rgba(0, 0, 0, 0.03);
+    color: var(--text-primary);
 }
 
 .stat-card--paid .stat-icon {
+    background: var(--success-soft);
+    color: var(--success);
+}
+
+.stat-card--debt .stat-icon {
     background: var(--accent-soft);
     color: var(--accent);
 }
 
 .stat-body h3 {
-    font-size: 0.8125rem;
+    font-size: 12px;
     font-weight: 500;
-    color: var(--text-tertiary);
-    margin-bottom: 6px;
+    color: var(--text-secondary);
+    margin-bottom: 4px;
 }
 
+/* PRIORITAS 8: Angka Uang Dibuat Paling Dominan */
 .stat-body p {
-    font-size: clamp(1.125rem, 2.5vw, 1.375rem);
-    font-weight: 600;
-    letter-spacing: -0.025em;
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
     line-height: 1.2;
     color: var(--text-primary);
     font-variant-numeric: tabular-nums;
 }
 
 .stat-card--paid .stat-body p {
-    color: var(--accent);
+    color: var(--success);
 }
 
-/* ── Progress panel ── */
-
+/* ==========================================================================
+   PRIORITAS 2: PROGRESS PANEL (GLOWING PROGRESS TRACK)
+   ========================================================================== */
 .progress-panel {
-    padding: var(--space-xl) var(--space-xl) var(--space-lg);
-    margin-bottom: var(--space-2xl);
+    padding: var(--space-xl);
+    margin-bottom: var(--space-xl);
     background: var(--bg-muted);
     border: 1px solid var(--border-light);
-    border-radius: var(--radius-xl);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-hero);
 }
 
 .progress-header {
@@ -245,27 +271,29 @@ body {
     justify-content: space-between;
     align-items: flex-start;
     gap: var(--space-lg);
-    margin-bottom: var(--space-xl);
+    margin-bottom: var(--space-lg);
 }
 
 .progress-eyebrow {
     display: block;
-    font-size: 0.75rem;
-    font-weight: 500;
-    color: var(--text-tertiary);
-    margin-bottom: 6px;
-}
-
-.progress-header h2 {
-    font-size: clamp(1.25rem, 3vw, 1.5rem);
+    font-size: 11px;
     font-weight: 600;
-    letter-spacing: -0.03em;
-    line-height: 1.2;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
     margin-bottom: 4px;
 }
 
+.progress-header h2 {
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    margin-bottom: 2px;
+}
+
 .progress-subtitle {
-    font-size: 0.9375rem;
+    font-size: 13px;
     color: var(--text-secondary);
 }
 
@@ -276,25 +304,25 @@ body {
 
 .progress-percentage {
     display: block;
-    font-size: clamp(2.5rem, 7vw, 3.25rem);
+    font-size: 36px;
     font-weight: 700;
-    letter-spacing: -0.04em;
+    letter-spacing: -0.03em;
     line-height: 1;
-    color: var(--accent);
+    color: var(--text-primary);
     font-variant-numeric: tabular-nums;
 }
 
 .progress-percentage-label {
     display: block;
-    margin-top: 6px;
-    font-size: 0.75rem;
+    margin-top: 4px;
+    font-size: 11px;
     font-weight: 500;
     color: var(--text-tertiary);
 }
 
 .progress-track {
-    height: 12px;
-    background: var(--bg-subtle);
+    height: 10px; /* Lebih tebal & modern */
+    background: rgba(0, 0, 0, 0.03);
     border-radius: var(--radius-full);
     overflow: hidden;
 }
@@ -304,44 +332,48 @@ body {
     width: 0%;
     height: 100%;
     border-radius: var(--radius-full);
-    background: var(--accent);
-    transition: width 0.5s var(--ease);
+    background: linear-gradient(90deg, var(--accent), #00a6ff); /* Gradient Halus */
+    box-shadow: 0 0 10px rgba(0, 113, 227, 0.25); /* Efek Glow Tipis */
+    transition: width 0.7s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .progress-caption,
 #progressText {
     margin-top: var(--space-md);
     text-align: center;
-    font-size: 0.9375rem;
+    font-size: 13px;
     font-weight: 500;
     color: var(--text-secondary);
 }
 
-/* ── Section headings ── */
-
+/* ==========================================================================
+   CORE SECTION HEADER LAYOUT
+   ========================================================================== */
 .section-head {
-    margin-bottom: var(--space-lg);
+    margin-bottom: var(--space-md);
+    padding-left: 2px;
 }
 
 .section-title {
-    font-size: 1.125rem;
-    font-weight: 600;
-    letter-spacing: -0.02em;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
     color: var(--text-primary);
-    margin-bottom: 4px;
+    margin-bottom: 2px;
 }
 
 .section-desc {
-    font-size: 0.875rem;
-    color: var(--text-tertiary);
+    font-size: 13px;
+    color: var(--text-secondary);
 }
 
 .installments-section {
-    margin-bottom: var(--space-2xl);
+    margin-bottom: var(--space-xl);
 }
 
-/* ── Installment cards ── */
-
+/* ==========================================================================
+   PRIORITAS 3, 4 & 5: INSTALLMENT CARDS & PILL BADGES
+   ========================================================================== */
 .installment-list,
 #daftarCicilan {
     display: flex;
@@ -355,36 +387,38 @@ body {
     align-items: center;
     gap: var(--space-lg);
     padding: var(--space-lg);
-    background: var(--bg-page);
+    background: var(--bg-muted);
     border: 1px solid var(--border-light);
     border-radius: var(--radius-md);
-    transition:
-        border-color 0.2s var(--ease),
-        box-shadow 0.2s var(--ease);
+    box-shadow: var(--shadow-xs);
+    transition: transform 240ms var(--ease), border-color 240ms var(--ease), box-shadow 240ms var(--ease);
 }
 
+/* PRIORITAS 3: Hover Interaction Card Style */
 .cicilan:hover {
-    border-color: var(--border);
-    box-shadow: var(--shadow-xs);
+    transform: translateY(-4px);
+    border-color: rgba(0, 0, 0, 0.08);
+    box-shadow: var(--shadow-sm);
 }
 
 .cicilan--paid {
-    background: var(--accent-soft);
-    border-color: var(--accent-border);
+    background: rgba(255, 255, 255, 0.65);
+    border-color: var(--border-light);
 }
 
+/* PRIORITAS 5: Next Unpaid Target Area Highlight */
 .cicilan--next {
-    border-color: var(--accent);
-    box-shadow: 0 0 0 1px var(--accent);
+    border-color: rgba(0, 113, 227, 0.35);
+    background: linear-gradient(180deg, #ffffff, rgba(0, 113, 227, 0.005));
+    box-shadow: 0 0 16px rgba(0, 113, 227, 0.03), var(--shadow-xs);
 }
 
 .cicilan--overdue {
-    background: var(--danger-soft);
-    border-color: var(--danger-border);
+    border-color: rgba(255, 59, 48, 0.15);
 }
 
 .cicilan--success-flash {
-    animation: successFlash 0.8s var(--ease);
+    animation: successFlash 1.2s var(--ease);
 }
 
 .cicilan-header {
@@ -392,49 +426,50 @@ body {
     align-items: center;
     flex-wrap: wrap;
     gap: var(--space-sm);
-    margin-bottom: var(--space-sm);
+    margin-bottom: 10px;
 }
 
 .info h4 {
-    font-size: 1rem;
+    font-size: 15px;
     font-weight: 600;
-    letter-spacing: -0.02em;
+    letter-spacing: -0.01em;
     color: var(--text-primary);
 }
 
+/* PRIORITAS 4: Modern Pill Badge Architecture */
 .status-badge {
     display: inline-flex;
     align-items: center;
     padding: 3px 10px;
-    font-size: 0.6875rem;
-    font-weight: 600;
-    letter-spacing: 0.01em;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0em;
     border-radius: var(--radius-full);
     border: 1px solid transparent;
 }
 
 .status-badge--paid {
-    background: var(--accent-soft);
-    color: var(--accent-hover);
-    border-color: var(--accent-border);
+    background: var(--success-soft);
+    color: var(--success);
+    border-color: transparent;
 }
 
 .status-badge--pending {
     background: var(--bg-subtle);
     color: var(--text-secondary);
-    border-color: var(--border-light);
+    border-color: transparent;
 }
 
 .status-badge--overdue {
     background: var(--danger-soft);
     color: var(--danger);
-    border-color: var(--danger-border);
+    border-color: transparent;
 }
 
 .status-badge--next {
-    background: var(--bg-page);
+    background: var(--accent-soft);
     color: var(--accent);
-    border-color: var(--accent-border);
+    border-color: transparent;
 }
 
 .cicilan-meta {
@@ -445,12 +480,12 @@ body {
 }
 
 .meta-item {
-    font-size: 0.875rem;
+    font-size: 13px;
     color: var(--text-secondary);
 }
 
 .meta-item--amount {
-    font-weight: 600;
+    font-weight: 500;
     color: var(--text-primary);
     font-variant-numeric: tabular-nums;
 }
@@ -461,134 +496,272 @@ body {
     color: var(--text-tertiary);
 }
 
-/* ── Buttons ── */
-
+/* ==========================================================================
+   BUTTONS INTERACTION SYSTEM
+   ========================================================================== */
 button,
 .btn-pay {
     flex-shrink: 0;
-    min-width: 96px;
-    padding: 10px 20px;
-    background: var(--accent);
+    min-width: 90px;
+    padding: 8px 16px;
+    background: var(--text-primary);
     color: #fff;
     border: none;
     border-radius: var(--radius-sm);
     font-family: var(--font);
-    font-size: 0.875rem;
+    font-size: 13px;
     font-weight: 600;
-    letter-spacing: -0.01em;
     cursor: pointer;
-    transition: background 0.15s var(--ease);
+    outline: none;
+    transition: background 200ms var(--ease), transform 200ms var(--ease);
 }
 
 button:hover,
 .btn-pay:hover {
-    background: var(--accent-hover);
+    background: #000000;
 }
 
 button:active,
 .btn-pay:active {
-    background: var(--accent-hover);
+    transform: scale(0.97); /* Micro button compression */
 }
 
 .btn-pay--cancel {
-    background: var(--bg-page);
+    background: #ffffff;
     color: var(--text-secondary);
-    border: 1px solid var(--border);
+    border: 1px solid rgba(0, 0, 0, 0.08);
 }
 
 .btn-pay--cancel:hover {
     background: var(--danger-soft);
     color: var(--danger);
-    border-color: var(--danger-border);
+    border-color: rgba(255, 59, 48, 0.15);
 }
 
-/* ── Gallery ── */
-
-.gallery-section {
-    margin-bottom: var(--space-lg);
+/* ==========================================================================
+   PRIORITAS 6: HISTORY CARD & PRECISE SPACINGS
+   ========================================================================== */
+.history-section {
+    margin-top: var(--space-xl);
 }
 
-.gallery {
-    display: grid;
+.history-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+/* PRIORITAS 10: Elegant Empty State Frame */
+.history-empty {
+    background-color: var(--bg-muted);
+    color: var(--text-tertiary);
+    padding: 32px var(--space-lg);
+    border-radius: var(--radius-md);
+    text-align: center;
+    font-size: 13px;
+    font-weight: 500;
+    border: 1px dashed rgba(0, 0, 0, 0.08);
+}
+
+.history-card {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
     gap: var(--space-md);
-}
-
-.gallery img {
-    width: 100%;
-    height: auto;
-    display: block;
-    border-radius: var(--radius-lg);
+    background-color: var(--bg-muted);
     border: 1px solid var(--border-light);
+    border-radius: var(--radius-md);
+    padding: 20px;
+    box-shadow: var(--shadow-xs);
+    box-sizing: border-box;
+    width: 100%;
+    transition: transform 200ms var(--ease), box-shadow 200ms var(--ease);
 }
 
-/* ── Animations ── */
-
-@keyframes successFlash {
-    0%   { background-color: var(--accent-soft); }
-    50%  { background-color: #dcfce7; }
-    100% { background-color: var(--accent-soft); }
+.history-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-sm);
 }
 
-@keyframes modalIn {
-    from { opacity: 0; transform: translateY(8px); }
-    to   { opacity: 1; transform: translateY(0); }
+.history-card__header {
+    width: 100%;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.03);
+    padding-bottom: 8px;
 }
 
-@keyframes toastIn {
-    from { opacity: 0; transform: translateX(-50%) translateY(8px); }
-    to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+.history-card__header h4 {
+    margin: 0;
+    font-size: 14px;
+    color: var(--success); /* Clean status indicator */
+    font-weight: 600;
 }
 
-/* ── Modal ── */
+.history-card__content {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+}
 
-.modal {
+.history-card__row {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    width: 100%;
+}
+
+.history-card__label {
+    font-size: 11px;
+    color: var(--text-tertiary);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+}
+
+.history-card__value {
+    font-size: 13px;
+    color: var(--text-primary);
+    font-weight: 500;
+    line-height: 1.4;
+}
+
+/* Nominal Riwayat Pembayaran Sangat Menonjol */
+.history-card__value--amount {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+/* ==========================================================================
+   PRIORITAS 9: ARCHITECTURAL GALLERY GRID
+   ========================================================================== */
+.gallery-section {
+    margin-top: var(--space-xl);
+    border-top: 1px solid rgba(0, 0, 0, 0.04);
+    padding-top: var(--space-xl);
+}
+
+.gallery-section h2 {
+    font-size: 14px;
+    color: var(--text-secondary);
+    margin-bottom: var(--space-md);
+    font-weight: 600;
+}
+
+.photo-gallery {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* 4 elegant clean grids */
+    gap: 14px;
+    width: 100%;
+}
+
+.photo-gallery img {
+    width: 100%;
+    height: 120px;
+    object-fit: cover;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border-light);
+    box-shadow: var(--shadow-xs);
+    overflow: hidden;
+    transition: transform 260ms var(--ease), box-shadow 260ms var(--ease);
+}
+
+.photo-gallery img:hover {
+    transform: scale(1.04) translateY(-2px);
+    box-shadow: var(--shadow-sm);
+}
+
+/* ==========================================================================
+   PREMIUM MODALS & BLUR EFFECTS (Linear Style)
+   ========================================================================== */
+.modal, 
+#amountModal {
     position: fixed;
     inset: 0;
-    z-index: 1000;
-    display: grid;
-    place-items: center;
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     padding: var(--space-lg);
 }
 
-.modal[hidden] {
-    display: none;
+.modal-backdrop,
+#amountModal {
+    backdrop-filter: blur(8px); /* Premium blur effect ala Arc/Wallet */
 }
 
+/* Backdrop elements background tracking */
 .modal-backdrop {
     position: absolute;
     inset: 0;
-    background: rgba(0, 0, 0, 0.25);
+    background: rgba(0, 0, 0, 0.15);
 }
 
-.modal-card {
+.modal-card,
+#amountModal > div {
     position: relative;
     z-index: 1;
     width: min(100%, 400px);
-    padding: var(--space-xl);
-    background: var(--bg-page);
-    border: 1px solid var(--border-light);
-    border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-md);
-    animation: modalIn 0.2s var(--ease);
+    padding: var(--space-xl) !important;
+    background: var(--bg-muted) !important;
+    border: 1px solid var(--border-light) !important;
+    border-radius: var(--radius-lg) !important;
+    box-shadow: var(--shadow-modal) !important;
+    animation: modalIn 340ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-.modal-card h3 {
-    font-size: 1.125rem;
-    font-weight: 600;
-    letter-spacing: -0.02em;
-    margin-bottom: var(--space-sm);
+.modal-card h3,
+#amountModal h3 {
+    font-size: 16px !important;
+    font-weight: 700 !important;
+    letter-spacing: -0.01em !important;
+    margin-bottom: 4px !important;
+    color: var(--text-primary) !important;
 }
 
-.modal-message {
-    font-size: 0.9375rem;
-    color: var(--text-secondary);
-    line-height: 1.55;
-    margin-bottom: var(--space-lg);
+.modal-message,
+#amountModal p.modal-message {
+    font-size: 13px !important;
+    color: var(--text-secondary) !important;
+    line-height: 1.5 !important;
+    margin-bottom: var(--space-lg) !important;
+}
+
+/* Premium Text Inputs Design */
+.modal-input,
+#amountModalInput {
+    width: 100%;
+    padding: 12px 14px !important;
+    border: 1px solid rgba(0, 0, 0, 0.06) !important;
+    border-radius: var(--radius-sm) !important;
+    margin-top: 4px !important;
+    margin-bottom: var(--space-md) !important;
+    font-size: 16px !important;
+    font-weight: 700 !important;
+    font-family: var(--font) !important;
+    background-color: var(--bg-subtle) !important;
+    box-sizing: border-box;
+    outline: none;
+    transition: border-color 200ms var(--ease), background-color 200ms var(--ease), box-shadow 200ms var(--ease) !important;
+}
+
+.modal-input:focus,
+#amountModalInput:focus {
+    background-color: #ffffff !important;
+    border-color: var(--accent) !important;
+    box-shadow: 0 0 0 3px rgba(0, 113, 227, 0.15) !important;
+}
+
+#amountModalError {
+    font-size: 12px !important;
+    color: var(--danger) !important;
+    margin-top: -8px !important;
+    margin-bottom: var(--space-md) !important;
 }
 
 .modal-actions {
     display: flex;
-    gap: var(--space-sm);
+    gap: 10px;
 }
 
 .btn-modal {
@@ -596,11 +769,11 @@ button:active,
     padding: 10px 16px;
     border-radius: var(--radius-sm);
     font-family: var(--font);
-    font-size: 0.875rem;
+    font-size: 13px;
     font-weight: 600;
     cursor: pointer;
     border: none;
-    transition: background 0.15s var(--ease);
+    transition: background 150ms var(--ease);
 }
 
 .btn-modal--cancel {
@@ -610,407 +783,122 @@ button:active,
 }
 
 .btn-modal--cancel:hover {
-    background: var(--bg-muted);
+    background: rgba(0, 0, 0, 0.04);
 }
 
-.btn-modal--confirm {
-    background: var(--accent);
-    color: #fff;
+.btn-modal--confirm,
+#amountModalSubmit {
+    background: var(--text-primary) !important;
+    color: #fff !important;
 }
 
-.btn-modal--confirm:hover {
-    background: var(--accent-hover);
+#amountModalSubmit:disabled {
+    background-color: var(--text-tertiary) !important;
+    opacity: 0.35 !important;
+    cursor: not-allowed !important;
 }
 
-/* ── Toast ── */
-
+/* ==========================================================================
+   FEEDBACK & KEYFRAMES
+   ========================================================================== */
 .toast {
     position: fixed;
     bottom: var(--space-xl);
     left: 50%;
     transform: translateX(-50%) translateY(12px);
-    z-index: 1100;
+    z-index: 11000;
     display: flex;
     align-items: center;
     gap: var(--space-sm);
-    padding: 12px 18px;
-    background: var(--text-primary);
+    padding: 12px 20px;
+    background: #1d1d1f;
     color: #fff;
-    border-radius: var(--radius-md);
-    box-shadow: var(--shadow-md);
-    font-size: 0.875rem;
+    border-radius: var(--radius-full);
+    box-shadow: var(--shadow-modal);
+    font-size: 13px;
     font-weight: 500;
     opacity: 0;
     pointer-events: none;
-    transition: opacity 0.2s, transform 0.2s var(--ease);
+    transition: opacity 240ms var(--ease), transform 240ms var(--ease);
 }
 
 .toast--visible {
     opacity: 1;
     transform: translateX(-50%) translateY(0);
-    animation: toastIn 0.25s var(--ease);
 }
 
 .toast-icon {
     display: grid;
     place-items: center;
-    width: 22px;
-    height: 22px;
-    background: var(--accent);
+    width: 20px;
+    height: 20px;
+    background: var(--success);
     border-radius: 50%;
-    font-size: 0.6875rem;
+    font-size: 11px;
+    font-weight: 700;
     flex-shrink: 0;
 }
 
-/* ── Confetti ── */
-
-.confetti-canvas {
-    position: fixed;
-    inset: 0;
-    z-index: 1200;
-    pointer-events: none;
+@keyframes successFlash {
+    0%   { background-color: #ffffff; }
+    30%  { background-color: var(--success-soft); border-color: var(--success); }
+    100% { background-color: #ffffff; }
 }
 
-/* ── Responsive ── */
+@keyframes modalIn {
+    from { opacity: 0; transform: scale(0.96) translateY(8px); }
+    to   { opacity: 1; transform: scale(1) translateY(0); }
+}
 
+/* ==========================================================================
+   RESPONSIVE OPTIMIZATION LAYOUTS
+   ========================================================================== */
 @media (max-width: 768px) {
-    .app {
-        padding: var(--space-xl) 0 var(--space-2xl);
-    }
+    .app { padding: var(--space-xl) 0 var(--space-2xl); }
+    .page-header { flex-direction: column; align-items: flex-start; gap: var(--space-md); margin-bottom: var(--space-xl); }
+    .ux-bar { width: 100%; justify-content: space-between; }
+    
+    .summary { grid-template-columns: 1fr; gap: var(--space-sm); margin-bottom: var(--space-xl); }
+    .stat-card { flex-direction: row; align-items: center; padding: var(--space-md) var(--space-lg); }
+    
+    .progress-panel { padding: var(--space-lg); }
+    .progress-header { flex-direction: column; align-items: flex-start; gap: var(--space-sm); margin-bottom: var(--space-lg); }
+    .progress-percentage-wrap { text-align: left; display: flex; align-items: baseline; gap: var(--space-sm); }
+    .progress-percentage-label { margin-top: 0; }
+    
+    .cicilan { flex-direction: column; align-items: stretch; padding: var(--space-md); }
+    .cicilan-header { justify-content: space-between; }
+    
+    button, .btn-pay { width: 100%; min-width: unset; }
+    .modal-actions { flex-direction: column; }
+    .toast { width: min(92%, 360px); justify-content: center; }
+    
+    .history-card__content { display: flex; flex-direction: column; }
+    .photo-gallery { grid-template-columns: repeat(2, 1fr); }
+}
 
-    .page-header {
-        margin-bottom: var(--space-xl);
+@media (min-width: 769px) {
+    .history-card__content {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
     }
-
-    .hero {
-        margin-bottom: var(--space-lg);
-    }
-
-    .ux-bar {
-        flex-direction: column;
-        align-items: stretch;
-        padding: var(--space-md);
-        gap: var(--space-md);
-    }
-
-    .ux-bar-divider {
-        width: 100%;
-        height: 1px;
-    }
-
-    .ux-bar-item--countdown {
-        align-items: flex-start;
-        text-align: left;
-    }
-
-    .summary {
-        grid-template-columns: 1fr;
-        gap: var(--space-sm);
-        margin-bottom: var(--space-xl);
-    }
-
-    .stat-card {
-        flex-direction: row;
-        align-items: center;
-        padding: var(--space-md) var(--space-lg);
-    }
-
-    .progress-panel {
-        padding: var(--space-lg);
-    }
-
-    .progress-header {
-        flex-direction: column;
-        align-items: flex-start;
-        margin-bottom: var(--space-lg);
-    }
-
-    .progress-percentage-wrap {
-        text-align: left;
-        display: flex;
-        align-items: baseline;
-        gap: var(--space-sm);
-    }
-
-    .progress-percentage-label {
-        margin-top: 0;
-    }
-
-    .cicilan {
-        flex-direction: column;
-        align-items: stretch;
-        padding: var(--space-md);
-    }
-
-    .cicilan-header {
-        justify-content: space-between;
-    }
-
-    button,
-    .btn-pay {
-        width: 100%;
-        min-width: unset;
-    }
-
-    .modal-actions {
-        flex-direction: column;
-    }
-
-    .toast {
-        width: min(92%, 360px);
-        justify-content: center;
-    }
+    .history-card__header { border-bottom: none; padding-bottom: 0; }
 }
 
 @media (max-width: 420px) {
-    .cicilan-meta {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 2px;
-    }
-
-    .meta-item + .meta-item::before {
-        display: none;
-    }
+    .cicilan-meta { flex-direction: column; align-items: flex-start; gap: 2px; }
+    .meta-item + .meta-item::before { display: none; }
+    .photo-gallery { grid-template-columns: 1fr; }
 }
 
+/* ==========================================================================
+   REDUCED MOTION INTERACTION PROTECTIONS
+   ========================================================================== */
 @media (prefers-reduced-motion: reduce) {
-    *,
-    *::before,
-    *::after {
+    *, *::before, *::after {
         animation-duration: 0.01ms !important;
         animation-iteration-count: 1 !important;
         transition-duration: 0.01ms !important;
     }
-    .gallery-section{
-        margin-top:60px;
-    }
-    
-    .photo-gallery{
-        display:grid;
-        grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
-        gap:20px;
-    }
-    
-    .photo-gallery{
-        display:grid;
-        grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
-        gap:20px;
-        margin-top:20px;
-    }
-    
-    .photo-gallery img{
-        width:100%;
-        max-width:380px;
-        height:250px;
-        object-fit:cover;
-        border-radius:18px;
-        box-shadow:0 10px 20px rgba(0,0,0,.12);
-        margin:auto;
-        display:block;
-    }
-    }
-    
-    /* ==========================================
-   STYLE PREMIUM UNTUK GALERI FOTO (CSS GRID)
-   ========================================== */
-
-/* Kontainer utama bagian galeri */
-.gallery-section {
-    margin-top: 40px;
-    padding: 20px 0;
-  }
-  
-  .gallery-section h2 {
-    font-size: 1.5rem;
-    color: #333;
-    margin-bottom: 20px;
-    font-weight: 600;
-  }
-  
-  /* Base style untuk wrapper galeri (Menggunakan CSS Grid Responsif) */
-  .photo-gallery {
-    display: grid;
-    grid-template-columns: 1fr; /* Default mobile: 1 kolom penuh */
-    gap: 20px; /* Jarak antar kartu foto */
-    width: 100%;
-  }
-  
-  /* Pengaturan pembungkus gambar agar efek overflow hidden dan border-radius bekerja sempurna */
-  .photo-gallery img {
-    width: 100%;
-    height: 240px; /* Tinggi seragam sesuai instruksi */
-    object-fit: cover; /* Foto otomatis memotong rapi tanpa gepeng */
-    border-radius: 12px; /* Border radius modern melengkung halus */
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); /* Bayangan halus premium */
-    overflow: hidden;
-    transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 0.3s ease;
-    cursor: pointer;
-  }
-  
-  /* Efek Hover Premium: Sedikit zoom dan elevasi bayangan */
-  .photo-gallery img:hover {
-    transform: scale(1.03) translateY(-4px); /* Efek sedikit zoom dan terangkat ke atas */
-    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15); /* Bayangan menjadi lebih tegas saat melayang */
-  }
-  
-  /* Media Query untuk Tablet (Lebar layar mulai dari 600px ke atas) */
-  @media (min-width: 600px) {
-    .photo-gallery {
-      grid-template-columns: repeat(2, 1fr); /* Otomatis membagi rapi menjadi 2 kolom */
-      gap: 24px;
-    }
-  }
-  
-  /* Media Query untuk Desktop Modern (Lebar layar mulai dari 1024px ke atas) */
-  @media (min-width: 1024px) {
-    .photo-gallery {
-      grid-template-columns: repeat(2, 1fr); /* Tetap mempertahankan format 2 kolom premium */
-      gap: 30px; /* Jarak antar foto sedikit lebih lebar agar lega di layar besar */
-    }
-  }
-
-/* Styling Tambahan Modal Input Nominal Custom */
-.modal-input {
-    width: 100%;
-    padding: 12px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    margin-top: 10px;
-    margin-bottom: 20px;
-    font-size: 1rem;
-    font-family: 'Inter', sans-serif;
-    box-sizing: border-box;
-    outline: none;
-    transition: border-color 0.2s;
-  }
-  
-  .modal-input:focus {
-    border-color: #0071e3;
-  }    
-  /* Styling UX Modern Modal */
-#amountModalSubmit:disabled {
-    background-color: #a2a2a2 !important;
-    opacity: 0.6;
-    cursor: not-allowed !important;
-  }/* ==========================================
-   STYLE MODERN: SECTION RIWAYAT PEMBAYARAN
-   ========================================== */
-
-/* ==========================================
-   PREMIUM UI POLISH: RIWAYAT PEMBAYARAN
-   ========================================== */
-
-   .history-section {
-    margin-top: 40px;
-    padding: 20px 0;
-  }
-  
-  .history-list {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-    margin-top: 20px;
-    width: 100%;
-  }
-  
-  .history-empty {
-    background-color: #f4f4f4;
-    color: #666;
-    padding: 20px;
-    border-radius: 12px;
-    text-align: center;
-    font-size: 0.95rem;
-    font-weight: 500;
-    border: 1px dashed #ccc;
-  }
-  
-  /* Kartu Riwayat: Mengadopsi penuh Design System kartu cicilan utama */
-  .history-card {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 16px;
-    background-color: #ffffff;
-    border: 1px solid #e3e3e3;
-    border-radius: 12px; /* Mengikuti border-radius card utama */
-    padding: 20px; /* Spacing yang lebih lega dan nyaman */
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03); /* Mengikuti shadow card utama */
-    box-sizing: border-box;
-    width: 100%;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-  }
-  
-  .history-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
-  }
-  
-  .history-card__header {
-    width: 100%;
-    border-bottom: 1px solid #f0f0f0;
-    padding-bottom: 10px;
-  }
-  
-  .history-card__header h4 {
-    margin: 0;
-    font-size: 1.1rem;
-    color: #30a46c; /* Indikator sukses/paid */
-    font-weight: 600;
-    font-family: 'Inter', sans-serif;
-  }
-  
-  .history-card__content {
-    display: flex;
-    flex-direction: column;
-    gap: 12px; /* Jarak antar informasi pas 10-12px */
-    width: 100%;
-  }
-  
-  /* Setiap pasang informasi tampil di baris terpisah */
-  .history-card__row {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    width: 100%;
-  }
-  
-  /* Label Deskripsi */
-  .history-card__label {
-    font-size: 0.85rem;
-    color: #888;
-    font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-  }
-  
-  /* Nilai Informasi Aktual */
-  .history-card__value {
-    font-size: 0.95rem;
-    color: #333;
-    font-weight: 500;
-    line-height: 1.5; /* Line-height nyaman dibaca */
-    word-break: break-word;
-  }
-  
-  /* Modifikator Khusus Nominal agar Menonjol Maksimal */
-  .history-card__value--amount {
-    font-size: 1.3rem; /* Lebih besar & menonjol */
-    font-weight: 700;   /* Extra Bold */
-    color: #1a1a1a;
-    margin-top: 2px;
-  }
-  
-  /* RESPONSIVE LAYOUT OPTIMIZATION */
-  @media (min-width: 768px) {
-    .history-card__content {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr); /* Tampilan 3 kolom sejajar pada Desktop */
-      gap: 20px;
-    }
-    
-    .history-card__header {
-      border-bottom: none;
-      padding-bottom: 0;
-    }
-  }
+}
