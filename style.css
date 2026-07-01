@@ -876,4 +876,37 @@ body {
     background-color: rgba(16, 185, 129, 0.2) !important;
     border-color: rgba(16, 185, 129, 0.4) !important;
     transform: scale(1.02);
+}/* Task 1: Warna Summary Card */
+.metric-number#sudahBayar { color: #22C55E; }
+.metric-number#sisaHutang { color: #F59E0B; }
+
+/* Task 3 & 6: Spacing & Hover Jadwal Pembayaran */
+.cicilan-meta {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-top: 10px;
+}
+.cicilan {
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+.cicilan:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+
+/* Task 5: Badge Pill */
+.status-badge {
+    border-radius: 999px;
+    padding: 4px 12px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+}
+
+/* Task 6: Hover Tombol */
+.btn-pay {
+    transition: background-color 0.25s ease, opacity 0.25s ease;
+}
+.btn-pay:hover {
+    opacity: 0.9;
 }

@@ -544,4 +544,26 @@ document.addEventListener("keydown", (e) => {
   }
 });
 
+// Task 4: Helper Function
+function formatTanggalIndo(dateStr) {
+  if (!dateStr) return "—";
+  const [y, m, d] = dateStr.split('-');
+  const bulan = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", 
+                 "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+  return `${d} ${bulan[parseInt(m) - 1]} ${y}`;
+}
+
+// Task 2: Perbarui fungsi renderProgressPanel
+function renderProgressPanel() {
+  // ... logika sebelumnya ...
+  const sisaBulan = cicilanMaster.filter(c => c.status !== 'paid').length;
+  
+  // Tambahkan elemen ini di DOM HTML Anda: <div id="sisaBulanText"></div>
+  const el = document.getElementById("sisaBulanText");
+  if(el) el.textContent = `${sisaBulan} Bulan Tersisa`;
+}
+
+// Task 4: Update renderDaftarCicilan
+// Gunakan: formatTanggalIndo(item.due_date) di bagian Jatuh Tempo.
+
 initialize();
