@@ -906,4 +906,77 @@ button:active,
         animation-iteration-count: 1 !important;
         transition-duration: 0.01ms !important;
     }
+}/* ==========================================================================
+   CLOUD SYNC STATUS COMPONENT (Premium Micro-interactions)
+   ========================================================================== */
+.sync-status-wrapper {
+    min-width: 110px;
+}
+
+.sync-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    transition: all 300ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.sync-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    position: relative;
+    display: inline-block;
+}
+
+.sync-text {
+    font-size: 13px;
+    font-variant-numeric: tabular-nums;
+}
+
+/* State 1: Syncing (Yellow Pulse) */
+.sync-status--syncing { color: #b45309; }
+.sync-status--syncing .sync-dot {
+    background-color: #ff9500;
+    box-shadow: 0 0 0 0 rgba(255, 149, 0, 0.4);
+    animation: syncPulseYellow 1.6s infinite ease-in-out;
+}
+
+/* State 2: Synced (Green Static) */
+.sync-status--synced { color: #1d1d1f; }
+.sync-status--synced .sync-dot {
+    background-color: #24b263;
+    box-shadow: 0 0 6px rgba(36, 178, 99, 0.2);
+}
+.sync-status--synced .sync-text {
+    color: var(--text-secondary);
+    font-weight: 500;
+    font-size: 12px;
+}
+
+/* State 3: Offline (Red Pulse) */
+.sync-status--offline { color: #dc2626; }
+.sync-status--offline .sync-dot {
+    background-color: #ff3b30;
+    box-shadow: 0 0 0 0 rgba(255, 59, 48, 0.4);
+    animation: syncPulseRed 1.6s infinite ease-in-out;
+}
+
+/* Subtle Pulsing Keyframes */
+@keyframes syncPulseYellow {
+    0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(255, 149, 0, 0.5); }
+    70% { transform: scale(1); box-shadow: 0 0 0 5px rgba(255, 149, 0, 0); }
+    100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(255, 149, 0, 0); }
+}
+
+@keyframes syncPulseRed {
+    0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(255, 59, 48, 0.5); }
+    70% { transform: scale(1); box-shadow: 0 0 0 5px rgba(255, 59, 48, 0); }
+    100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(255, 59, 48, 0); }
+}
+
+/* Responsive adjustment */
+@media (max-width: 768px) {
+    .sync-status-wrapper { width: 100%; display: flex; flex-direction: row; justify-content: space-between; align-items: center; }
 }

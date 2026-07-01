@@ -626,3 +626,88 @@ async function initialize() {
 }
 
 initialize();
+// ==========================================
+// LOGIKA WORKER CLOUD SYNC STATUS
+// ==========================================
+let lastSyncedTime = null;
+let syncTimerInterval = null;
+
+const SyncStatus = {
+  element: document.getElementById("cloudSyncStatus"),
+  text: document.getElementById("syncText"),
+
+  setSyncing() {
+    if (!this.element) return;
+    clearInterval(syncTimerInterval);
+    this.element.className = "sync-status sync-status--syncing";
+    this.text.textContent = "Syncing...";
+  },
+
+  setSynced() {
+    if (!this.element) return;
+    this.element.className = "sync-status sync-status--synced";
+    lastSyncedTime = new Date();
+    this.updateTimeAgo();
+    
+    clearInterval(syncTimerInterval);
+    syncTimerInterval = setInterval(() => this.updateTimeAgo(), 60000); // Perbarui setiap menit
+  },
+
+  setOffline() {
+    if (!this.element) return;
+    clearInterval(syncTimerInterval);
+    this.element.className = "sync-status sync-status--offline";
+    this.text.textContent = "Offline";
+  },
+
+  updateTimeAgo() {
+    if (!lastSyncedTime) return;
+    const diffMs = new Date() - lastSyncedTime;
+    const diffMins = Math.floor(diffMs / 60000);
+
+    if (diffMins < 1) {
+      this.text.textContent = "Synced: Just now";
+    } else {
+      this.text.textContent = `Synced: ${diffMins}m ago`;
+    }
+  }
+};
+
+// ==========================================
+// SINKRONISASI PADA KODE ASLI (HOOKS)
+// ==========================================
+
+// 1. Pada fungsi pengambilan data utama (Contoh: fetchData atau initialize)
+// Tambahkan pemicu di dalam blok try-catch Anda yang sudah ada:
+async function fetchCicilanData() { // Sesuaikan nama fungsi fetch data asli Anda
+  try {
+    SyncStatus.setSyncing(); // <-- Taruh di baris paling atas saat fetch mulai berjalan
+    
+    const response = await fetch(`${API_BASE_URL}/payments`);
+    const data = await response.json();
+    
+    // Logika render aplikasi bawaan Anda...
+    // renderApp(data); 
+
+    SyncStatus.setSynced(); // <-- Taruh di sini setelah data sukses diterima dan dirender
+  } catch (error) {
+    console.error(error);
+    SyncStatus.setOffline(); // <-- Taruh di sini di dalam blok catch jika koneksi gagal
+  }
+}
+
+// 2. Pada fungsi eksekusi pembayaran (Contoh: executePayment)
+// Pastikan status kembali dipicu ketika transaksi memperbarui database Cloudflare:
+async function executePayment() {
+  try {
+    SyncStatus.setSyncing(); // <-- Pasang saat tombol konfirmasi pembayaran ditekan dan request dikirim
+    
+    // Logika POST/PUT request pembayaran bawaan Anda...
+    // const res = await fetch(`${API_BASE_URL}/payments/.../pay`, { method: 'POST' });
+    
+    // Setelah sukses update data di client side:
+    SyncStatus.setSynced(); // <-- Pemicu otomatis terupdate menjadi "Just now" kembali
+  } catch (error) {
+    SyncStatus.setOffline();
+  }
+}
