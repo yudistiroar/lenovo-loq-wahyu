@@ -12,7 +12,7 @@ const API_BASE_URL = "https://lenovo-loq-backend.asrifyudistira.workers.dev";
 
 let cicilanMaster = []; 
 let pendingPayIndex = null;
-let isCancelOperation = false; // State tracker untuk membedakan operasi Bayar vs Batalkan
+let isCancelOperation = false; 
 let currentTotalHargaVal = 0;
 let currentSudahBayarVal = 0;
 let currentSisaHutangVal = 0;
@@ -256,7 +256,6 @@ function renderDaftarCicilan() {
       statusLabel = "Lunas";
       statusClass = "paid";
       card.classList.add("cicilan--paid");
-      // Mengembalikan fungsionalitas trigger pembatalan klik persis pada badge Lunas
       badgeAttributes = `onclick="window.triggerCancelFlow(${index})" role="button" tabindex="0" title="Klik untuk membatalkan pelunasan"`;
     } else if (index === nextUnpaidIdx) {
       statusLabel = "Berikutnya";
@@ -363,7 +362,6 @@ window.triggerPaymentFlow = function(index) {
   }
 };
 
-// Mengaktifkan Detektor Klik Batalkan Pembayaran (Bug Regression Fix)
 window.triggerCancelFlow = function(index) {
   pendingPayIndex = index;
   isCancelOperation = true;
@@ -412,7 +410,7 @@ function processAmountSubmit() {
 }
 
 // ==========================================
-// MASTER NETWORK POST CONTEXT OPERATOR
+// MASTER NETWORK POST CONTEXT OPERATOR (Fixed Tipe Data Payload)
 // ==========================================
 async function executePayment() {
   if (pendingPayIndex === null) return;
@@ -430,7 +428,6 @@ async function executePayment() {
     const item = cicilanMaster[pendingPayIndex];
     let payValue = item.nominal ?? 0;
     
-    // Jika operasi adalah PEMBATALAN, bersihkan paid_amount ke nilai 0 (Pending state)
     if (isCancelOperation) {
       payValue = 0;
     } else if (DOM.amountModalInput && DOM.amountModalInput.value) {
@@ -438,15 +435,15 @@ async function executePayment() {
       if (customAmount > 0) payValue = customAmount;
     }
 
+    // FIX: Bungkus parameter paid_amount ke String() untuk memenuhi validasi D1 Worker Anda
     const response = await fetch(`${API_BASE_URL}/payments/${item.id}/pay`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ paid_amount: payValue })
+      body: JSON.stringify({ paid_amount: String(payValue) })
     });
 
     if (!response.ok) throw new Error("API Jaringan Error!");
 
-    // Set Notifikasi Teks Berdasarkan Aksi Modus Operasi
     if (isCancelOperation) {
       showToast(`Pembayaran Cicilan Ke-${item.installment} berhasil dibatalkan.`);
     } else {
@@ -455,7 +452,6 @@ async function executePayment() {
     
     closeConfirmModal();
     
-    // Refresh Seluruh Lapisan UI Finansial secara Simultan
     await fetchCicilan();
     updateSyncState("synced", "Synced just now");
     
@@ -492,7 +488,7 @@ function showToast(msg) {
 }
 
 // ==========================================
-// REGISTRASI EVENT LISTENERS UTAMAKAN PROD-UX
+// REGISTRASI EVENT LISTENERS
 // ==========================================
 if (DOM.confirmCancel) {
   DOM.confirmCancel.addEventListener("click", () => {
