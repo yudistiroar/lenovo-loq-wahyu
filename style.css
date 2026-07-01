@@ -17,7 +17,6 @@
     --accent-glow: rgba(37, 99, 235, 0.15);
     --accent-border: rgba(37, 99, 235, 0.2);
     
-    /* TASK 1: Variabel warna fungsional untuk angka summary card */
     --success: #22c55e;          
     --warning: #f59e0b;          
     --success-border: rgba(34, 197, 94, 0.2);
@@ -190,7 +189,6 @@ body {
     font-variant-numeric: tabular-nums;
 }
 
-/* TASK 1: Pewarnaan Angka Metrik Berdasarkan Hierarki */
 #sudahBayar {
     color: var(--success);
 }
@@ -225,6 +223,24 @@ body {
     text-transform: uppercase;
     letter-spacing: 0.06em;
     color: var(--text-secondary);
+}
+
+/* BUG 1: Styling Tombol Pembatalan Transaksi Terakhir */
+.btn-undo-last {
+    background-color: rgba(239, 68, 68, 0.1);
+    color: #f87171;
+    border: 1px solid rgba(239, 68, 68, 0.25);
+    padding: 4px 10px;
+    font-size: 11px;
+    font-weight: 600;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: all 200ms ease;
+}
+
+.btn-undo-last:hover {
+    background-color: rgba(239, 68, 68, 0.2);
+    border-color: rgba(239, 68, 68, 0.45);
 }
 
 /* ==========================================================================
@@ -283,7 +299,6 @@ body {
     transition: width 800ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* TASK 2: Label Sisa Bulan Minimalis */
 .progress-remaining-months {
     font-size: 12px;
     font-weight: 500;
@@ -328,14 +343,11 @@ body {
     box-shadow: var(--shadow-md); 
     position: relative;
     overflow: hidden;
-    
-    /* TASK 6: Hover Effect Transisi 0.25 Detik Halus */
     transition: transform 250ms cubic-bezier(0.16, 1, 0.3, 1),
                 border-color 250ms cubic-bezier(0.16, 1, 0.3, 1),
                 box-shadow 250ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* TASK 6: Hover Effect Card Sedikit Terangkat */
 .cicilan:hover {
     transform: translateY(-3px);
     border-color: rgba(255, 255, 255, 0.16);
@@ -402,7 +414,6 @@ body {
     color: var(--text-primary);
 }
 
-/* TASK 3: Grid Spacing Keterbacaan yang Lebih Nyaman & Lega */
 .cicilan-meta {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -425,7 +436,6 @@ body {
     font-variant-numeric: tabular-nums;
 }
 
-/* TASK 2 & 6: Refinement Tombol Bayar Sekarang & Hover Efek */
 .btn-pay {
     margin-top: var(--space-sm); 
     padding: 10px 20px; 
@@ -439,8 +449,6 @@ body {
     letter-spacing: -0.01em;
     cursor: pointer;
     box-shadow: var(--shadow-inset);
-    
-    /* TASK 6: Hover Effect Transisi 0.25 Detik Halus */
     transition: background-color 250ms var(--ease-linear), 
                 opacity 250ms var(--ease-out), 
                 transform 150ms var(--ease-out);
@@ -456,40 +464,36 @@ body {
 }
 
 /* ==========================================================================
-   TASK 5: BADGE STATUS (PILL ARCHITECTURE)
+   BADGE STATUS (PILL ARCHITECTURE)
    ========================================================================== */
 .status-badge {
     font-size: 10px;
-    font-weight: 600;            /* Font weight 600 */
-    padding: 4px 12px;           /* Padding sedikit lebih besar */
-    border-radius: 999px;        /* Border radius penuh (pill) */
+    font-weight: 600;            
+    padding: 4px 12px;           
+    border-radius: 999px;        
     text-transform: uppercase;
-    letter-spacing: 0.02em;      /* Letter spacing tipis */
+    letter-spacing: 0.02em;      
     display: inline-block;
 }
 
-/* LUNAS -> Hijau Muted */
 .status-badge--paid {
     background-color: rgba(34, 197, 94, 0.12);
     color: #4ade80;
     border: 1px solid rgba(34, 197, 94, 0.25);
 }
 
-/* BERIKUTNYA -> Biru Muted */
 .status-badge--next {
     background-color: rgba(37, 99, 235, 0.15);
     color: #60a5fa;
     border: 1px solid rgba(37, 99, 235, 0.3);
 }
 
-/* PENDING -> Abu-abu Muted */
 .status-badge--pending {
     background-color: rgba(161, 161, 170, 0.08);
     color: #a1a1aa;
     border: 1px solid rgba(161, 161, 170, 0.18);
 }
 
-/* OVERDUE -> Merah Muted */
 .status-badge--overdue {
     background-color: rgba(239, 68, 68, 0.12);
     color: #f87171;

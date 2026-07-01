@@ -42,6 +42,7 @@ const DOM = {
   riwayatPembayaran: document.getElementById("riwayatPembayaran"),
   photoGallery: document.getElementById("photoGallery"),
   sisaBulanText: document.getElementById("sisaBulanText"),
+  btnCancelLastPayment: document.getElementById("btnCancelLastPayment"),
   
   // Confirmation Modal Nodes
   confirmModal: document.getElementById("confirmModal"),
@@ -64,6 +65,24 @@ const DOM = {
 };
 
 // ==========================================
+// BUG 2: GENERATOR TANGGAL BERDASARKAN KONTRAK (1 JULI 2026)
+// ==========================================
+function getContractDueDate(installmentNumber) {
+  // Base date kontrak: 1 Juli 2026
+  const baseYear = 2026;
+  const baseMonth = 6; // Juli dalam object Date Javascript (0-indexed)
+  const baseDay = 1;
+  
+  let targetDate = new Date(baseYear, baseMonth + (installmentNumber - 1), baseDay);
+  
+  let yyyy = targetDate.getFullYear();
+  let mm = String(targetDate.getMonth() + 1).padStart(2, '0');
+  let dd = String(targetDate.getDate()).padStart(2, '0');
+  
+  return `${yyyy}-${mm}-${dd}`;
+}
+
+// ==========================================
 // HELPER FUNCTION FORMAT TANGGAL INDO
 // ==========================================
 function formatTanggalIndo(dateStr) {
@@ -75,9 +94,10 @@ function formatTanggalIndo(dateStr) {
   const bulanIndex = parseInt(parts[1], 10) - 1;
   const tanggal = parseInt(parts[2], 10);
   
+  // Diubah agar urutan penamaan bulan selaras dengan kalender masehi standar secara runtut
   const daftarBulan = [
-    "Agustus", "September", "Oktober", "November", "Desember", 
-    "Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli"
+    "Januari", "Februari", "Maret", "April", "Mei", "Juni",
+    "Juli", "Agustus", "September", "Oktober", "November", "Desember"
   ];
   
   const namaBulan = daftarBulan[bulanIndex] || parts[1];
@@ -189,13 +209,23 @@ async function fetchCicilan() {
   try {
     const response = await fetch(`${API_BASE_URL}/payments`);
     if (!response.ok) throw new Error("Gagal mengambil data dari server.");
-    cicilanMaster = await response.json();
+    let data = await response.json();
     
-    if (!Array.isArray(cicilanMaster)) {
-      cicilanMaster = cicilanMaster ? [cicilanMaster] : [];
+    if (!Array.isArray(data)) {
+      data = data ? [data] : [];
     }
     
-    cicilanMaster.sort((a, b) => (a.installment ?? 0) - (b.installment ?? 0));
+    // BUG 2: Melakukan normalisasi properti jatuh tempo dinamis berdasarkan urutan kontrak asli
+    cicilanMaster = data.map((item, index) => {
+      const idx = item.installment ?? (index + 1);
+      return {
+        ...item,
+        installment: idx,
+        due_date: getContractDueDate(idx)
+      };
+    });
+    
+    cicilanMaster.sort((a, b) => a.installment - b.installment);
     renderAll();
   } catch (error) {
     console.error("Fetch API Error:", error);
@@ -325,11 +355,17 @@ function renderRiwayatPembayaran() {
   DOM.riwayatPembayaran.innerHTML = "";
 
   const paidHistory = cicilanMaster.filter(c => (c.paid_amount ?? 0) > 0);
+  
+  // BUG 1: Menampilkan/menyembunyikan tombol "Batalkan Pembayaran Terakhir" berdasarkan ketersediaan histori transaksi aktif
   if (paidHistory.length === 0) {
     DOM.riwayatPembayaran.innerHTML = `<div class="history-empty">Belum ada riwayat aktivitas transfer tersimpan.</div>`;
+    if (DOM.btnCancelLastPayment) DOM.btnCancelLastPayment.style.display = "none";
     return;
   }
 
+  if (DOM.btnCancelLastPayment) DOM.btnCancelLastPayment.style.display = "inline-block";
+
+  // Urutan riwayat: Transaksi terbaru diletakkan paling atas
   const sortedHistory = [...paidHistory].sort((a, b) => new Date(b.paid_at || 0) - new Date(a.paid_at || 0));
 
   sortedHistory.forEach((item, index) => {
@@ -352,7 +388,7 @@ function renderRiwayatPembayaran() {
         </div>
         <div class="history-card__row">
           <span class="history-card__label">Tanggal Masuk</span>
-          <span class="history-card__value">${formatTanggalIndo(item.paid_at)}</span>
+          <span class="history-card__value">${formatTanggalIndo(item.paid_at || item.due_date)}</span>
         </div>
       </div>
     `;
@@ -372,7 +408,7 @@ function renderGallery() {
 }
 
 // ==========================================
-// REFACTORED MUTATION INTERACTION WORKFLOWS
+// ACTION INTERACTION WORKFLOWS
 // ==========================================
 window.triggerPaymentFlow = function(index) {
   pendingPayIndex = index;
@@ -381,14 +417,11 @@ window.triggerPaymentFlow = function(index) {
   const nominal = item.nominal ?? 0;
   const paidAmount = item.paid_amount ?? 0;
   
-  // Hitung sisa sisa target yang belum dibayar di bulan berjalan
   const targetSisaBulanIni = Math.max(0, nominal - paidAmount);
 
-  // REFACTOR: Klik tombol bayar selalu memunculkan modal input nominal terlebih dahulu
   if (DOM.amountModalTitle) DOM.amountModalTitle.textContent = `Pembayaran Cicilan Ke-${item.installment}`;
   if (DOM.amountModalTarget) DOM.amountModalTarget.textContent = `Target tagihan bulan ini: ${formatRupiah(targetSisaBulanIni)}`;
   
-  // Set default nilai input ke nominal sisa target cicilan bulan ini
   if (DOM.amountModalInput) {
     DOM.amountModalInput.value = formatRupiahLive(String(targetSisaBulanIni));
   }
@@ -400,7 +433,25 @@ window.triggerPaymentFlow = function(index) {
 window.triggerCancelFlow = function(index) {
   pendingPayIndex = index;
   isCancelOperation = true;
-  openConfirmModal("Batalkan pembayaran ini?");
+  openConfirmModal(`Batalkan status lunas khusus untuk Cicilan Ke-${cicilanMaster[index].installment}?`);
+};
+
+// BUG 1: Fungsi pemicu alur pembatalan khusus transaksi terakhir yang valid
+window.triggerCancelLastPaymentFlow = function() {
+  const paidItems = cicilanMaster.filter(c => (c.paid_amount ?? 0) > 0);
+  if (paidItems.length === 0) return;
+  
+  // Mencari elemen cicilan terakhir berdasarkan nomor angsuran terbesar yang sudah dibayar
+  let lastPaidItem = paidItems.reduce((max, item) => item.installment > max.installment ? item : max, paidItems[0]);
+  
+  // Temukan index aslinya pada array master
+  const originalIndex = cicilanMaster.findIndex(c => c.id === lastPaidItem.id);
+  
+  if (originalIndex !== -1) {
+    pendingPayIndex = originalIndex;
+    isCancelOperation = true;
+    openConfirmModal(`Apakah Anda yakin ingin membatalkan Pembayaran Terakhir (Cicilan Ke-${lastPaidItem.installment})?`);
+  }
 };
 
 function openConfirmModal(message) {
@@ -427,7 +478,6 @@ function validateRealtime() {
   const paidAmount = item.paid_amount ?? 0;
   const targetSisaBulanIni = Math.max(0, nominal - paidAmount);
 
-  // Validasi: Tolak nominal yang lebih kecil dari sisa target bulan ini
   if (inputVal < targetSisaBulanIni) {
     DOM.amountModalError.textContent = `Nominal tidak boleh kurang dari target tagihan bulan ini (${formatRupiah(targetSisaBulanIni)})`;
     DOM.amountModalError.style.display = "block";
@@ -444,8 +494,6 @@ function processAmountSubmit() {
   const amount = parseRupiah(DOM.amountModalInput.value);
   
   if (DOM.amountModal) DOM.amountModal.style.display = "none";
-  
-  // Tampilkan modal konfirmasi dengan nominal yang sudah ditentukan
   openConfirmModal(`Konfirmasi pembayaran sebesar ${formatRupiah(amount)} untuk Cicilan Ke-${cicilanMaster[pendingPayIndex].installment}?`);
 }
 
@@ -482,7 +530,6 @@ async function executePayment() {
     }
 
     const response = await fetch(requestUrl, fetchOptions);
-
     if (!response.ok) throw new Error("API Jaringan Error!");
 
     if (isCancelOperation) {

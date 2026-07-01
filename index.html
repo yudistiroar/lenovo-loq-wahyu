@@ -79,8 +79,7 @@
                         <h3>Jadwal Pembayaran</h3>
                     </div>
                     <div class="installment-feed" id="daftarCicilan">
-                        <!-- Diisi via JavaScript -->
-                    </div>
+                        </div>
                 </section>
             </div>
 
@@ -97,7 +96,6 @@
                         <div class="progress-fill" id="progressBar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
                     </div>
                     
-                    <!-- TASK 2: Informasi Bulan Tersisa Minimalis -->
                     <div id="sisaBulanText" class="progress-remaining-months">0 Bulan Tersisa</div>
                     
                     <div class="progress-details-bar">
@@ -106,12 +104,12 @@
                 </section>
 
                 <section class="panel-history">
-                    <div class="section-head">
+                    <div class="section-head" style="display: flex; justify-content: space-between; align-items: center;">
                         <h3>Riwayat Transaksi</h3>
+                        <button type="button" id="btnCancelLastPayment" class="btn-undo-last" style="display: none;" onclick="window.triggerCancelLastPaymentFlow()">Batalkan Pembayaran Terakhir</button>
                     </div>
                     <div class="history-feed" id="riwayatPembayaran">
-                        <!-- Diisi via JavaScript -->
-                    </div>
+                        </div>
                 </section>
             </div>
         </main>
@@ -119,18 +117,16 @@
         <section class="gallery-section">
             <h2>Galeri Fisik Unit</h2>
             <div class="photo-gallery" id="photoGallery">
-                <!-- Diisi via JavaScript -->
-            </div>
+                </div>
         </section>
 
     </div>
 </div>
 
-<!-- DEFAULT CONFIRMATION MODAL -->
 <div class="modal-layer" id="confirmModal">
     <div class="modal-backdrop"></div>
     <div class="modal-wrapper">
-        <h3>Konfirmasi Aksi</h3>
+        <h3>Konfirmasi Tindakan</h3>
         <p id="confirmMessage">Apakah Anda yakin ingin melanjutkan tindakan ini?</p>
         <div class="modal-actions">
             <button type="button" class="btn-secondary" id="confirmCancel">Kembali</button>
@@ -139,12 +135,11 @@
     </div>
 </div>
 
-<!-- PARTIAL/CUSTOM AMOUNT MODAL -->
 <div class="modal-layer" id="amountModal">
     <div class="modal-backdrop"></div>
     <div class="modal-wrapper">
         <h3 id="amountModalTitle">Masukkan Jumlah Pembayaran</h3>
-        <p id="amountModalTarget">Kekurangan tagihan: Rp 0</p>
+        <p id="amountModalTarget">Target tagihan bulan ini: Rp 0</p>
         <div class="input-group">
             <span class="currency-symbol">Rp</span>
             <input type="text" id="amountModalInput" class="input-field" placeholder="0" autocomplete="off">
@@ -152,12 +147,11 @@
         <div class="error-message" id="amountModalError"></div>
         <div class="modal-actions">
             <button type="button" class="btn-secondary" id="amountModalCancel">Batal</button>
-            <button type="button" class="btn-primary" id="amountModalSubmit">Lanjutkan</button>
+            <button type="button" class="btn-primary" id="amountModalSubmit">Bayar</button>
         </div>
     </div>
 </div>
 
-<!-- GLOBAL APPLICATION TOAST SYSTEM -->
 <div class="toast" id="successToast">
     <div class="toast-icon">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" style="width:18px;height:18px;">
