@@ -2,33 +2,29 @@
    PREMIUM DESIGN SYSTEM (Apple Wallet, Linear & Arc Inspired)
    ========================================================================== */
    :root {
-    --bg-page: #f5f5f7; /* Karakter abu-abu terang premium khas Apple workspace */
-    --bg-muted: #ffffff;
+    --bg-page: #ffffff;
+    --bg-muted: #fafafa;
     --bg-subtle: #f5f5f7;
     --text-primary: #1d1d1f;
     --text-secondary: #6e6e73;
     --text-tertiary: #86868b;
     
     /* Premium Smooth Accents */
-    --accent: #0071e3; /* Blue Apple Signatures */
-    --accent-hover: #0077ed;
-    --accent-soft: rgba(0, 113, 227, 0.04);
-    --accent-border: rgba(0, 113, 227, 0.15);
+    --accent: #16a34a;
+    --accent-hover: #15803d;
+    --accent-soft: #f0fdf4;
+    --accent-border: #bbf7d0;
     
-    --success: #24b263;
-    --success-soft: rgba(36, 178, 99, 0.05);
-    --success-border: rgba(36, 178, 99, 0.15);
+    --danger: #dc2626;
+    --danger-soft: #fef2f2;
+    --danger-border: #fecaca;
     
-    --danger: #ff3b30;
-    --danger-soft: rgba(255, 59, 48, 0.04);
-    --danger-border: rgba(255, 59, 48, 0.12);
+    --warning: #b45309;
+    --warning-soft: #fffbeb;
+    --warning-border: #fde68a;
     
-    --warning: #ff9500;
-    --warning-soft: rgba(255, 149, 0, 0.05);
-    --warning-border: rgba(255, 149, 0, 0.15);
-    
-    --border: rgba(0, 0, 0, 0.04);
-    --border-light: rgba(0, 0, 0, 0.04);
+    --border: rgba(0, 0, 0, 0.08);
+    --border-light: rgba(0, 0, 0, 0.05);
     
     /* Radii & Shadows */
     --radius-sm: 10px;
@@ -38,9 +34,9 @@
     --radius-full: 999px;
     
     --font: "Inter", -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", system-ui, sans-serif;
-    --ease: cubic-bezier(0.16, 1, 0.3, 1); /* Linear-like micro-interactions curve */
+    --ease: cubic-bezier(0.16, 1, 0.3, 1);
     
-    /* Whitespace Utilities */
+    /* Space Layouts */
     --space-xs: 8px;
     --space-sm: 12px;
     --space-md: 16px;
@@ -49,9 +45,9 @@
     --space-2xl: 48px;
     --space-3xl: 64px;
 
-    --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.01);
-    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.015), 0 4px 16px rgba(0, 0, 0, 0.015);
-    --shadow-md: 0 12px 32px rgba(0, 0, 0, 0.04), 0 2px 4px rgba(0, 0, 0, 0.01);
+    --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.04);
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.05);
     --shadow-hero: 0 20px 40px rgba(0, 0, 0, 0.03), inset 0 1px 0 rgba(255, 255, 255, 0.7);
     --shadow-modal: 0 30px 70px rgba(0, 0, 0, 0.08);
 }
@@ -70,7 +66,7 @@ html {
 
 body {
     min-height: 100vh;
-    background-color: var(--bg-page);
+    background-color: var(--bg-subtle);
     font-family: var(--font);
     font-size: 16px;
     line-height: 1.5;
@@ -85,18 +81,18 @@ body {
 }
 
 .container {
-    width: min(92%, 840px); /* Ruang layout dibuat sedikit lebih lega & seimbang */
+    width: min(92%, 840px);
     margin: 0 auto;
 }
 
 /* ==========================================================================
-   PAGE HEADER & UX TOP BAR
+   PAGE HEADER & APPLE HIG UX TOP DASHBOARD BAR
    ========================================================================== */
 .page-header {
     margin-bottom: var(--space-xl);
     display: flex;
     justify-content: space-between;
-    align-items: flex-end;
+    align-items: center;
     flex-wrap: wrap;
     gap: var(--space-lg);
     border-bottom: 1px solid rgba(0, 0, 0, 0.04);
@@ -121,34 +117,69 @@ body {
     color: var(--text-secondary);
 }
 
+/* Polished Tinted Grid Top Dashboard Container */
 .ux-bar {
     display: flex;
     align-items: center;
-    justify-content: flex-end;
-    gap: var(--space-lg);
-    padding: 10px 20px;
-    background: var(--bg-muted);
-    border: 1px solid var(--border-light);
-    border-radius: var(--radius-full); /* Rounded pill style */
-    box-shadow: var(--shadow-xs);
+    justify-content: space-between;
+    gap: 12px;
+    padding: 10px 16px;
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.015);
+    width: 100%;
+    max-width: 540px;
 }
 
 .ux-bar-item {
+    flex: 1;
     display: flex;
-    flex-direction: column;
-    gap: 2px;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 12px;
+    background: rgba(0, 0, 0, 0.015); /* Subtle tinted background */
+    border-radius: 12px;
+    border: 1px solid rgba(0, 0, 0, 0.01);
+    transition: background 200ms ease;
 }
 
-.ux-bar-item--countdown {
-    align-items: flex-start;
-    text-align: left;
+.ux-bar-item:hover {
+    background: rgba(0, 0, 0, 0.025);
+}
+
+.ux-bar-icon-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    background: #ffffff;
+    border-radius: 8px;
+    border: 1px solid rgba(0, 0, 0, 0.04);
+    color: var(--text-secondary);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+    flex-shrink: 0;
+}
+
+.ux-icon {
+    width: 15px;
+    height: 15px;
+}
+
+.ux-bar-content {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
 }
 
 .ux-bar-label {
-    font-size: 11px;
+    font-size: 10px;
     font-weight: 600;
     text-transform: uppercase;
-    letter-spacing: 0.03em;
+    letter-spacing: 0.04em;
     color: var(--text-tertiary);
 }
 
@@ -159,14 +190,31 @@ body {
     color: var(--text-primary);
 }
 
-.ux-bar-value--countdown {
-    font-size: 13px;
-    font-weight: 600;
+.ux-bar-due-group {
+    display: flex;
+    align-items: center;
+    gap: 6px;
 }
 
-.ux-bar-value--overdue { color: var(--danger); }
-.ux-bar-value--today { color: var(--warning); }
-.ux-bar-value--complete { color: var(--success); }
+.ux-bar-badge {
+    font-size: 11px;
+    font-weight: 500;
+    padding: 1px 6px;
+    border-radius: 6px;
+    border: 1px solid transparent;
+}
+
+.ux-bar-badge--warning {
+    background: var(--warning-soft);
+    color: var(--warning);
+    border-color: var(--warning-border);
+}
+
+.ux-bar-badge--danger {
+    background: var(--danger-soft);
+    color: var(--danger);
+    border-color: var(--danger-border);
+}
 
 .ux-bar-divider {
     width: 1px;
@@ -174,8 +222,56 @@ body {
     background: rgba(0, 0, 0, 0.06);
 }
 
+/* Cloud Sync Micro Interaction States */
+.sync-status {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: opacity 250ms ease; /* Fade animation when status changes */
+}
+
+.sync-status--fade-out {
+    opacity: 0;
+}
+
+.sync-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+}
+
+.sync-text {
+    font-size: 13px;
+    font-weight: 600;
+}
+
+/* 🟡 Syncing State */
+.sync-status--syncing { color: var(--warning); }
+.sync-status--syncing .sync-dot {
+    background-color: #ff9500;
+    animation: applePulse 1.4s infinite ease-in-out;
+}
+
+/* 🟢 Synced State */
+.sync-status--synced { color: var(--text-secondary); }
+.sync-status--synced .sync-dot { background-color: #24b263; }
+.sync-status--synced .sync-text { font-weight: 500; }
+
+/* 🔴 Offline State */
+.sync-status--offline { color: var(--danger); }
+.sync-status--offline .sync-dot {
+    background-color: #ff3b30;
+    animation: applePulse 1.4s infinite ease-in-out;
+}
+
+@keyframes applePulse {
+    0% { opacity: 0.4; transform: scale(0.96); }
+    50% { opacity: 1; transform: scale(1.04); }
+    100% { opacity: 0.4; transform: scale(0.96); }
+}
+
 /* ==========================================================================
-   PRIORITAS 1 & 8: HERO SUMMARY & PRICE TYPOGRAPHY
+   HERO SUMMARY CARDS & TYPOGRAPHY
    ========================================================================== */
 .summary {
     display: grid;
@@ -189,22 +285,21 @@ body {
     flex-direction: column;
     gap: var(--space-md);
     padding: var(--space-lg);
-    background: var(--bg-muted);
+    background: var(--bg-page);
     border: 1px solid var(--border-light);
     border-radius: var(--radius-md);
     box-shadow: var(--shadow-xs);
-    transition: transform 240ms var(--ease), box-shadow 240ms var(--ease), border-color 240ms var(--ease);
+    transition: transform 240ms var(--ease), box-shadow 240ms var(--ease);
 }
 
 .stat-card:hover {
     transform: translateY(-2px);
     box-shadow: var(--shadow-sm);
-    border-color: rgba(0, 0, 0, 0.08);
 }
 
 .stat-icon {
-    width: 42px;
-    height: 42px;
+    width: 40px;
+    height: 40px;
     display: grid;
     place-items: center;
     border-radius: var(--radius-sm);
@@ -217,20 +312,9 @@ body {
     height: 18px;
 }
 
-.stat-card--price .stat-icon {
-    background: rgba(0, 0, 0, 0.03);
-    color: var(--text-primary);
-}
-
-.stat-card--paid .stat-icon {
-    background: var(--success-soft);
-    color: var(--success);
-}
-
-.stat-card--debt .stat-icon {
-    background: var(--accent-soft);
-    color: var(--accent);
-}
+.stat-card--price .stat-icon { background: rgba(0, 0, 0, 0.03); color: var(--text-primary); }
+.stat-card--paid .stat-icon { background: var(--accent-soft); color: var(--accent); }
+.stat-card--debt .stat-icon { background: rgba(0, 113, 227, 0.04); color: #0071e3; }
 
 .stat-body h3 {
     font-size: 12px;
@@ -239,7 +323,6 @@ body {
     margin-bottom: 4px;
 }
 
-/* PRIORITAS 8: Angka Uang Dibuat Paling Dominan */
 .stat-body p {
     font-size: 20px;
     font-weight: 700;
@@ -249,24 +332,18 @@ body {
     font-variant-numeric: tabular-nums;
 }
 
-.stat-card--paid .stat-body p {
-    color: var(--success);
-}
+.stat-card--paid .stat-body p { color: var(--accent); }
 
 /* ==========================================================================
-   PRIORITAS 2: PROGRESS PANEL (GLOWING PROGRESS TRACK)
+   PROGRESS PANEL (GLOWING TRACK)
    ========================================================================== */
 .progress-panel {
     padding: var(--space-xl);
     margin-bottom: var(--space-xl);
-    background: var(--bg-muted);
+    background: var(--bg-page);
     border: 1px solid var(--border-light);
     border-radius: var(--radius-lg);
     box-shadow: var(--shadow-hero);
-}
-
-.progress-panel[hidden] {
-    display: none !important;
 }
 
 .progress-header {
@@ -281,7 +358,7 @@ body {
     display: block;
     font-size: 11px;
     font-weight: 600;
-    color: var(--accent);
+    color: #0071e3;
     text-transform: uppercase;
     letter-spacing: 0.04em;
     margin-bottom: 4px;
@@ -312,7 +389,6 @@ body {
     letter-spacing: -0.03em;
     line-height: 1;
     color: var(--text-primary);
-    font-variant-numeric: tabular-nums;
 }
 
 .progress-percentage-label {
@@ -324,7 +400,7 @@ body {
 }
 
 .progress-track {
-    height: 10px; /* Lebih tebal & modern */
+    height: 10px;
     background: rgba(0, 0, 0, 0.03);
     border-radius: var(--radius-full);
     overflow: hidden;
@@ -335,8 +411,8 @@ body {
     width: 0%;
     height: 100%;
     border-radius: var(--radius-full);
-    background: linear-gradient(90deg, var(--accent), #00a6ff); /* Gradient Halus */
-    box-shadow: 0 0 10px rgba(0, 113, 227, 0.25); /* Efek Glow Tipis */
+    background: linear-gradient(90deg, #0071e3, #00a6ff);
+    box-shadow: 0 0 10px rgba(0, 113, 227, 0.2);
     transition: width 0.7s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -350,7 +426,7 @@ body {
 }
 
 /* ==========================================================================
-   CORE SECTION HEADER LAYOUT
+   CORE SECTION LAYOUT HIERARCHY
    ========================================================================== */
 .section-head {
     margin-bottom: var(--space-md);
@@ -370,12 +446,10 @@ body {
     color: var(--text-secondary);
 }
 
-.installments-section {
-    margin-bottom: var(--space-xl);
-}
+.installments-section { margin-bottom: var(--space-xl); }
 
 /* ==========================================================================
-   PRIORITAS 3, 4 & 5: INSTALLMENT CARDS & PILL BADGES
+   INSTALLMENT LIST CARDS & BADGES
    ========================================================================== */
 .installment-list,
 #daftarCicilan {
@@ -390,14 +464,13 @@ body {
     align-items: center;
     gap: var(--space-lg);
     padding: var(--space-lg);
-    background: var(--bg-muted);
+    background: var(--bg-page);
     border: 1px solid var(--border-light);
     border-radius: var(--radius-md);
     box-shadow: var(--shadow-xs);
     transition: transform 240ms var(--ease), border-color 240ms var(--ease), box-shadow 240ms var(--ease);
 }
 
-/* PRIORITAS 3: Hover Interaction Card Style */
 .cicilan:hover {
     transform: translateY(-4px);
     border-color: rgba(0, 0, 0, 0.08);
@@ -409,20 +482,14 @@ body {
     border-color: var(--border-light);
 }
 
-/* PRIORITAS 5: Next Unpaid Target Area Highlight */
 .cicilan--next {
-    border-color: rgba(0, 113, 227, 0.35);
+    border-color: rgba(0, 113, 227, 0.3);
     background: linear-gradient(180deg, #ffffff, rgba(0, 113, 227, 0.005));
-    box-shadow: 0 0 16px rgba(0, 113, 227, 0.03), var(--shadow-xs);
+    box-shadow: 0 0 16px rgba(0, 113, 227, 0.02), var(--shadow-xs);
 }
 
-.cicilan--overdue {
-    border-color: rgba(255, 59, 48, 0.15);
-}
-
-.cicilan--success-flash {
-    animation: successFlash 1.2s var(--ease);
-}
+.cicilan--overdue { border-color: rgba(255, 59, 48, 0.15); }
+.cicilan--success-flash { animation: successFlash 1.2s var(--ease); }
 
 .cicilan-header {
     display: flex;
@@ -439,68 +506,33 @@ body {
     color: var(--text-primary);
 }
 
-/* PRIORITAS 4: Modern Pill Badge Architecture */
+/* Modern Pill Badges Structure */
 .status-badge {
     display: inline-flex;
     align-items: center;
     padding: 3px 10px;
     font-size: 11px;
     font-weight: 500;
-    letter-spacing: 0em;
     border-radius: var(--radius-full);
-    border: 1px solid transparent;
 }
 
-.status-badge--paid {
-    background: var(--success-soft);
-    color: var(--success);
-    border-color: transparent;
-}
-
-.status-badge--pending {
-    background: var(--bg-subtle);
-    color: var(--text-secondary);
-    border-color: transparent;
-}
-
-.status-badge--overdue {
-    background: var(--danger-soft);
-    color: var(--danger);
-    border-color: transparent;
-}
-
-.status-badge--next {
-    background: var(--accent-soft);
-    color: var(--accent);
-    border-color: transparent;
-}
+.status-badge--paid { background: var(--accent-soft); color: var(--accent); }
+.status-badge--pending { background: var(--bg-subtle); color: var(--text-secondary); }
+.status-badge--overdue { background: var(--danger-soft); color: var(--danger); }
+.status-badge--next { background: rgba(0, 113, 227, 0.05); color: #0071e3; }
 
 .cicilan-meta {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    gap: 4px 0;
 }
 
-.meta-item {
-    font-size: 13px;
-    color: var(--text-secondary);
-}
-
-.meta-item--amount {
-    font-weight: 500;
-    color: var(--text-primary);
-    font-variant-numeric: tabular-nums;
-}
-
-.meta-item + .meta-item::before {
-    content: "·";
-    margin: 0 10px;
-    color: var(--text-tertiary);
-}
+.meta-item { font-size: 13px; color: var(--text-secondary); }
+.meta-item--amount { font-weight: 500; color: var(--text-primary); font-variant-numeric: tabular-nums; }
+.meta-item + .meta-item::before { content: "·"; margin: 0 10px; color: var(--text-tertiary); }
 
 /* ==========================================================================
-   BUTTONS INTERACTION SYSTEM
+   BUTTON INTERACTION SYSTEM
    ========================================================================== */
 button,
 .btn-pay {
@@ -519,15 +551,8 @@ button,
     transition: background 200ms var(--ease), transform 200ms var(--ease);
 }
 
-button:hover,
-.btn-pay:hover {
-    background: #000000;
-}
-
-button:active,
-.btn-pay:active {
-    transform: scale(0.97); /* Micro button compression */
-}
+button:hover, .btn-pay:hover { background: #000000; }
+button:active, .btn-pay:active { transform: scale(0.97); }
 
 .btn-pay--cancel {
     background: #ffffff;
@@ -542,21 +567,13 @@ button:active,
 }
 
 /* ==========================================================================
-   PRIORITAS 6: HISTORY CARD & PRECISE SPACINGS
+   RIWAYAT ACTIVITAS (HISTORY CARDS)
    ========================================================================== */
-.history-section {
-    margin-top: var(--space-xl);
-}
+.history-section { margin-top: var(--space-xl); }
+.history-list { display: flex; flex-direction: column; gap: 12px; }
 
-.history-list {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-}
-
-/* PRIORITAS 10: Elegant Empty State Frame */
 .history-empty {
-    background-color: var(--bg-muted);
+    background-color: var(--bg-page);
     color: var(--text-tertiary);
     padding: 32px var(--space-lg);
     border-radius: var(--radius-md);
@@ -571,47 +588,27 @@ button:active,
     flex-direction: column;
     align-items: flex-start;
     gap: var(--space-md);
-    background-color: var(--bg-muted);
+    background-color: var(--bg-page);
     border: 1px solid var(--border-light);
     border-radius: var(--radius-md);
     padding: 20px;
     box-shadow: var(--shadow-xs);
-    box-sizing: border-box;
     width: 100%;
     transition: transform 200ms var(--ease), box-shadow 200ms var(--ease);
 }
 
-.history-card:hover {
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-sm);
-}
-
-.history-card__header {
-    width: 100%;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.03);
-    padding-bottom: 8px;
-}
+.history-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-sm); }
+.history-card__header { width: 100%; border-bottom: 1px solid rgba(0, 0, 0, 0.03); padding-bottom: 8px; }
 
 .history-card__header h4 {
     margin: 0;
     font-size: 14px;
-    color: var(--success); /* Clean status indicator */
+    color: var(--accent);
     font-weight: 600;
 }
 
-.history-card__content {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    width: 100%;
-}
-
-.history-card__row {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-    width: 100%;
-}
+.history-card__content { display: flex; flex-direction: column; gap: 12px; width: 100%; }
+.history-card__row { display: flex; flex-direction: column; gap: 2px; width: 100%; }
 
 .history-card__label {
     font-size: 11px;
@@ -621,22 +618,11 @@ button:active,
     letter-spacing: 0.03em;
 }
 
-.history-card__value {
-    font-size: 13px;
-    color: var(--text-primary);
-    font-weight: 500;
-    line-height: 1.4;
-}
-
-/* Nominal Riwayat Pembayaran Sangat Menonjol */
-.history-card__value--amount {
-    font-size: 16px;
-    font-weight: 700;
-    color: var(--text-primary);
-}
+.history-card__value { font-size: 13px; color: var(--text-primary); font-weight: 500; line-height: 1.4; }
+.history-card__value--amount { font-size: 16px; font-weight: 700; color: var(--text-primary); }
 
 /* ==========================================================================
-   PRIORITAS 9: ARCHITECTURAL GALLERY GRID
+   GALLERY PHOTO GRID
    ========================================================================== */
 .gallery-section {
     margin-top: var(--space-xl);
@@ -644,19 +630,8 @@ button:active,
     padding-top: var(--space-xl);
 }
 
-.gallery-section h2 {
-    font-size: 14px;
-    color: var(--text-secondary);
-    margin-bottom: var(--space-md);
-    font-weight: 600;
-}
-
-.photo-gallery {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr); /* 4 elegant clean grids */
-    gap: 14px;
-    width: 100%;
-}
+.gallery-section h2 { font-size: 14px; color: var(--text-secondary); margin-bottom: var(--space-md); font-weight: 600; }
+.photo-gallery { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; width: 100%; }
 
 .photo-gallery img {
     width: 100%;
@@ -669,15 +644,12 @@ button:active,
     transition: transform 260ms var(--ease), box-shadow 260ms var(--ease);
 }
 
-.photo-gallery img:hover {
-    transform: scale(1.04) translateY(-2px);
-    box-shadow: var(--shadow-sm);
-}
+.photo-gallery img:hover { transform: scale(1.04) translateY(-2px); box-shadow: var(--shadow-sm); }
 
 /* ==========================================================================
-   PREMIUM MODALS & BLUR EFFECTS (Linear Style)
+   MODAL DIALOGS SYSTEM & BLUR EFFECTS
    ========================================================================== */
-.modal, 
+.modal,
 #amountModal {
     position: fixed;
     inset: 0;
@@ -688,8 +660,7 @@ button:active,
     padding: var(--space-lg);
 }
 
-/* FIXED PROTECTOR: Pastikan elemen HTML yang memiliki atribut [hidden] 
-   benar-benar disembunyikan dan TIDAK ditimpa oleh display: flex */
+/* FIXED CLOSURE PROTECTOR AGAINST VISUAL GLITCHES */
 .modal[hidden],
 #amountModal[hidden] {
     display: none !important;
@@ -699,7 +670,8 @@ button:active,
     position: absolute;
     inset: 0;
     background: rgba(0, 0, 0, 0.15);
-    backdrop-filter: blur(8px); /* Premium blur effect ala Arc/Wallet */
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
 }
 
 .modal-card,
@@ -708,7 +680,7 @@ button:active,
     z-index: 1;
     width: min(100%, 400px);
     padding: var(--space-xl) !important;
-    background: var(--bg-muted) !important;
+    background: var(--bg-page) !important;
     border: 1px solid var(--border-light) !important;
     border-radius: var(--radius-lg) !important;
     box-shadow: var(--shadow-modal) !important;
@@ -732,7 +704,6 @@ button:active,
     margin-bottom: var(--space-lg) !important;
 }
 
-/* Premium Text Inputs Design */
 .modal-input,
 #amountModalInput {
     width: 100%;
@@ -745,7 +716,6 @@ button:active,
     font-weight: 700 !important;
     font-family: var(--font) !important;
     background-color: var(--bg-subtle) !important;
-    box-sizing: border-box;
     outline: none;
     transition: border-color 200ms var(--ease), background-color 200ms var(--ease), box-shadow 200ms var(--ease) !important;
 }
@@ -753,7 +723,7 @@ button:active,
 .modal-input:focus,
 #amountModalInput:focus {
     background-color: #ffffff !important;
-    border-color: var(--accent) !important;
+    border-color: #0071e3 !important;
     box-shadow: 0 0 0 3px rgba(0, 113, 227, 0.15) !important;
 }
 
@@ -764,10 +734,7 @@ button:active,
     margin-bottom: var(--space-md) !important;
 }
 
-.modal-actions {
-    display: flex;
-    gap: 10px;
-}
+.modal-actions { display: flex; gap: 10px; }
 
 .btn-modal {
     flex: 1;
@@ -787,24 +754,13 @@ button:active,
     border: 1px solid var(--border-light);
 }
 
-.btn-modal--cancel:hover {
-    background: rgba(0, 0, 0, 0.04);
-}
-
+.btn-modal--cancel:hover { background: rgba(0, 0, 0, 0.04); }
 .btn-modal--confirm,
-#amountModalSubmit {
-    background: var(--text-primary) !important;
-    color: #fff !important;
-}
-
-#amountModalSubmit:disabled {
-    background-color: var(--text-tertiary) !important;
-    opacity: 0.35 !important;
-    cursor: not-allowed !important;
-}
+#amountModalSubmit { background: var(--text-primary) !important; color: #fff !important; }
+#amountModalSubmit:disabled { background-color: var(--text-tertiary) !important; opacity: 0.35 !important; cursor: not-allowed !important; }
 
 /* ==========================================================================
-   FEEDBACK & KEYFRAMES
+   FEEDBACK & KEYFRAMES ANIMATION
    ========================================================================== */
 .toast {
     position: fixed;
@@ -827,17 +783,14 @@ button:active,
     transition: opacity 240ms var(--ease), transform 240ms var(--ease);
 }
 
-.toast--visible {
-    opacity: 1;
-    transform: translateX(-50%) translateY(0);
-}
+.toast--visible { opacity: 1; transform: translateX(-50%) translateY(0); }
 
 .toast-icon {
     display: grid;
     place-items: center;
     width: 20px;
     height: 20px;
-    background: var(--success);
+    background: var(--accent);
     border-radius: 50%;
     font-size: 11px;
     font-weight: 700;
@@ -846,7 +799,7 @@ button:active,
 
 @keyframes successFlash {
     0%   { background-color: #ffffff; }
-    30%  { background-color: var(--success-soft); border-color: var(--success); }
+    30%  { background-color: var(--accent-soft); border-color: var(--accent); }
     100% { background-color: #ffffff; }
 }
 
@@ -856,18 +809,20 @@ button:active,
 }
 
 /* ==========================================================================
-   RESPONSIVE OPTIMIZATION LAYOUTS
+   RESPONSIVE LAYOUT RESPONSIVENESS
    ========================================================================== */
 @media (max-width: 768px) {
     .app { padding: var(--space-xl) 0 var(--space-2xl); }
-    .page-header { flex-direction: column; align-items: flex-start; gap: var(--space-md); margin-bottom: var(--space-xl); }
-    .ux-bar { width: 100%; justify-content: space-between; }
+    .page-header { flex-direction: column; align-items: flex-start; gap: var(--space-md); }
+    .ux-bar { width: 100%; max-width: unset; flex-direction: column; align-items: stretch; gap: 8px; padding: 12px; }
+    .ux-bar-divider { display: none; }
+    .ux-bar-item { width: 100%; }
     
-    .summary { grid-template-columns: 1fr; gap: var(--space-sm); margin-bottom: var(--space-xl); }
+    .summary { grid-template-columns: 1fr; gap: var(--space-sm); }
     .stat-card { flex-direction: row; align-items: center; padding: var(--space-md) var(--space-lg); }
     
     .progress-panel { padding: var(--space-lg); }
-    .progress-header { flex-direction: column; align-items: flex-start; gap: var(--space-sm); margin-bottom: var(--space-lg); }
+    .progress-header { flex-direction: column; align-items: flex-start; gap: var(--space-sm); }
     .progress-percentage-wrap { text-align: left; display: flex; align-items: baseline; gap: var(--space-sm); }
     .progress-percentage-label { margin-top: 0; }
     
@@ -883,11 +838,7 @@ button:active,
 }
 
 @media (min-width: 769px) {
-    .history-card__content {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 20px;
-    }
+    .history-card__content { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
     .history-card__header { border-bottom: none; padding-bottom: 0; }
 }
 
@@ -897,86 +848,10 @@ button:active,
     .photo-gallery { grid-template-columns: 1fr; }
 }
 
-/* ==========================================================================
-   REDUCED MOTION INTERACTION PROTECTIONS
-   ========================================================================== */
 @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after {
         animation-duration: 0.01ms !important;
         animation-iteration-count: 1 !important;
         transition-duration: 0.01ms !important;
     }
-}/* ==========================================================================
-   CLOUD SYNC STATUS COMPONENT (Premium Micro-interactions)
-   ========================================================================== */
-.sync-status-wrapper {
-    min-width: 110px;
-}
-
-.sync-status {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 13px;
-    font-weight: 600;
-    transition: all 300ms cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.sync-dot {
-    width: 7px;
-    height: 7px;
-    border-radius: 50%;
-    position: relative;
-    display: inline-block;
-}
-
-.sync-text {
-    font-size: 13px;
-    font-variant-numeric: tabular-nums;
-}
-
-/* State 1: Syncing (Yellow Pulse) */
-.sync-status--syncing { color: #b45309; }
-.sync-status--syncing .sync-dot {
-    background-color: #ff9500;
-    box-shadow: 0 0 0 0 rgba(255, 149, 0, 0.4);
-    animation: syncPulseYellow 1.6s infinite ease-in-out;
-}
-
-/* State 2: Synced (Green Static) */
-.sync-status--synced { color: #1d1d1f; }
-.sync-status--synced .sync-dot {
-    background-color: #24b263;
-    box-shadow: 0 0 6px rgba(36, 178, 99, 0.2);
-}
-.sync-status--synced .sync-text {
-    color: var(--text-secondary);
-    font-weight: 500;
-    font-size: 12px;
-}
-
-/* State 3: Offline (Red Pulse) */
-.sync-status--offline { color: #dc2626; }
-.sync-status--offline .sync-dot {
-    background-color: #ff3b30;
-    box-shadow: 0 0 0 0 rgba(255, 59, 48, 0.4);
-    animation: syncPulseRed 1.6s infinite ease-in-out;
-}
-
-/* Subtle Pulsing Keyframes */
-@keyframes syncPulseYellow {
-    0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(255, 149, 0, 0.5); }
-    70% { transform: scale(1); box-shadow: 0 0 0 5px rgba(255, 149, 0, 0); }
-    100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(255, 149, 0, 0); }
-}
-
-@keyframes syncPulseRed {
-    0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(255, 59, 48, 0.5); }
-    70% { transform: scale(1); box-shadow: 0 0 0 5px rgba(255, 59, 48, 0); }
-    100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(255, 59, 48, 0); }
-}
-
-/* Responsive adjustment */
-@media (max-width: 768px) {
-    .sync-status-wrapper { width: 100%; display: flex; flex-direction: row; justify-content: space-between; align-items: center; }
 }

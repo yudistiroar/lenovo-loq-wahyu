@@ -36,9 +36,9 @@
                         <span id="todayDate" class="ux-bar-value">—</span>
                     </div>
                 </div>
-            
+
                 <div class="ux-bar-divider" aria-hidden="true"></div>
-            
+
                 <div class="ux-bar-item">
                     <div class="ux-bar-icon-wrap">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="ux-icon">
@@ -53,9 +53,9 @@
                         </div>
                     </div>
                 </div>
-            
+
                 <div class="ux-bar-divider" aria-hidden="true"></div>
-            
+
                 <div class="ux-bar-item">
                     <div class="ux-bar-icon-wrap">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="ux-icon">
@@ -71,6 +71,7 @@
                     </div>
                 </div>
             </div>
+        </header>
 
         <section class="summary" aria-label="Ringkasan Keuangan">
             <div class="stat-card stat-card--price">
@@ -187,6 +188,68 @@
     <span class="toast-icon" aria-hidden="true">✓</span>
     <span id="successToastText">Pembayaran berhasil disimpan.</span>
 </div>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const countdownTarget = document.getElementById("countdownText");
+  const daysBadge = document.getElementById("daysRemainingText");
+
+  if (countdownTarget) {
+    const observer = new MutationObserver(() => {
+      let rawText = countdownTarget.textContent;
+      if (rawText && (rawText.includes(":") || rawText.match(/\d{4}-\d{2}-\d{2}/))) {
+        let datePart = rawText.includes(":") ? rawText.split(":")[1].trim() : rawText.trim();
+        let targetDate = new Date(datePart);
+        
+        if (!isNaN(targetDate)) {
+          let formattedDate = targetDate.toLocaleDateString("id-ID", {
+            day: "numeric", month: "long", year: "numeric"
+          });
+          
+          let today = new Date();
+          today.setHours(0,0,0,0);
+          targetDate.setHours(0,0,0,0);
+          
+          let diffTime = targetDate.getTime() - today.getTime();
+          let diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+          
+          observer.disconnect();
+          countdownTarget.textContent = formattedDate;
+          
+          if (daysBadge) {
+            daysBadge.style.display = "inline-block";
+            if (diffDays > 0) {
+              daysBadge.textContent = `${diffDays} hari lagi`;
+              daysBadge.className = "ux-bar-badge ux-bar-badge--warning";
+            } else if (diffDays === 0) {
+              daysBadge.textContent = `Hari ini`;
+              daysBadge.className = "ux-bar-badge ux-bar-badge--danger";
+            } else {
+              daysBadge.textContent = `Terlambat ${Math.abs(diffDays)} hari`;
+              daysBadge.className = "ux-bar-badge ux-bar-badge--danger";
+            }
+          }
+          observer.observe(countdownTarget, { childList: true, characterData: true });
+        }
+      }
+    });
+    observer.observe(countdownTarget, { childList: true, characterData: true });
+  }
+});
+
+window.updateCloudSyncVisualState = function(stateClass, textContent) {
+  const syncContainer = document.getElementById("cloudSyncStatus");
+  const syncText = document.getElementById("syncText");
+  if (syncContainer && syncText) {
+    syncContainer.classList.add("sync-status--fade-out");
+    setTimeout(() => {
+      syncContainer.className = `sync-status ${stateClass}`;
+      syncText.textContent = textContent;
+      syncContainer.classList.remove("sync-status--fade-out");
+    }, 250);
+  }
+};
+</script>
 
 <script src="script.js"></script>
 </body>
