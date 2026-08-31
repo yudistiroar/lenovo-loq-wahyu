@@ -45,9 +45,6 @@
   function paint(block, error = '') {
     const { root, item } = block;
     root.replaceChildren();
-    const title = document.createElement('h5'); title.textContent = 'Bukti transaksi'; root.append(title);
-    const note = document.createElement('p'); note.className = 'receipt-note';
-    note.textContent = 'Publik · JPG, PNG, WebP · Maks. 10 MB · 1 bukti aktif'; root.append(note);
     const status = document.createElement('p'); status.className = 'receipt-status'; status.setAttribute('role','status');
     const key = String(item.id); const receipt = receipts.get(key);
     if (busy.has(key)) { status.textContent = 'Memproses bukti, mohon tunggu…'; root.append(status); return; }
@@ -57,20 +54,34 @@
       return;
     }
     const imageUrl = receipt && safeImageUrl(receipt.url);
-    if (imageUrl) {
-      const link = document.createElement('a'); link.href = imageUrl; link.target = '_blank'; link.rel = 'noopener noreferrer';
-      link.className = 'receipt-preview'; link.setAttribute('aria-label', `Lihat bukti cicilan ke-${item.installment} ukuran penuh`);
-      const img = document.createElement('img'); img.src = imageUrl; img.alt = `Bukti cicilan ke-${item.installment}`; img.loading = 'lazy';
-      img.addEventListener('error', () => { status.textContent = 'Gambar belum dapat ditampilkan. Coba muat ulang.'; });
-      link.append(img); root.append(link);
-    } else { status.textContent = 'Belum ada bukti terlampir.'; }
     const input = document.createElement('input'); input.type = 'file'; input.accept = TYPES.join(','); input.hidden = true;
     input.addEventListener('change', () => { const file = input.files[0]; if (file) upload(block, file); });
     const actions = document.createElement('div'); actions.className = 'receipt-actions';
-    actions.append(button(receipt ? 'Ganti bukti' : 'Upload bukti', () => input.click()));
-    if (receipt) actions.append(button('Hapus bukti', () => remove(block), true));
+    root.append(input, actions);
+    if (imageUrl) {
+      const viewer = document.createElement('details'); viewer.className = 'receipt-viewer';
+      const summary = document.createElement('summary'); summary.textContent = 'Lihat bukti';
+      summary.setAttribute('aria-label', `Lihat bukti cicilan ke-${item.installment}`);
+      const link = document.createElement('a'); link.href = imageUrl; link.target = '_blank'; link.rel = 'noopener noreferrer';
+      link.className = 'receipt-preview'; link.setAttribute('aria-label', `Lihat bukti cicilan ke-${item.installment} ukuran penuh`);
+      const img = document.createElement('img'); img.alt = `Bukti cicilan ke-${item.installment}`; img.loading = 'lazy';
+      img.addEventListener('error', () => { status.textContent = 'Gambar belum dapat ditampilkan. Coba muat ulang.'; });
+      viewer.addEventListener('toggle', () => { if (viewer.open && !img.getAttribute('src')) img.src = imageUrl; });
+      const caption = document.createElement('p'); caption.className = 'receipt-note'; caption.textContent = 'Klik gambar untuk membuka ukuran penuh.';
+      link.append(img); viewer.append(summary, link, caption); actions.append(viewer);
+    } else if (!receipt) {
+      actions.append(button('Tambah bukti', () => input.click()));
+    } else { status.textContent = 'Tautan bukti tidak valid. Ganti bukti melalui menu lainnya.'; }
+    if (receipt) {
+      const menu = document.createElement('details'); menu.className = 'receipt-menu';
+      const summary = document.createElement('summary'); summary.textContent = '⋯'; summary.title = 'Pilihan bukti';
+      summary.setAttribute('aria-label', `Pilihan bukti cicilan ke-${item.installment}`);
+      const options = document.createElement('div'); options.className = 'receipt-menu-options';
+      options.append(button('Ganti bukti', () => { menu.open = false; input.click(); }), button('Hapus bukti', () => { menu.open = false; remove(block); }, true));
+      menu.append(summary, options); actions.append(menu);
+    }
     if (error) status.textContent = error;
-    root.append(input, actions, status);
+    root.append(status);
   }
   async function run(block, operation, success) {
     const key = String(block.item.id);
@@ -112,4 +123,15 @@
     },
     refresh,
   };
+  document.addEventListener('click', event => {
+    for (const menu of document.querySelectorAll('.receipt-menu[open]')) {
+      if (!menu.contains(event.target)) menu.open = false;
+    }
+  });
+  document.addEventListener('keydown', event => {
+    if (event.key !== 'Escape') return;
+    for (const menu of document.querySelectorAll('.receipt-menu[open]')) {
+      menu.open = false; menu.querySelector('summary').focus();
+    }
+  });
 })();

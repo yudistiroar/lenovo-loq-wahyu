@@ -1,14 +1,23 @@
 /* Public payment evidence */
-.receipt-block { margin-top: 16px; padding-top: 16px; border-top: 1px solid #33333b; }
+.receipt-block { margin-top: 14px; padding-top: 12px; border-top: 1px solid #2b2b32; }
 .receipt-block h5 { font-size: 13px; color: #f4f4f7; }
 .receipt-note, .receipt-status { font-size: 12px; color: #a1a1aa; line-height: 1.6; margin-top: 8px; overflow-wrap: anywhere; }
-.receipt-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+.receipt-actions { display: flex; align-items: flex-start; gap: 8px; }
 .receipt-button { padding: 9px 13px; border: 1px solid #3b3b46; border-radius: 8px; background: #222227; color: #f4f4f7; cursor: pointer; font: inherit; font-size: 12px; }
 .receipt-button:hover { background: #303038; }
 .receipt-button:focus-visible, .receipt-preview:focus-visible { outline: 2px solid #60a5fa; outline-offset: 3px; }
 .receipt-button--danger { color: #fca5a5; }
 .receipt-preview { display: block; margin-top: 12px; border-radius: 8px; overflow: hidden; background: #09090b; }
 .receipt-preview img { display: block; width: 100%; max-height: 220px; object-fit: contain; }
+.receipt-status:empty { display: none; }
+.receipt-viewer { flex: 1; min-width: 0; }
+.receipt-viewer > summary { color: #93c5fd; font-size: 12px; cursor: pointer; padding: 10px 0; }
+.receipt-menu { position: relative; margin-left: auto; }
+.receipt-menu > summary { list-style: none; cursor: pointer; width: 38px; height: 38px; display: grid; place-items: center; border: 1px solid #3b3b46; border-radius: 8px; font-size: 22px; }
+.receipt-menu > summary::-webkit-details-marker { display: none; }
+.receipt-menu-options { position: absolute; top: 44px; right: 0; z-index: 5; display: grid; gap: 4px; min-width: 150px; background: #222227; padding: 6px; border: 1px solid #3b3b46; border-radius: 10px; box-shadow: 0 10px 30px #0008; }
+.receipt-menu-options .receipt-button { text-align: left; border: 0; }
+.receipt-viewer > summary:focus-visible, .receipt-menu > summary:focus-visible, .payment-management > summary:focus-visible { outline: 2px solid #60a5fa; outline-offset: 3px; border-radius: 4px; }
 
 /* ==========================================================================
    THE STRIPE / LINEAR / VERCEL FINTECH DESIGN SYSTEM
@@ -525,6 +534,7 @@ body {
 .history-feed {
     display: flex;
     flex-direction: column;
+    gap: 14px;
 }
 
 .history-empty {
@@ -535,30 +545,37 @@ body {
 }
 
 .history-card {
-    border-bottom: 1px dashed var(--bg-element);
-    padding: var(--space-sm) 0;
-}
-
-.history-card:last-child {
-    border-bottom: none;
-    padding-bottom: 0;
-}
-
-.history-card:first-child {
-    padding-top: 0;
+    border: 1px solid #303037;
+    border-radius: 12px;
+    background: #19191e;
+    padding: 18px;
 }
 
 .history-card__header {
-    margin-bottom: 6px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 14px;
 }
 
 .history-card__header h4 {
-    font-size: 11px;
+    font-size: 14px;
     font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: var(--success);
+    line-height: 1.6;
+    color: var(--text-primary);
 }
+.history-period { font-weight: 400; color: #b5b5c0; }
+.history-success { flex-shrink: 0; border-radius: 20px; padding: 4px 8px; background: #163326; color: #86efac; font-size: 10px; line-height: 1.6; }
+.history-amount { font-size: 21px; font-weight: 650; font-variant-numeric: tabular-nums; letter-spacing: -0.02em; }
+.history-paid-date { font-size: 12px; color: #b5b5c0; line-height: 1.6; }
+.history-intro { margin-top: 8px; color: #a1a1aa; font-size: 12px; line-height: 1.6; }
+.history-evidence-note { margin-top: 16px; color: #a1a1aa; font-size: 11px; line-height: 1.7; }
+.payment-management { padding: 16px 20px; border: 1px solid #303037; border-radius: 12px; }
+.payment-management > summary { cursor: pointer; color: #a1a1aa; font-size: 12px; }
+.payment-management > p { margin: 12px 0; font-size: 12px; line-height: 1.6; color: #a1a1aa; }
+.payment-management .btn-undo-last { max-width: 100%; white-space: normal; line-height: 1.6; }
+@media (max-width: 480px) { .history-card { padding: 14px; } .history-period { display: block; } }
 
 .history-card__content {
     display: flex;

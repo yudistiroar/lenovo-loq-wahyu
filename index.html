@@ -104,13 +104,19 @@
                 </section>
 
                 <section class="panel-history">
-                    <div class="section-head" style="display: flex; justify-content: space-between; align-items: center;">
+                    <div class="section-head">
                         <h3>Riwayat Transaksi</h3>
-                        <button type="button" id="btnCancelLastPayment" class="btn-undo-last" style="display: none;" onclick="window.triggerCancelLastPaymentFlow()">Batalkan Pembayaran Terakhir</button>
+                        <p class="history-intro">Urut dari cicilan pertama. Bulan cicilan bisa berbeda dari tanggal pembayaran.</p>
                     </div>
                     <div class="history-feed" id="riwayatPembayaran">
                         </div>
+                    <p class="history-evidence-note">Bukti bersifat publik. JPG, PNG, atau WebP, maksimal 10 MB per file.</p>
                 </section>
+                <details class="payment-management" id="paymentManagement" hidden>
+                    <summary>Kelola pembayaran</summary>
+                    <p>Pembatalan mengubah status pembayaran, bukan hanya menghapus bukti.</p>
+                    <button type="button" id="btnCancelLastPayment" class="btn-undo-last" style="display: none;" onclick="window.triggerCancelLastPaymentFlow()">Batalkan Pembayaran Terakhir</button>
+                </details>
             </div>
         </main>
 

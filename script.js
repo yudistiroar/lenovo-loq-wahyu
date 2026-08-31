@@ -356,6 +356,8 @@ function renderRiwayatPembayaran() {
   window.paymentReceipts?.beginRender();
 
   const paidHistory = cicilanMaster.filter(c => (c.paid_amount ?? 0) > 0);
+  const management = document.getElementById('paymentManagement');
+  if (management) management.hidden = paidHistory.length === 0;
   
   // BUG 1: Menampilkan/menyembunyikan tombol "Batalkan Pembayaran Terakhir" berdasarkan ketersediaan histori transaksi aktif
   if (paidHistory.length === 0) {
@@ -366,31 +368,22 @@ function renderRiwayatPembayaran() {
 
   if (DOM.btnCancelLastPayment) DOM.btnCancelLastPayment.style.display = "inline-block";
 
-  // Urutan riwayat: Transaksi terbaru diletakkan paling atas
-  const sortedHistory = [...paidHistory].sort((a, b) => new Date(b.paid_at || 0) - new Date(a.paid_at || 0));
+  // Match the installment schedule, not the order in which payments were entered.
+  const sortedHistory = [...paidHistory].sort((a, b) => a.installment - b.installment);
 
   sortedHistory.forEach((item, index) => {
-    const card = document.createElement("div");
+    const card = document.createElement("article");
     card.className = "history-card";
     card.style.animationDelay = `${index * 40}ms`;
-
+    const period = parseDateISO(getContractDueDate(item.installment)).toLocaleDateString('id-ID', { month: 'long', year: 'numeric' });
     card.innerHTML = `
       <div class="history-card__header">
-        <h4>Transaksi Sukses</h4>
+        <h4>Cicilan ke-${item.installment} <span class="history-period">· ${period}</span></h4>
+        <span class="history-success">Berhasil</span>
       </div>
       <div class="history-card__content">
-        <div class="history-card__row">
-          <span class="history-card__label">Instansi</span>
-          <span class="history-card__value">Cicilan Ke-${item.installment}</span>
-        </div>
-        <div class="history-card__row">
-          <span class="history-card__label">Jumlah Transfer</span>
-          <span class="history-card__value history-card__value--amount">${formatRupiah(item.paid_amount ?? 0)}</span>
-        </div>
-        <div class="history-card__row">
-          <span class="history-card__label">Tanggal Masuk</span>
-          <span class="history-card__value">${formatTanggalIndo(item.paid_at || item.due_date)}</span>
-        </div>
+        <p class="history-amount">${formatRupiah(item.paid_amount ?? 0)}</p>
+        <p class="history-paid-date">${item.paid_at ? `Dibayar ${formatTanggalIndo(item.paid_at)}` : 'Tanggal pembayaran belum tersedia'}</p>
       </div>
     `;
     window.paymentReceipts?.attach(card, item);
