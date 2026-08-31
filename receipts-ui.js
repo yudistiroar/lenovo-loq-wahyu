@@ -54,6 +54,13 @@
       return;
     }
     const imageUrl = receipt && safeImageUrl(receipt.url);
+    const cue = document.createElement('p');
+    cue.className = `receipt-cue ${receipt ? 'receipt-cue--attached' : 'receipt-cue--empty'}`;
+    const icon = document.createElement('span'); icon.setAttribute('aria-hidden', 'true');
+    icon.textContent = receipt ? '✓' : '○';
+    const label = document.createElement('span');
+    label.textContent = receipt ? 'Bukti terlampir' : 'Belum ada bukti';
+    cue.append(icon, label); root.append(cue);
     const input = document.createElement('input'); input.type = 'file'; input.accept = TYPES.join(','); input.hidden = true;
     input.addEventListener('change', () => { const file = input.files[0]; if (file) upload(block, file); });
     const actions = document.createElement('div'); actions.className = 'receipt-actions';
