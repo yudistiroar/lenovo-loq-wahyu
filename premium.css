@@ -31,7 +31,7 @@ body { background-image: radial-gradient(ellipse at 10% 0%, #16356533, transpare
     border-radius: inherit;
     background: linear-gradient(90deg, #060c1bf5 0%, #080c1dd6 34%, #090d2052 68%),
                 linear-gradient(0deg, #070d20f5, transparent 85%),
-                url('Images/loq-hero.png') right 48% / auto 150% no-repeat;
+                url('Images/loq-hero-v2.png') right center / auto 125% no-repeat;
 }
 .hero h1 { font-size: clamp(25px, 3vw, 35px); letter-spacing: -.045em; margin-bottom: 12px; text-shadow: 0 2px 18px #0008; }
 .subtitle { line-height: 1.7; color: #c0cce2; }
@@ -94,15 +94,15 @@ button, summary, a, .panel-metric, .history-card { transition: border-color 180m
 }
 @media (max-width: 890px) {
     .page-header { min-height: 270px; justify-content: space-between; }
-    .page-header::before { background-position: center, center, right 48%; }
+    .page-header::before { background-position: center, center, right center; }
     .ux-bar { max-width: 460px; }
 }
 @media (max-width: 640px) {
     .page-header { padding: 24px 20px; min-height: 285px; border-radius: 18px; }
     .page-header::before {
-        background-image: linear-gradient(90deg, #060c1bd9, #080c1d66), linear-gradient(0deg, #070d20fa, transparent 100%), url('Images/loq-hero.png');
+        background-image: linear-gradient(90deg, #060c1bd9, #080c1d66), linear-gradient(0deg, #070d20fa, transparent 100%), url('Images/loq-hero-v2.png');
         background-size: cover, cover, auto 100%;
-        background-position: center;
+        background-position: center, center, right center;
     }
     .hero h1 { font-size: 28px; max-width: 260px; }
     .ux-bar { gap: 12px; flex-wrap: wrap; }
