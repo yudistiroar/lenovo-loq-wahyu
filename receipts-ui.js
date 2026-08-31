@@ -47,6 +47,11 @@
     root.replaceChildren();
     const status = document.createElement('p'); status.className = 'receipt-status'; status.setAttribute('role','status');
     const key = String(item.id); const receipt = receipts.get(key);
+    const badge = root.closest('.history-card')?.querySelector('.history-success');
+    if (badge) {
+      badge.textContent = loaded && receipt ? 'Berhasil + Bukti' : 'Berhasil';
+      badge.title = loaded ? (receipt ? 'Pembayaran berhasil dan bukti sudah terlampir' : 'Pembayaran berhasil, belum ada bukti') : 'Pembayaran berhasil; status bukti belum diketahui';
+    }
     if (busy.has(key)) { status.textContent = 'Memproses bukti, mohon tunggu…'; root.append(status); return; }
     if (!loaded) {
       status.textContent = error || 'Memuat bukti…'; root.append(status);
@@ -54,13 +59,6 @@
       return;
     }
     const imageUrl = receipt && safeImageUrl(receipt.url);
-    const cue = document.createElement('p');
-    cue.className = `receipt-cue ${receipt ? 'receipt-cue--attached' : 'receipt-cue--empty'}`;
-    const icon = document.createElement('span'); icon.setAttribute('aria-hidden', 'true');
-    icon.textContent = receipt ? '✓' : '○';
-    const label = document.createElement('span');
-    label.textContent = receipt ? 'Bukti terlampir' : 'Belum ada bukti';
-    cue.append(icon, label); root.append(cue);
     const input = document.createElement('input'); input.type = 'file'; input.accept = TYPES.join(','); input.hidden = true;
     input.addEventListener('change', () => { const file = input.files[0]; if (file) upload(block, file); });
     const actions = document.createElement('div'); actions.className = 'receipt-actions';

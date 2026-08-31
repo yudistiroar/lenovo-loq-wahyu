@@ -73,9 +73,7 @@ body { background-image: radial-gradient(ellipse at 10% 0%, #16356533, transpare
 .history-period, .history-paid-date { color: #b0bfd6; }
 .history-intro, .history-evidence-note, .receipt-note, .receipt-status { color: #a4b3cd; }
 .receipt-block { border-color: #33415a; }
-.receipt-cue { display: flex; align-items: center; gap: 7px; width: fit-content; margin-bottom: 10px; padding: 5px 9px; border-radius: 6px; font-size: 11px; font-weight: 500; line-height: 1.5; }
-.receipt-cue--attached { color: #acd3ff; background: #24487655; border: 1px solid #527eb866; }
-.receipt-cue--empty { color: #a4b3c9; background: #ffffff04; border: 1px solid #ffffff0d; }
+.history-card__header { flex-wrap: wrap; }
 .receipt-button, .receipt-menu > summary { background: #1c2b43; border-color: #425777; color: #d8e8ff; }
 .receipt-button-danger { color: #ffafb7; }
 .receipt-menu-options { background: #172338; border-color: #455b7e; }
