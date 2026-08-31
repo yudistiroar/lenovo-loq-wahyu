@@ -1,0 +1,113 @@
+/* Visual layer only: preserve dashboard structure and interaction behavior. */
+:root {
+    --bg-page: #080b14;
+    --bg-surface: #101522;
+    --bg-card: #141b2a;
+    --bg-element: #232e43;
+    --bg-hover: #2b3851;
+    --text-primary: #f1f5ff;
+    --text-secondary: #abb9d0;
+    --text-muted: #8b9ab3;
+    --accent: #367cf5;
+    --accent-hover: #5294ff;
+}
+
+body { background-image: radial-gradient(ellipse at 10% 0%, #16356533, transparent 45%); }
+.page-header {
+    position: relative;
+    isolation: isolate;
+    min-height: 244px;
+    padding: 32px;
+    border: 1px solid #536c9c66;
+    border-radius: 22px;
+    background: #0b1020;
+    box-shadow: 0 18px 60px #0005, 0 0 40px #407bff0a;
+}
+.page-header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: inherit;
+    background: linear-gradient(90deg, #060c1bf5 0%, #080c1dd6 34%, #090d2052 68%),
+                linear-gradient(0deg, #070d20f5, transparent 85%),
+                url('Images/loq-hero.png') right 48% / auto 150% no-repeat;
+}
+.hero h1 { font-size: clamp(25px, 3vw, 35px); letter-spacing: -.045em; margin-bottom: 12px; text-shadow: 0 2px 18px #0008; }
+.subtitle { line-height: 1.7; color: #c0cce2; }
+.subtitle strong { color: #e7efff; }
+.ux-bar { gap: 18px; }
+.ux-bar-item { flex-direction: column; align-items: flex-start; gap: 6px; }
+.ux-bar-label { color: #a8bad8; letter-spacing: .09em; }
+.ux-bar-value { color: #e4edff; }
+
+.panel-metric, .panel-progress, .panel-history {
+    background: linear-gradient(145deg, #172033 0%, #101522 75%);
+    border-color: #344360;
+    box-shadow: 0 8px 28px #0002, inset 0 1px #ffffff04;
+}
+.panel-metric::before { height: 2px; background: linear-gradient(90deg, #419aff, #8561f5 65%, transparent); }
+.panel-metric:nth-child(2)::before { background: linear-gradient(90deg, #34d399, #3fa2d3, transparent); }
+.panel-metric:nth-child(3)::before { background: linear-gradient(90deg, #a084ff, #e7a553, transparent); }
+.metric-title { color: #a8b8d4; letter-spacing: .09em; }
+.metric-number { font-size: clamp(26px, 2.5vw, 30px); letter-spacing: -.045em; }
+#sudahBayar { color: #65e2b3; }
+#sisaHutang { color: #f6cc84; }
+.section-head h3, .gallery-section h2 { color: #c7d4ee; letter-spacing: .09em; }
+.progress-fill { background: linear-gradient(90deg, #349eff, #9167fa); box-shadow: 0 0 16px #637fff66; }
+.progress-percentage-label { color: #b8ceff; }
+
+.cicilan { background: linear-gradient(120deg, #182133, #121a29); border-color: #2d3b53; }
+.cicilan--next { background: linear-gradient(115deg, #182b49, #191e36); border-color: #568af088; box-shadow: 0 8px 28px #236bff12; }
+.cicilan--next::after { background: linear-gradient(#53b2ff, #9564f5); }
+.cicilan--paid { opacity: 1; background: #101723; border-color: #29374b; }
+.cicilan--paid .info h4, .cicilan--paid .meta-item strong { color: #a5b2c7; text-decoration: none; }
+.cicilan--overdue { border-color: #ef777766; }
+.status-badge, .history-success { box-shadow: inset 0 1px #ffffff08; }
+.status-badge--next { color: #a6ceff; border-color: #568cda88; background: #2960b32b; }
+.status-badge--paid, .history-success { color: #83e8bd; background: #163d34; border: 1px solid #37876e77; }
+.btn-pay { background: linear-gradient(110deg, #286fe9, #6555d9); box-shadow: 0 4px 16px #3d6cf32b, inset 0 1px #ffffff29; }
+.btn-pay:hover { background: linear-gradient(110deg, #3983fc, #7967ed); }
+.history-card { background: linear-gradient(135deg, #1b263a, #141c2c); border-color: #364660; box-shadow: inset 0 1px #ffffff04; }
+.history-amount { font-size: 24px; color: #f1f6ff; }
+.history-period, .history-paid-date { color: #b0bfd6; }
+.history-intro, .history-evidence-note, .receipt-note, .receipt-status { color: #a4b3cd; }
+.receipt-block { border-color: #33415a; }
+.receipt-button, .receipt-menu > summary { background: #1c2b43; border-color: #425777; color: #d8e8ff; }
+.receipt-button-danger { color: #ffafb7; }
+.receipt-menu-options { background: #172338; border-color: #455b7e; }
+.receipt-viewer > summary { color: #a8cdff; }
+.payment-management { background: #101623; border-color: #2e3c53; }
+.payment-management > summary, .payment-management > p { color: #aab8d0; }
+.photo-gallery img { border-color: #3c4d6b; box-shadow: 0 8px 24px #0003; }
+.gallery-section { border-color: #2d3b54; }
+.modal-wrapper { border-color: #48628c; box-shadow: 0 24px 100px #0009; }
+button, summary, a, .panel-metric, .history-card { transition: border-color 180ms ease, background-color 180ms ease, box-shadow 180ms ease; }
+:is(button, summary, a, input):focus-visible { outline: 2px solid #92c5ff; outline-offset: 4px; }
+@media (hover: hover) {
+    .panel-metric:hover, .history-card:hover { border-color: #5977a5; box-shadow: 0 8px 28px #0003; }
+    .cicilan:not(.cicilan--paid):hover { border-color: #658dcd; }
+    .receipt-button:hover, .receipt-menu > summary:hover { background: #2a3b58; border-color: #739bd3; }
+}
+@media (max-width: 890px) {
+    .page-header { min-height: 270px; justify-content: space-between; }
+    .page-header::before { background-position: center, center, right 48%; }
+    .ux-bar { max-width: 460px; }
+}
+@media (max-width: 640px) {
+    .page-header { padding: 24px 20px; min-height: 285px; border-radius: 18px; }
+    .page-header::before {
+        background-image: linear-gradient(90deg, #060c1bd9, #080c1d66), linear-gradient(0deg, #070d20fa, transparent 100%), url('Images/loq-hero.png');
+        background-size: cover, cover, auto 100%;
+        background-position: center;
+    }
+    .hero h1 { font-size: 28px; max-width: 260px; }
+    .ux-bar { gap: 12px; flex-wrap: wrap; }
+    .ux-bar-label { font-size: 9px; }
+    .ux-bar-value { font-size: 12px; }
+    .history-amount { font-size: 23px; }
+}
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+    .cicilan:hover { transform: none; }
+}
