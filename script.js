@@ -353,6 +353,7 @@ function renderDaftarCicilan() {
 function renderRiwayatPembayaran() {
   if (!DOM.riwayatPembayaran) return;
   DOM.riwayatPembayaran.innerHTML = "";
+  window.paymentReceipts?.beginRender();
 
   const paidHistory = cicilanMaster.filter(c => (c.paid_amount ?? 0) > 0);
   
@@ -392,8 +393,10 @@ function renderRiwayatPembayaran() {
         </div>
       </div>
     `;
+    window.paymentReceipts?.attach(card, item);
     DOM.riwayatPembayaran.appendChild(card);
   });
+  window.paymentReceipts?.refresh();
 }
 
 function renderGallery() {
