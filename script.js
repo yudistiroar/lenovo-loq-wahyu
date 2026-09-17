@@ -301,10 +301,21 @@ function renderDaftarCicilan() {
 
   const nextUnpaidIdx = getNextUnpaidIndex();
 
-  cicilanMaster.forEach((item, index) => {
+  // Prioritaskan tagihan aktif, lalu tagihan mendatang, dan simpan yang lunas di bawah.
+  // masterIndex tetap dibawa agar aksi bayar/batal selalu menunjuk transaksi yang benar.
+  const displayItems = cicilanMaster.map((item, masterIndex) => {
+    const paidAmount = item.paid_amount ?? 0;
+    const nominal = item.nominal ?? 0;
+    const isLunas = item.status === "paid" || paidAmount >= nominal;
+    const priority = masterIndex === nextUnpaidIdx ? 0 : (isLunas ? 2 : 1);
+    return { item, masterIndex, priority };
+  }).sort((a, b) => a.priority - b.priority || a.item.installment - b.item.installment);
+
+  displayItems.forEach(({ item, masterIndex }, displayIndex) => {
     const card = document.createElement("div");
     card.className = "cicilan";
-    card.style.animationDelay = `${index * 30}ms`;
+    card.dataset.masterIndex = String(masterIndex);
+    card.style.animationDelay = `${displayIndex * 30}ms`;
 
     const paidAmount = item.paid_amount ?? 0;
     const nominal = item.nominal ?? 0;
@@ -318,8 +329,8 @@ function renderDaftarCicilan() {
       statusLabel = "Lunas";
       statusClass = "paid";
       card.classList.add("cicilan--paid");
-      badgeAttributes = `onclick="window.triggerCancelFlow(${index})" role="button" tabindex="0" title="Klik untuk membatalkan pelunasan"`;
-    } else if (index === nextUnpaidIdx) {
+      badgeAttributes = `onclick="window.triggerCancelFlow(${masterIndex})" role="button" tabindex="0" title="Klik untuk membatalkan pelunasan"`;
+    } else if (masterIndex === nextUnpaidIdx) {
       statusLabel = "Berikutnya";
       statusClass = "next";
       card.classList.add("cicilan--next");
@@ -344,7 +355,7 @@ function renderDaftarCicilan() {
           <div class="meta-item">Jatuh Tempo: <strong>${formatTanggalIndo(item.due_date)}</strong></div>
         </div>
       </div>
-      ${isLunas ? "" : `<button type="button" class="btn-pay" onclick="triggerPaymentFlow(${index})">Bayar Sekarang</button>`}
+      ${isLunas ? "" : `<button type="button" class="btn-pay" onclick="triggerPaymentFlow(${masterIndex})">Bayar Sekarang</button>`}
     `;
     DOM.daftarCicilan.appendChild(card);
   });
@@ -540,9 +551,9 @@ async function executePayment() {
     updateSyncState("synced", "Synced just now");
     
     setTimeout(() => {
-      const cards = DOM.daftarCicilan.querySelectorAll(".cicilan");
-      if (cards && cards[pendingPayIndex]) {
-        cards[pendingPayIndex].classList.add("cicilan--success-flash");
+      const paidCard = DOM.daftarCicilan.querySelector(`.cicilan[data-master-index="${pendingPayIndex}"]`);
+      if (paidCard) {
+        paidCard.classList.add("cicilan--success-flash");
       }
       pendingPayIndex = null;
       isCancelOperation = false;
